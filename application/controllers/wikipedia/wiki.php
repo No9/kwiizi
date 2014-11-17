@@ -455,39 +455,12 @@ public function ping_it()
 
 
 
-//CEtte fonction affiche le jeu
-    public function game()
-    { ?>
-     <div id="slotMachine">
-		<p id="slotCredits">15</p>
-		<a href="#" id="slotTrigger">spin</a>
-        <div id="wheel1" class="wheel">
-            <img src="<?php echo base_url(); ?>assets/game/images/wheel1.gif" alt="" />
-            <img src="<?php echo base_url(); ?>assets/game/images/ani.gif" alt="" class="slotSpinAnimation" />
-        </div>
-        <div id="wheel2" class="wheel">
-            <img src="<?php echo base_url(); ?>assets/game/images/wheel2.gif" alt="" />
-            <img src="<?php echo base_url(); ?>assets/game/images/ani.gif" alt="" class="slotSpinAnimation" />
-        </div>
-        <div id="wheel3" class="wheel">
-            <img src="<?php echo base_url(); ?>assets/game/images/wheel3.gif" alt="" />
-            <img src="<?php echo base_url(); ?>assets/game/images/ani.gif" alt="" class="slotSpinAnimation" />
-        </div>
-        <img src="<?php echo base_url(); ?>assets/game/images/over.png" alt="" id="wheelOverlay" />
-		<p id="slotSplash">
-			<a href="#">start</a>
-		</p>
-     </div>
-
-     <?php	 
-    }
-
-
     //Cette fonction va chercher les articles de wikipedia sur Kiwix
     public function get_article(){
 
     	 //on définit les règles de succès: 	      
 	    $this->form_validation->set_rules('page_url','page_url','required|trim');
+	    $this->form_validation->set_rules('type','type','required|trim');
   	
 	    if($this->form_validation->run()) 
 		{ 	            
@@ -551,7 +524,15 @@ public function ping_it()
 		}
 
 		$reponses['page_title']              = $title_text;
-		$reponses['page_text']               = str_replace('../../',HOST_WIKI.'/ted_business_05_2014/',$full_text);
+		
+		if($this->input->post("type")!='none'){
+		    
+		    $reponses['page_text']               = str_replace('../../',HOST_WIKI.'/'.$this->input->post("type").'/',$full_text);
+		}else{
+
+		    $reponses['page_text']               = $full_text;
+		}
+
   
 	    // on a notre objet $reponse (un array en fait)
         // reste juste à l'encoder en JSON et l'envoyer
@@ -648,14 +629,14 @@ public function ping_it()
             	default:
             	    if($increment_ted==false){
 
-            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result);
+            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result,'ted_zim_name'=>$all_zim_file[$i]);
 
             		    $ted = array($this_ted);
 
             		    $increment_ted = true;        
             	    }else{
 
-            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result);
+            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result,'ted_zim_name'=>$all_zim_file[$i]);
 
             	    	array_push($ted, $this_ted);
             	    }	

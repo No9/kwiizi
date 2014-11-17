@@ -258,7 +258,7 @@ $(document).ready(function(){
 			         
 			            var page_url = $(this).attr('href').replace($('.hoster').attr('kiwix'),'');
 
-				  		retrieve_article_url(page_url);
+				  		retrieve_article_url(page_url,false);
 				
 					    return false;                    
 		        });
@@ -478,7 +478,7 @@ $(document).ready(function(){
 		  //On affiche la box pour patienter
           $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
 			
-		  retrieve_article_url(page_url);
+		  retrieve_article_url(page_url,false);
 		
 		});
 		
@@ -878,16 +878,20 @@ $(document).ready(function(){
 
             
 			//on affiche l'article en passanrt par la base de donnée 
-            function retrieve_article_server(page_url,recorder) {
+            function retrieve_article_server(page_url,recorder,type) {
 			
 			       //on récupère l'article
+			       if(type==false){
+                        
+                        type = 'none';
+			       }
 				    $.ajax({ 
     
 							url: $('#get_API').attr('api'),
                                         
 							type: 'POST',
 							
-							data: {'page_url':page_url},
+							data: {'page_url':page_url,'type':type},
                                         
 							async : true,
 
@@ -905,7 +909,7 @@ $(document).ready(function(){
             }
 
 			
-		    function retrieve_article_url(page_url){
+		    function retrieve_article_url(page_url,type){
 	    
 				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
 			    {
@@ -917,7 +921,7 @@ $(document).ready(function(){
 						
 						    var recorder = 'yes';
 					     
-					        retrieve_article_server(page_url,recorder);//on prend l'article au serveur
+					        retrieve_article_server(page_url,recorder,type);//on prend l'article au serveur
 						}
 						else
 						{ 
@@ -944,7 +948,7 @@ $(document).ready(function(){
 					$.indexedDB(dbName).objectStore("article").get(page_url).fail(function(error, event){ 
 					    var recorder = 'yes';
 					    //console.log('deviation'); 
-					    retrieve_article_server(page_url,recorder);//on prend l'article au serveur	
+					    retrieve_article_server(page_url,recorder,type);//on prend l'article au serveur	
                     });
 				}
 				else
@@ -959,7 +963,7 @@ $(document).ready(function(){
 					    {
 						 var recorder ='yes';
 						 
-						 retrieve_article_server(page_url,recorder);//on prend l'article au serveur	   
+						 retrieve_article_server(page_url,recorder,type);//on prend l'article au serveur	   
                         }
 						else
 						{
@@ -980,7 +984,7 @@ $(document).ready(function(){
                     {
 					   var recorder = 'yes';
 					     
-					   retrieve_article_server(page_url,recorder);//on prend l'article au serveur	
+					   retrieve_article_server(page_url,recorder,type);//on prend l'article au serveur	
                     }
                 }					
 			}
@@ -1033,9 +1037,10 @@ $(document).ready(function(){
 
 					//On load de javascript file of the video
 		            $.getScript($('.ted_video').attr('js'));
-					
-					$('.wiki_content').html($('.wiki_content').html().replace('REDIRECT','<i class="icon-refresh"></i> '));
-					
+
+					//This is for ted conference
+					$('.wiki_content').html($('.wiki_content').html().replace('../../',$('.hoster').attr('host_wiki')+'/'+window.ted_zim_file+'/' ));
+
 					
 					//on cha,ge le titre de la page
 					$('title').html($('.wiki_title').text());
@@ -1060,7 +1065,7 @@ $(document).ready(function(){
 			            var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
 			            
 
-				  		retrieve_article_url(page_url);
+				  		retrieve_article_url(page_url,false);
 				
 					    return false;                    
 			        });
@@ -1570,6 +1575,14 @@ $(document).ready(function(){
                                             window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "popupWindow", "width=600,height=600,scrollbars=yes");
                                     
 			                            }else{
+
+
+                                            //This is specialy for TED video
+
+			                                if($(this).parent().parent().attr('type')=='ted'){ 
+
+			                                	var type = $(this).parent().parent().attr('ted_zim_file');
+			                                } 
                                             
                                             //On affiche la box pour patienter                  
 		                                    $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
@@ -1582,7 +1595,7 @@ $(document).ready(function(){
 				                            //Et on active le bouton sur le quel on vient de cliquer	
                                             $(this).parent().attr('class','active');
 								      
-								            retrieve_article_url(page_url);
+								            retrieve_article_url(page_url,type);
 			                            }     
 									  
                                       return false;		            
@@ -1594,7 +1607,8 @@ $(document).ready(function(){
 			         
 			                            var page_url = $(this).attr('href').replace($('.hoster').attr('kiwix'),'');
 
-				  		                retrieve_article_url(page_url);
+
+				  		                retrieve_article_url(page_url,false);
 				
 					                    return false;                   
                                     }); 
