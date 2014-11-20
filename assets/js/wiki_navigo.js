@@ -1570,6 +1570,9 @@ $(document).ready(function(){
 			                          	    window.show_page();
 			                            }
 
+			                            var type = false;
+
+
 			                            if($(this).parent().parent().attr('type')=='gutenberg') { //If it's a result of gutenberg library,we open the book in a new window
                                            
                                             window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "popupWindow", "width=600,height=600,scrollbars=yes");
@@ -1577,7 +1580,7 @@ $(document).ready(function(){
 			                            }else{
 
                                             //This is specialy for TED video
-
+                                           
 			                                if($(this).parent().parent().attr('type')=='ted'){ 
 
 			                                	var type = $(this).parent().parent().attr('ted_zim_file');
@@ -1594,7 +1597,7 @@ $(document).ready(function(){
 				                            //Et on active le bouton sur le quel on vient de cliquer	
                                             $(this).parent().attr('class','active');
 								      
-								            retrieve_article_url(page_url,false);
+								            retrieve_article_url(page_url,type);
 			                            }     
 									  
                                       return false;		            
