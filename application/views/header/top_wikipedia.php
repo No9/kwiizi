@@ -5,7 +5,7 @@
 				
 					<!--<img src="<?php echo base_url().'assets/smileys/lap_cretin.jpg'; ?>" class="profil_chiz img-polaroid"> -->
 					<div class="input-append show_me_search" style="padding-top:10px;display:none;">
-					   <input class="input-xlarge watermark_search" type="text" placeholder="<?php echo $this->lang->line('form_search'); ?>"><button class="btn btn-primary watermark_search_valid" type="button"><i class="icon-search icon-white"> </i></button>
+					   <input class="input-xlarge watermark_search wiper" type="text" placeholder="<?php echo $this->lang->line('form_search'); ?>"><button class="btn btn-primary watermark_search_valid" type="button"><i class="icon-search icon-white"> </i></button>
 				    </div>				
 				</div>
                 

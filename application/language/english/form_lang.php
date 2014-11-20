@@ -103,6 +103,8 @@ $lang['form_no_connected']      = "No user online.";
 $lang['form_wikipedia']         = "Wikipedia";
 $lang['form_library']           = "Library";
 $lang['form_videotek']          = "Video";
+$lang['form_offline']           = "!Your are offline";
+
 
 
 

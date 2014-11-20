@@ -342,6 +342,8 @@
 	<span class="already_used" msg="<?php echo $this->lang->line('form_already_used'); ?>" redirect="<?php echo site_url(); ?>" connexion_trait ="<?php echo site_url().'/user/connect/connexion_trait'; ?>"> </span>
 	 
 	<span class="notif_search" short="<?php echo $this->lang->line('form_short'); ?>"></span>
+	
+	<span class="offline_app" message="<?php echo $this->lang->line('form_offline'); ?>"></span>
 
 	<span class="not_allow_family" message="<?php echo $this->lang->line('form_not_allow_family'); ?>"></span>
 

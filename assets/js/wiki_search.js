@@ -11,10 +11,13 @@ $(document).ready(function(){
 
 		    $('.watermark_search').unbind('keyup');
 
+		    
 		    //On fait le focus sur la vrai recherche 
            $('.begoo').val($('watermark_search').val());			
 			
 			$('.watermark_search').keyup(function(evenement){ 
+
+				wipe_val();
 			
 			// Si evenement.which existe, codeTouche vaut celui-ci.
 				 // Sinon codeTouche vaut evenement.keyCode.
@@ -37,6 +40,9 @@ $(document).ready(function(){
     	 $('.begoo').unbind('keyup');
 
         $('.begoo').keyup(function(evenement){
+
+        	wipe_val();
+
  
            //On fait le focus sur la vrai recherche 
            $('.watermark_search').val($('.begoo').val());
@@ -57,6 +63,19 @@ $(document).ready(function(){
 
     	$('.watermark_search_valid').click();
     })
+
+
+
+    //This function wipe any value typed to the search engine if the app is offline
+    function wipe_val(){
+
+    	if(window.kwiki_inline=='off'){
+
+    		$('.wiper').val('');
+
+    		$('.wiper').attr('placeholder',$('.offline_app').attr('message'));
+    	}
+    }
 		
 		
 		

@@ -105,6 +105,7 @@ $lang['form_no_connected']      = "Aucun utilisateur en ligne.";
 $lang['form_wikipedia']         = "Wikipedia";
 $lang['form_library']           = "Librairie";
 $lang['form_videotek']          = "Vidéo";
+$lang['form_offline']           = "!Vous êtes hors ligne";
 
 
 
