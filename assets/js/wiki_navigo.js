@@ -1576,7 +1576,6 @@ $(document).ready(function(){
                                     
 			                            }else{
 
-
                                             //This is specialy for TED video
 
 			                                if($(this).parent().parent().attr('type')=='ted'){ 
@@ -1595,7 +1594,7 @@ $(document).ready(function(){
 				                            //Et on active le bouton sur le quel on vient de cliquer	
                                             $(this).parent().attr('class','active');
 								      
-								            retrieve_article_url(page_url,type);
+								            retrieve_article_url(page_url,false);
 			                            }     
 									  
                                       return false;		            
