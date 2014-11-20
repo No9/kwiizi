@@ -147,11 +147,11 @@ $(document).ready(function(){
 													if(i==0){ //If it is the first tab,we open it at default
 
 													    $('.all_ted_list').append('<li class="active"><a href="#tabindex_'+i+'" data-toggle="tab"><span class="badge badge-info">'+i+'</span></a></li>');
-													    $('.all_ted_content').append('<div class="tab-pane active ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i></li></ul></div>');
+													    $('.all_ted_content').append('<div class="tab-pane active ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i> '+papi.ted[i].ted_zim_name.replace(/_/g,' ')+'</li></ul></div>');
 													}else{
 
 													    $('.all_ted_list').append('<li><a href="#tabindex_'+i+'" data-toggle="tab"><span class="badge badge-info">'+i+'</span></a></li>');
-													    $('.all_ted_content').append('<div class="tab-pane ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i></li></ul></div>');
+													    $('.all_ted_content').append('<div class="tab-pane ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i> '+papi.ted[i].ted_zim_name.replace(/_/g,' ')+'</li></ul></div>');
 													}
 
  
