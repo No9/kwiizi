@@ -9,12 +9,12 @@ $(document).ready(function(){
 		//C'est ici qu'on lis le contenu de rechercher en appuyant sur la touche "entré" pour traiter
 		$('.watermark_search').focus(function() {
 
-		    $(document).unbind('keyup');
+		    $('.watermark_search').unbind('keyup');
 
 		    //On fait le focus sur la vrai recherche 
            $('.begoo').val($('watermark_search').val());			
 			
-			$(document).keyup(function(evenement){
+			$('.watermark_search').keyup(function(evenement){ 
 			
 			// Si evenement.which existe, codeTouche vaut celui-ci.
 				 // Sinon codeTouche vaut evenement.keyCode.
@@ -33,6 +33,8 @@ $(document).ready(function(){
 
           //Pour le focus sur Begoo
     $('.begoo').focus(function(){
+
+    	 $('.begoo').unbind('keyup');
 
         $('.begoo').keyup(function(evenement){
  
