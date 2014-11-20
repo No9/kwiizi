@@ -1115,7 +1115,8 @@ $(document).ready(function(){
                 $.unblockUI();//on débloque le navigateur				
 		        
 		        //We wipe the double Title
-		        $('#firstHeading').fadeOut();
+		        $('.firstHeading').html('');
+
 		        $('#title').fadeOut();
 				                      
 				$('body').animate({scrollTop : '0px'},1000);//on te scroll au debut de la page
@@ -1156,6 +1157,7 @@ $(document).ready(function(){
 					        if(result_url==undefined)//si ce tableau existe				
 					        {
 						     window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
+
 				             $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter		
 						    }
 						    else
@@ -1404,7 +1406,7 @@ $(document).ready(function(){
 							 
 						  var list_title = all_title[i];	
 															
-						  var b = '<a href="'+$('.hoster').attr('kiwix')+all_url[i]+'" class="click_list">';
+						  var b = '<a href="'+all_url[i]+'" class="hist_wiki">';
 															
 						  var c = '<i class="icon-chevron-right" style="float:right;"></i>';
 																
