@@ -428,7 +428,7 @@ $(document).ready(function(){
 		{
             //$('#make_call').attr('class','m-btn red');
 
-            $('#facetimer').modal('show');
+           // $('#facetimer').modal('show');
 
 		    //$('#make_call').html('<i class="icon-facetime-video icon-white"></i> '+$('#make_call').attr('end_call'));
 
@@ -1137,6 +1137,8 @@ $(document).ready(function(){
                      $('#my_self').attr('src', window.URL.createObjectURL(stream));
 					 
 					 window.localStream = stream;
+
+					 $('#facetimer').modal('show');
 					 
 					 streamed = true;
 					 
@@ -1317,7 +1319,9 @@ $(document).ready(function(){
 		   
 		    if(streamed==true)
 			{
-			   call.answer(window.localStream); // Answer the call with an A/V stream.
+				$('#facetimer').modal('show');
+
+			    call.answer(window.localStream); // Answer the call with an A/V stream.
 			}
 			else
 			{
@@ -1327,6 +1331,8 @@ $(document).ready(function(){
                      $('#my_self').attr('src', window.URL.createObjectURL(stream));
 					 
 					 window.localStream = stream;
+
+					 $('#facetimer').modal('show'); 
 					 
 					 streamed==true;
                      
