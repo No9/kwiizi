@@ -2,6 +2,10 @@
 $(document).ready(function(){ 
 
 
+	//Unable right click
+	$(document).bind('contextmenu', function (e) {e.preventDefault();});
+
+
 	var hoster = $('.hoster').attr('url');
 	var port_kiwix = $('.hoster').attr('port_kiwix');
 	var zim = $('.hoster').attr('zim');
