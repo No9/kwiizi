@@ -1,7 +1,6 @@
 
 $(document).ready(function(){ 
 
-alert('yop');
 	//Unable right click
 	//$(document).bind('contextmenu', function (e) {e.preventDefault();});
 

@@ -66,27 +66,17 @@ public function hi()
 	
 	
 public function index()
-	{ 
-
-		$this->session->set_userdata('device', 'standart');
-
-	    if(!$this->session->userdata('logged_in'))//si on est connecté on va direct à la page d'accueil
-	    {
-	        redirect('wikipedia/wiki/hi','refresh');//et la redirection
-		}
-		else
-		{
-	      //On fait un array des données à transmettre aux entetes et corps de page
-		 $data = array(
+	{ 	
+	    //On fait un array des données à transmettre aux entetes et corps de page
+		$data = array(
             'title'    => 'Kwiki',
 		    'h1'       => 'Kwiki',
 			'top'      => 'wikipedia'
-                           );
+        );
 			 
 		 $this->parser->parse('page/all_pages',$data);
 		 $this->parser->parse('wikipedia/wikipedia',$data);
 		 $this->parser->parse('footer/footer_wiki',$data);
-		}
 	}
 
 
