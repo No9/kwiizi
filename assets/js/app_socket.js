@@ -1541,11 +1541,6 @@ $(document).ready(function(){
 							
 				            success: function(data){
 							
-							            if($.trim(data)!=='connected')//s'il n'est pas connecté
-										{
-										   window.location.href = $('.already_used').attr('redirect');
-									    }
-
 									    $('.attente').html('');//on efface l'attente
 
 									    window.kwiki_inline ='on';

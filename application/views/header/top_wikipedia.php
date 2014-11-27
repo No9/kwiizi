@@ -18,8 +18,6 @@
 					    
 						<!--<li class="cacher"><a href="#" class="aspirated" category="<?php echo $this->lang->line('form_category');?>" back="<?php echo $this->lang->line('form_back');?>"><span class="label label-important"> <i class="icon-download-alt icon-white"></i> <?php echo $this->lang->line('form_cat_aspire');?> </span></a></li> -->
 				
-					    <li class="special_nav" style="display:none;"><a href="#" class="follow_me bulle hide_list_mobil" data-placement="top" title="<?php echo $this->lang->line('bulle_follow_me_b');?>" action="<?php echo site_url().'/wikipedia/wiki/follow_me'; ?>" truth="" follow_no="<?php echo $this->lang->line('bulle_follow_no'); ?>"  follow_me="<?php echo $this->lang->line('bulle_follow_me'); ?>" action_no="<?php echo site_url().'/wikipedia/wiki/follow_me_over'; ?>"><span class="label label-warning"><i class="icon-search icon-white"></i> <span class="statu_link"><?php echo $this->lang->line('bulle_follow_me'); ?></span> <span class="followers_number" style="display:none;">(<span class="followers">0</span>)</span> </span></a></li>
-                        
 						<li class="special_navi" style="display:none;"><a href="#" class="favorite_wiki bulle" data-placement="top" title="<?php echo $this->lang->line('bulle_fav_article');?>" url_fav="<?php echo site_url().'/wikipedia/wiki/favorite/'; ?>"><span class="label label-info"><span class="fav_count"></span><i class="icon-heart icon-white"></i> <?php echo $this->lang->line('form_share'); ?> </span></a></li>
                         
 						<li class="special_navi" style="display:none;"><a href="#" target="_blank" class="print_it bulle" data-placement="top" title="<?php echo $this->lang->line('bulle_print_me');?>"><img src="<?php echo base_url().'assets/smileys/pdf.png'; ?>" ></a></li>
@@ -40,14 +38,7 @@
                     
 					    <span class="look_wiki_url"  page_consulte="<?php echo site_url().'/wikipedia/wiki/record_article'; ?>"  style="display:none;"></span><!-- garde le préfixe de l'url des articles wikipedia -->
 					
-				    </div>
-					
-					 
-					   <span class=" install note_follow label label-info" style="display:none;"><?php echo $this->lang->line('form_follow_them'); ?> :</span>
-                        <span class="info_followed" style="display:none;" ><a href="#" class="stop_follow_him bulle" title="<?php echo $this->lang->line('form_no_folow'); ?>" data-placement="top"><span class="text-warning" > <i class="icon-stop"></i> <?php echo $this->lang->line('form_no_folow'); ?> <span class="name_followed" ></span></span></a><span class="divider">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
-                        <span class="leader" url_leader="<?php echo site_url().'/wikipedia/wiki/leader'; ?>"></span> 				
-					
-					
+				    </div>										
 					
 				</div>
             </div>
