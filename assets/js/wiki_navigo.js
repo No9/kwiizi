@@ -53,8 +53,6 @@ $(document).ready(function(){
 
 		        //$('.chizer').fadeOut();//On retire le moteur de recher des suivis
 
-		        $('#nottys').fadeOut();//On retire la publicité en nofication
-
 		        $('.cacher').fadeOut();
 
 		        $('.view').parent().attr('style','');
@@ -79,8 +77,6 @@ $(document).ready(function(){
         	$('.tiler').fadeIn();
 
             $('.one').hide();$('.two').show();
-
-        	$('#nottys').fadeIn();//On remet la publicité en nofication
 
         	$('.contenu_liste').fadeIn();
 

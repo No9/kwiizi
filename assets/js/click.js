@@ -171,38 +171,7 @@ $(document).ready(function(){
             	}   
             })
 
-
-
-        //cette fonction déclanche l'apparition de la notification
-			function notty_it(message)
-			{
-			    $.ClassyNotty({
-                    content: message,
-                    img:$('#url_image').attr('url')+'logo_begoo.jpg',
-                    showTime: true,
-	                timeout: timeout_notty                                             
-                });    
-            } 
-	
 			
-			
-			
-			//Cette fonction affiche les onglets des notification et prérempli les nouveaux messages avec un Onclick
-			$('.my_note').click(function() {
-
-				if(window.device=='mobile'){
-
-					window.hide_page();
-				}
-			        //On affiche la box pour patienter
-                  
-				   $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-				   
-					  //on télécharge les notifications
-					  last_notify(false);	
-
-                return false;		            
-            });
 
 
             function affiche_list_note(data){
@@ -238,112 +207,8 @@ $(document).ready(function(){
 
 
 
-        
-    //Je télécharge les noifications dernières
-    function last_notify(statu){
-
-	    $.ajax({  //On affiche tout dabord les onglets avec cette requete ajax
-    
-				url: $('.my_msg_pub').attr('action')+50,
-                                        
-				type: 'POST',
-                                        
-				async : true,
-							
-				dataType:"json",
-					                    
-				error:  function(){ 
-                                        
-                            if($.jStorage.storageAvailable() && $.jStorage.get('note')){
-
-                                if(statu==true){
-
-                                    //On fait défiler les notification qui sot en local
-                                    My_notty($.jStorage.get('note'),0);
-                                 
-                                }else{
-
-                                    //On affiche en liste
-                                    see_note();
-                                }
-                            }else{
-
-                                    if(statu==false){
-
-                                        //On dit qu'il nya aucune notication
-                                        window.notificate_it($('.not_news').attr('not_news'),'error','bottomRight');
-                                    }
-                            }							        
-					    },
-                                        
-			    success:function(data) {						          												 
-								     
-                                        if(data.statu =='succes')
-                                        {
-
-                                        	if(statu==true){
-                                        		//On télécharge dabord
-                                        		download_note(data);
-                 
-                                        	}else{
-                                        		//On affiche sous forme de liste
-                                        		 //On affiche en liste
-                                                see_note();
-                                        	}
-									       
-									       $('#info_msg_wait').fadeOut();//On efface la box qui fait patiente									 
-                                        }else{
-
-                                            if(statu==false){
-
-                                                //On dit qu'il nya aucune notication
-                                                window.notificate_it($('.not_news').attr('not_news'),'error','bottomRight');
-                                            }                                        	
-                                        }                  
-									}
-					    });
-    }
-
-    var get_note = last_notify(true);
-
-    function download_note(data){
-
-    	$.jStorage.set('note_nbre',data.counter);//On garde le nombre de notification
-
-    	var all_notes = [];
-
-    	var i =0;
-
-    	var nbre_note = data.counter * 1;//On converti en réel
-
-    	$.each(data.notification, function(entryIndex, entry) {
-		    
-		    var each_note = [entry['message'],entry['timestamp']];
-
-		    all_notes.push(each_note);
-
-		    i=i+1;
-
-		    if(i==nbre_note - 1){
-
-		    	$.jStorage.set('note',all_notes);
-
-		    	//Et on déclanche le défilement
-		    	defile_note();
-		    }	 											
-        });
-    }
-    
-
-    //Cette fonction déclenche le défilement des messages
-    function defile_note(){
-
-    	 My_notty($.jStorage.get('note'),0);  	
-    }
-    //Dès que je récupère la denire notif,jenregistre en local
-    //Jarrenge de bug de nombre de notication
-
-
+   
+ 
 			
 			
 
@@ -443,35 +308,6 @@ $(document).ready(function(){
 			}
 		}
 
-
-		function My_notty(contenus,chariot) 
-		{
-			if(window.device=='standart'){
-
-			    setInterval(function()
-                {
-                	if($('.begoo').attr('id')!==undefined){
-			           //si on est au début du tableau ou en cour de lecture,
-				       niveau = contenus.length - chariot;
-				 
-				        if(niveau == contenus.length || chariot < contenus.length)
-				        {					
-					      //on apprete tout
-					      message = contenus[chariot][0];
-					      //on envoi à la fonction de lecture
-					      notty_it(message);
-                          chariot = chariot + 1;
-					
-					      //et on recommence le processus après un temps x			        
-				        }
-				        else
-				        {
-				          chariot = 0;
-				        }
-				    } 
-                }, delay_notif);
-            }	 
-        }
 
 
 			

@@ -384,7 +384,6 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/header.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/click.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.classynotty.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_contact.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_search.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.scrollToTop.min.js"></script>
