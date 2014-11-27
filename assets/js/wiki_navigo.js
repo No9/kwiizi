@@ -1,9 +1,11 @@
 
 $(document).ready(function(){ 
 
-
+alert('yop');
 	//Unable right click
-	$(document).bind('contextmenu', function (e) {e.preventDefault();});
+	//$(document).bind('contextmenu', function (e) {e.preventDefault();});
+
+	var popupWindow;
 
 
 	var hoster = $('.hoster').attr('url');
@@ -1577,11 +1579,11 @@ $(document).ready(function(){
 			                            }
 
 			                            var type = false;
-
+                                           
 
 			                            if($(this).parent().parent().attr('type')=='gutenberg') { //If it's a result of gutenberg library,we open the book in a new window
                                            
-                                            window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "popupWindow", "width=600,height=600,scrollbars=yes");
+                                            window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
                                     
 			                            }else{
 
