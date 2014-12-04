@@ -11,13 +11,13 @@
 				<div class="wiki_content">
 
 					<div class="parent_begoo" style="padding-top:100px;">
-                        <img class="logo_kwiki" style="height:70px;" src="<?php echo base_url(); ?>assets/img/kwiki.png" /><span class="label label-success">Nom de l'institution </span><br>
+                        <img class="logo_kwiki" style="height:70px;" src="<?php echo base_url(); ?>assets/img/kwiki.png" /><span class="label label-success">Université de Douala </span><br>
 			            <div class="input-append">
                             <input class="input-xxlarge begoo wiper" id="appendedInputButton" size="16" type="text"><button class="btn btn-primary begoo_click" response="get" type="button"><i class="icon-search icon-white"> </i></button>
                         </div>
+			            <div class="alert alert-info" style="width:20%;"><strong><?php echo $this->lang->line('form_term_search'); ?></strong></div>
+
 					</div>
-				    
-				
 				</div>
 				
 	   

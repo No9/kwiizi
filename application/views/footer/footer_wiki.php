@@ -7,9 +7,21 @@
 
 
             <!-- Block qui la box qui fait patienter pendans le chargement ajax -->
-	        <div id="Please_wait"style="display:none;"> <img src="<?php echo base_url().'assets/css/images/ajax-load.gif'; ?>" > <?php echo $this->lang->line('statu_wait'); ?></div>	
+	        <div id="Please_wait"style="display:none;"> 
+                 
+                <div class="container_load">
+	                <div class="content_load">
+                        <div class="ball"></div>
+                        <div class="ball1"></div>
+                        <!-- <?php echo $this->lang->line('statu_wait'); ?> -->
+                    </div>
+                </div>
+
+	        
+
+	        </div>	
               
-			<div id="info_msg_wait" style="display:none;" class="alert alert-info">
+			<div id="info_msg_wait" style="display:none;" >
                
             </div>
 	

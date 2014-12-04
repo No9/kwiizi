@@ -104,6 +104,7 @@ $lang['form_wikipedia']         = "Wikipedia";
 $lang['form_library']           = "Library";
 $lang['form_videotek']          = "Video";
 $lang['form_offline']           = "!Your are offline";
+$lang['form_term_search']       = "! Type your search.";
 
 
 
