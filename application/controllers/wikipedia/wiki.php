@@ -20,6 +20,8 @@ public function __construct()
 			
 	  //le helper de texte pour limiter les chaines de caractère lors de certains l'affichages
 	    $this->load->helper('text');
+
+	    $this->load->helper('string');
 		
 		//C'est cette ligne de code qui détecte la langue du navigateur et affiche le site dans la langue correspondante
 		$this->lang->load('form', $this->config->item('language'));
@@ -71,7 +73,7 @@ public function index()
 		$data = array(
             'title'    => 'Kwiki',
 		    'h1'       => 'Kwiki',
-			'top'      => 'wikipedia'
+			'top'      => 'wikipedia',
         );
 			 
 		 $this->parser->parse('page/all_pages',$data);

@@ -61,12 +61,12 @@
 
             	<li class="">
                       <a href="<?php echo site_url().'/wikipedia/wiki'; ?>" class="bulle off_hider" data-placement="bottom" title="home"><i class="icon-home icon-white"></i>  <!-- <span class="lang"><?php echo $this->lang->line('form_home'); ?></span> --></a>
-		            </li>
+		        </li>
 					
 
-		            <li class="">
-                      <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic off_hist" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white sub_hide"></i> <?php echo $this->lang->line('form_historic');?> <span class="off_hist_caracter"></span></a>
-		            </li>
+		        <li class="">
+                    <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic off_hist" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white sub_hide"></i> <?php echo $this->lang->line('form_historic');?> <span class="off_hist_caracter"></span></a>
+		        </li>
             </ul>
         </div>
 

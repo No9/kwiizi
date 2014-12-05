@@ -43,6 +43,7 @@ io.sockets.on('connection', function (socket) {
 		var index_followed = followed_list.indexOf(data.user_id); //On regarde aussi s'il est dans la liste des suivis
 
 		if(index_followed==-1){ //S'il n'est pas dedans on l'inscrit
+			
 		    followed_list.push(data.user_id);//On ajoute cette personne dans la liste des suivies
 		    followed_list_name.push(data.username);
 		}

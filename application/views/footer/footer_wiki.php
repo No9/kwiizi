@@ -346,6 +346,8 @@
 	<span action="<?php echo site_url().'/msg/notification/ListePub/'; ?>" class="my_msg_pub" ></span>
 	<span action="<?php echo site_url().'/msg/notification/ListePub_out/'; ?>" class=" my_msg_pub_out" ></span>
 
+	<span class="peer" peer="<?php echo random_string('alnum',8); ?>"></span>
+
 	<div class="result_label" wikipedia="<?php echo $this->lang->line('form_wikipedia'); ?>" library="<?php echo $this->lang->line('form_library'); ?>" video="<?php echo $this->lang->line('form_videotek'); ?>"></div>
 
 	

@@ -66,8 +66,10 @@ $(document).ready(function(){
 		socket.emit('welcome',{'my_numero':my_numero,'my_user_id':my_user_id});
 		
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+
 		
-		var peer = new Peer(my_numero+'_pot', {host:$('#url_peer').attr('host'), port:$('#url_peer').attr('port'),debug: 3});
+		var peer = new Peer($('.peer').attr('peer'), {host:$('#url_peer').attr('host'), port:$('#url_peer').attr('port'),debug: 3});
 		
 		
 		peer.on('open', function(id) {
