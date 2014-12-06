@@ -210,8 +210,8 @@
         <div class="modal-body">
 		    
 			<div class="alert alert-block">
-                <h4>Warning!</h4>
-                <?php echo $this->lang->line('form_advice_call'); ?>
+                <?php echo $this->lang->line('form_advice_call_1'); ?>:<span class="peer" style="color:blue;" > <?php echo random_string('numeric',8); ?></span><br>
+                <?php echo $this->lang->line('form_advice_call_2'); ?>
             </div>
 			
             <p>		
@@ -220,8 +220,8 @@
                         <label class="control-label" for="telephone"><?php echo $this->lang->line('form_number'); ?></label>
                         <div class="controls">
 						    
-                                <input class="span2 number_phone" verif_friend="<?php echo site_url().'/user/user/verif_friend'; ?>" placeholder="Téléphone" id="telephone" size="16" type="text" autofocus>
-				                <button class="btn btn-primary call_number" type="button"><i class="icon-play icon-white"> </i>&nbsp;&nbsp;Joindre cette personne</button>
+                                <input class="span2 number_phone" verif_friend="<?php echo site_url().'/user/user/verif_friend'; ?>" placeholder="<?php echo $this->lang->line('form_number'); ?>" id="telephone" size="16" type="text" autofocus>
+				                <button class="btn btn-primary call_number" type="button"><i class="icon-facetime-video icon-white"> </i>OK</button>
 					            <button class="btn btn-warning" type="button" data-dismiss="modal" aria-hidden="true"> <i class="icon-remove icon-white"> </i></button>
                            
                         </div>
@@ -245,8 +245,10 @@
     <div class="modal hide fade" id="facetimer" aria-labelledby="facetimerLabel" aria-hidden="false">
         
         <div class="modal-body">
+
+        	<div class="waiting_response"></div>
 			
-            <video id="caller" class="facetime" src="" autoplay></video>
+            <video id="caller" class="facetime" src="" autoplay><div class="waiting_response"></div></video>
         </div>
 
         <div class="modal-footer">                
@@ -345,8 +347,6 @@
 	<div id="wiki_cat_download" url="<?php echo base_url().'assets/js/wiki_category_download.js'; ?>"></div>
 	<span action="<?php echo site_url().'/msg/notification/ListePub/'; ?>" class="my_msg_pub" ></span>
 	<span action="<?php echo site_url().'/msg/notification/ListePub_out/'; ?>" class=" my_msg_pub_out" ></span>
-
-	<span class="peer" peer="<?php echo random_string('alnum',8); ?>"></span>
 
 	<div class="result_label" wikipedia="<?php echo $this->lang->line('form_wikipedia'); ?>" library="<?php echo $this->lang->line('form_library'); ?>" video="<?php echo $this->lang->line('form_videotek'); ?>"></div>
 

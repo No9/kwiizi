@@ -1,7 +1,7 @@
 <?php
 
 $lang['form_username']          = "Nom";
-$lang['form_number']            = "Téléphone";
+$lang['form_number']            = "Identifiant";
 $lang['form_message']           = "Votre message";
 $lang['form_connect']           = "Connecte moi";
 $lang['form_passconf']          = "Confirmer le mot de passe";
@@ -65,17 +65,18 @@ $lang['form_end_call']          = "Raccrocher";
 $lang['form_contact']           = "Contact";
 $lang['form_u_msg']             = "What's up ?";
 $lang['form_send_tof']          = "Envoie lui ta photo à l'instant :)";
-$lang['form_advice_call']       = "Ecrit le numéro de téléphone d'un de tes contacts susceptible d'être sur le réseau";
+$lang['form_advice_call_1']     = "Envoyez cette identifiant en bleu à votre correspondant";
+$lang['form_advice_call_2']     = "Ou alors copiez l'indetifiant de votre correspondant sur ce champ";
 $lang['form_disconnect_stat']   = "Cette personne recevra votre message à sa prochaine connexion";
 $lang['form_no_activ_speak']    = "Vous n'avez aucune conversation active.";
-$lang['form_u_number']          = "Ceci est votre numéro de téléphone !!!";
+$lang['form_u_number']          = "Ceci est votre Identifiant !!!";
 $lang['form_none_number']       = "Ecrivez le numéro de téléphone de votre contact.";
 $lang['form_error']             = "OuPs!! Une erreur inconnue est survenue";
 $lang['form_nobody']            = "Cette personne n'est pas actuellement connectée";
 $lang['form_new_call']          = "Vous avez un appel de";
 $lang['form_reject_call']       = "OuPs! Sorry... Cette personne vient de rejeter votre appel";
 $lang['form_accept_tof']        = "Mais vous pouvez l'envoyer vos photos en instantanné ";
-$lang['form_call_ended']        = "a terminé l'appel";
+$lang['form_call_ended']        = "Appel raccroché";
 $lang['form_statu_connect']     = "(Connecté)";
 $lang['form_statu_disconnect']  = "(Déconnecté)";
 $lang['form_disconnection']     = "(Déconnexion)";

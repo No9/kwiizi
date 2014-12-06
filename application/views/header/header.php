@@ -42,8 +42,6 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/topCenter.js"></script>
 	
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/humane.min.js"></script>
-	
-	
 
 </head>
 
@@ -63,6 +61,9 @@
                       <a href="<?php echo site_url().'/wikipedia/wiki'; ?>" class="bulle off_hider" data-placement="bottom" title="home"><i class="icon-home icon-white"></i>  <!-- <span class="lang"><?php echo $this->lang->line('form_home'); ?></span> --></a>
 		        </li>
 					
+                <li class="">
+                      <a href="#" title="<?php echo $this->lang->line('form_call_note'); ?>" data-placement="bottom" class="bulle sender_message off_hider"><i class="icon-facetime-video icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_call'); ?></span>--></a>
+		        </li>
 
 		        <li class="">
                     <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic off_hist" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white sub_hide"></i> <?php echo $this->lang->line('form_historic');?> <span class="off_hist_caracter"></span></a>

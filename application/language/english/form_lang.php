@@ -1,7 +1,7 @@
 <?php
 
 $lang['form_username']          = "Name";
-$lang['form_number']            = "Phone";
+$lang['form_number']            = "ID";
 $lang['form_message']           = "Your message";
 $lang['form_connect']           = "Connect me";
 $lang['form_email']             = "Email";
@@ -63,17 +63,18 @@ $lang['form_end_call']          = "End call";
 $lang['form_contact']           = "Contact";
 $lang['form_u_msg']             = "What's up ?";
 $lang['form_send_tof']          = "Send him your picture now :)";
-$lang['form_advice_call']       = "Write the number phone of yours contacts liable to the network";
+$lang['form_advice_call_1']     = "Send this blue ID to your correspondent";
+$lang['form_advice_call_2']     = "Or feel the ID of your correspondent on this fields";
 $lang['form_disconnect_stat']   = "This person will receive your message to his next connection";
 $lang['form_no_activ_speak']    = "You have no active conversation !!!";
-$lang['form_u_number']          = "This is your number phone !!!";
+$lang['form_u_number']          = "This is your ID !!!";
 $lang['form_none_number']       = "Write the number phone of your contact.";
 $lang['form_error']             = "OuPs!! Which is the error !!??";
 $lang['form_nobody']            = "This person is not connected";
 $lang['form_new_call']          = "You have a new call of";
 $lang['form_reject_call']       = "OuPs! Sorry... This person rejected your call";
 $lang['form_accept_tof']        = "So you can send him your pictures";
-$lang['form_call_ended']        = "closed call";
+$lang['form_call_ended']        = "End call";
 $lang['form_statu_connect']     = "(Connected)";
 $lang['form_statu_disconnect']  = "(Disconnected)";
 $lang['form_disconnection']     = "(Disconnection)";

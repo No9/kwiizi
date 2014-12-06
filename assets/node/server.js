@@ -303,11 +303,9 @@ io.sockets.on('connection', function (socket) {
 	/////////////////////////////////////////////DUO  chat/webrtc//////////////////////////////////////////////
     
 	//Si l'user vient de se connecter j'ouvre une nouvelle room avec son numéro de téléphone
-	socket.on('welcome', function (data) { 
+	socket.on('welcome', function (my_id) { 
 	   
-	   socket.join(data.my_numero);
-	   socket.join(data.my_user_id);
-		
+	   socket.join(my_id);		
     });
 
 
@@ -349,9 +347,9 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	
-	socket.on('end_call',function(data){
+	socket.on('end_call',function(caller_id){
 	
-       	socket.broadcast.to(data.interloc_num).emit('call_ended',data);
+       	socket.broadcast.to(caller_id).emit('call_ended');
 	});
 
 	socket.on('zut',function(data){
@@ -360,9 +358,9 @@ io.sockets.on('connection', function (socket) {
 	});
     
 
-    socket.on('stop_belling',function(data){
+    socket.on('stop_belling',function(caller_id){
 
-    	socket.broadcast.to(data.interloc_num).emit('stop_belling',data);
+    	socket.broadcast.to(caller_id).emit('stop_belling');
     })
 
 
