@@ -49,13 +49,6 @@
 			<div id="number" style="display:none;"><?php echo $this->lang->line('form_err_number'); ?></div>
 			<div id="one" style="display:none;">yes</div>
 		  </div>
-			<div id="navigateur" style="display:none;">
-		           <p>Vous devez mettre à jour votre navigateur. Cliquez sur l'un des liens suivants pour téléchargez votre navigateur. <img src="<?php echo base_url(); ?>/assets/image_notif/chrome.png"></p>
-                   <p><div class="loaderdot"></div></p>
-                   <div class="connect_link"></div>
-                  
-
-		    </div>
 		</div>
 
       </div>

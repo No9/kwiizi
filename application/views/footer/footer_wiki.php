@@ -205,7 +205,7 @@
 			
 			
 	<!-- pour le numéro de téléphone-->		
-	<div class="modal hide fade" id="my_person" aria-labelledby="my_personLabel" aria-hidden="false">
+	<div class="modal hide fade" id="my_person" aria-labelledby="my_personLabel" aria-hidden="false" data-backdrop="static">
         
         <div class="modal-body">
 		    
@@ -230,6 +230,22 @@
 			</p>
         </div>    
     </div>
+
+
+    <!-- pour les navigateurs compatibles-->		
+	<div class="modal hide fade" id="browser" aria-labelledby="browserLabel" aria-hidden="false" data-backdrop="static">
+        
+        <div class="modal-body">
+		    <div class="alert">
+		           <p><?php echo $this->lang->line('form_browser'); ?> <img src="<?php echo base_url(); ?>/assets/image_notif/chrome.png"></p>
+                   <a href="<?php echo base_url(); ?>/assets/logi/chrome.exe"><span class="label label-info"><i class="icon-windows icon-white"></i> Chrome (windows XP,7,8)</span></a>  
+		           <a href="<?php echo base_url(); ?>/assets/logi/firefox.exe"><span class="label label-info"><i class="icon-windows icon-white"></i> Firefox (windows XP,7,8)</span></a>  
+		           
+		           <a href="<?php echo base_url(); ?>/assets/logi/com.android.chrome.apk"><span class="label label-info"><i class="icon-windows icon-android"></i> Chrome (Android)</span></a>
+   
+            </div>
+        </div>    
+    </div>
 	
 
     <div id="alert" no_call="<?php echo $this->lang->line('form_no_call'); ?>" no_active_conv="<?php echo $this->lang->line('form_no_activ_speak'); ?>" form_u_number="<?php echo $this->lang->line('form_u_number'); ?>" form_none_number="<?php echo $this->lang->line('form_none_number'); ?>" error="<?php echo $this->lang->line('form_error'); ?>" nobody="<?php echo $this->lang->line('form_nobody'); ?>" new_call="<?php echo $this->lang->line('form_new_call'); ?>" reject_call="<?php echo $this->lang->line('form_reject_call'); ?>" end_call="<?php echo $this->lang->line('form_call_ended'); ?>"  wat="<?php echo $this->lang->line('form_wat'); ?>" no_contact="<?php echo $this->lang->line('form_no_contact'); ?>" incompatible="<?php echo $this->lang->line('form_incompatible'); ?>" busy="<?php echo $this->lang->line('form_busy'); ?>"></div>
@@ -242,7 +258,7 @@
     <div class="no_connected" no_connected="<?php echo $this->lang->line('form_no_connected'); ?>" ></div>
 
 
-    <div class="modal hide fade" id="facetimer" aria-labelledby="facetimerLabel" aria-hidden="false">
+    <div class="modal hide fade" id="facetimer" aria-labelledby="facetimerLabel" data-backdrop="static" aria-hidden="false">
         
         <div class="modal-body">
 
@@ -272,17 +288,6 @@
 		     <?php 
 		    }
 		?>
-
-
-
-    <!-- Pour le téléchargement des navigateurs -->
-	<div class="browser" style="display:none;">
-		           <a href="<?php echo base_url(); ?>/assets/logi/chrome.exe"><span class="label label-info"><i class="icon-windows icon-white"></i> Chrome (windows XP,7,8)</span></a>  
-		           <a href="<?php echo base_url(); ?>/assets/logi/firefox.exe"><span class="label label-info"><i class="icon-windows icon-white"></i> Firefox (windows XP,7,8)</span></a>  
-		           
-		           <a href="<?php echo base_url(); ?>/assets/logi/com.android.chrome.apk"><span class="label label-info"><i class="icon-windows icon-android"></i> Chrome (Android)</span></a>
-    </div>
-	
 	
 	
 

@@ -79,7 +79,7 @@ $lang['form_statu_connect']     = "(Connected)";
 $lang['form_statu_disconnect']  = "(Disconnected)";
 $lang['form_disconnection']     = "(Disconnection)";
 $lang['form_finder']            = "Search";
-$lang['form_wat']               = "has a problem of connection.";
+$lang['form_wat']               = "your correspondent has a problem of connection.";
 $lang['form_no_contact']        = "You have no contact";
 $lang['form_incompatible']      = "Your browser or his version does not support calls";
 $lang['form_no_folow']          = "Stop to follow";
@@ -106,6 +106,8 @@ $lang['form_library']           = "Library";
 $lang['form_videotek']          = "Video";
 $lang['form_offline']           = "!Your are offline";
 $lang['form_term_search']       = "! Type your search.";
+$lang['form_browser']           = "You must update your browser. Click below to choose and download your browser.";
+
 
 
 

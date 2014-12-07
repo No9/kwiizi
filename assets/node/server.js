@@ -308,42 +308,22 @@ io.sockets.on('connection', function (socket) {
 	   socket.join(my_id);		
     });
 
-
-	//Si l'user se déconnecte je ferme sa room
-    socket.on('bye', function (numero_room) {
-
-	    socket.leave(numero_room);
-    });
-
-
-    //Si l'user recoit un nouveau message dans sa room personnel
-    socket.on('new_message_duo', function (data) {
-
-	    socket.broadcast.to(data.interloc_num).emit('toc_toc',data);
-    });
 	
-	
-	socket.on('dring_dring',function(data){//on recoit un nouvel appel chat video
-	
-       	socket.broadcast.to(data.interloc_num).emit('allo',data);
-	});
+	socket.on('verif_if_called_busy',function(data){
 
-	
-	socket.on('busy',function(data){
-
-		socket.broadcast.to(data.sender_num).emit('busy',data);
+		socket.broadcast.to(data.called_ID).emit('verif_if_called_busy',data);
 	})
 	
 	
-	socket.on('call_accepted',function(data){
+	socket.on('called_busy',function(caller_ID){
 	
-       	socket.broadcast.to(data.sender_num).emit('he_accepted',data);
+       	socket.broadcast.to(caller_ID).emit('called_busy');
 	});
 	
 	
-	socket.on('call_rejected',function(data){
+	socket.on('called_not_busy',function(data){
 	
-       	socket.broadcast.to(data.sender_num).emit('he_rejected',data);
+       	socket.broadcast.to(data.caller_ID).emit('called_not_busy',data.called_ID);
 	});
 	
 	
@@ -352,9 +332,9 @@ io.sockets.on('connection', function (socket) {
        	socket.broadcast.to(caller_id).emit('call_ended');
 	});
 
-	socket.on('zut',function(data){
+	socket.on('zut',function(caller_ID){
 	
-       	socket.broadcast.to(data.interloc_num).emit('wat',data);
+       	socket.broadcast.to(caller_ID).emit('zut');
 	});
     
 
@@ -363,17 +343,6 @@ io.sockets.on('connection', function (socket) {
     	socket.broadcast.to(caller_id).emit('stop_belling');
     })
 
-
-    socket.on('guest',function(sender){
-
-    	socket.broadcast.emit('guest',sender);
-    })
-
-    socket.on('guest_response',function(data){
-
-    	socket.broadcast.to(data.sender).emit('guest_response',data);
-    })
-	
 	/////////////////////////////////////////////DUO  chat/webrtc Fin//////////////////////////////////////////////
 
 

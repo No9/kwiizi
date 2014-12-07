@@ -81,7 +81,7 @@ $lang['form_statu_connect']     = "(Connecté)";
 $lang['form_statu_disconnect']  = "(Déconnecté)";
 $lang['form_disconnection']     = "(Déconnexion)";
 $lang['form_finder']            = "Chercher";
-$lang['form_wat']               = "n'arrive pas à se connecter suite à un problème matériel de son coté.";
+$lang['form_wat']               = "votre correspondant n'arrive pas à se connecter suite à un problème matériel de son coté.";
 $lang['form_no_contact']        = "Votre liste de contact est vide";
 $lang['form_incompatible']      = "Votre navigateur ou sa version est incompatible pour effectuer des appels";
 $lang['form_no_folow']          = "Arrête de suivre";
@@ -108,6 +108,7 @@ $lang['form_library']           = "Librairie";
 $lang['form_videotek']          = "Vidéo";
 $lang['form_offline']           = "!Vous êtes hors ligne";
 $lang['form_term_search']       = "! Tapez les termes que vous cherchez dans le moteur de recherche de la bibliothèque.";
+$lang['form_browser']           = "Vous devez mettre à jour votre navigateur. Cliquez sur l'un des liens suivants pour téléchargez votre navigateur.";
 
 
 

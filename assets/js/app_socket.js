@@ -64,131 +64,25 @@ $(document).ready(function(){
 		
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-		
-		var peer = new Peer($.trim($('.peer').text()), {host:$('#url_peer').attr('host'), port:$('#url_peer').attr('port'),debug: 3});
+		if(!navigator.getUserMedia){
+
+			$('#browser').modal('show');
+		}
+
+		var my_ID = $.trim($('.peer').text());
+	
+		var peer = new Peer(my_ID, {host:$('#url_peer').attr('host'), port:$('#url_peer').attr('port'),debug: 3});
 		
 		
 		peer.on('open', function(id) {
-          console.log('My peer ID is: ' + id); 
+
+            console.log('My peer ID is: ' + id); 
         });
 		
 		
 		
 		
-		/////////////////////////////////////////////DUO  chat/webrtc//////////////////////////////////////////////
- 
-		   //Cette fonction détecte les nouveaux messages de notification personnelle
-		    socket.on('toc_toc',function(data){
-
-             	toc_toc(data,'new')	;	
-		    });
-			
-			
-			//Cette fonction détecte les nouvelles photos envoyées
-		    socket.on('da_tof',function(data){
-             	
-                humane.clickToClose = true;
-                humane.timeout = 0;
-				humane('<img src="'+data.image+'" /><br>'+data.sender_name);
-
-                 //we play song
-				$('#chatAudio')[0].play();				
-		    });
-			
-			
-			
-			//on traite les nouveau message qui arrive
-			function toc_toc(data,form)
-			{
-			   //S'il n'est pas en communication avec l'expéditeur
-             var sender_num = $.trim(data.sender_num);
-			 
-			 var actual_friend = $.trim($('#interloc').attr('number'));
-                
-				if(sender_num !==actual_friend)
-                {               
-				  var user_name = '<br> <strong>'+$.trim(data.sender_name)+'</strong>';
-				  
-				  var message_text = $.trim(data.message);
-				  
-				  var notify = message_text + user_name;
-				  
-				  window.notificate_it(notify,'information','centerLeft');//j'affiche le message en notification
-				  
-				  window.unread_msg('add',1,data.sender_num,data.sender_name);//On ajoute +1 au nombre de message non lu
-				  
-				  //on ajoute dans la liste des messages si le my_pace est ouvert et qu'il n'est pas dans la liste qui est affiché
-                }
-                else
-                {				
-		          player_message(data.sender_name,data.message); //Affiche les message de mon interlocuteur en direct			  
-				}
-				
-			 tab_recorder(data.sender_name,data.message,data.sender_num);
-
-               //On enregistre le message en local
-			   recorder_msg(data);
-
-
-              //Ici on ajoute une nouvelle entré dans la liste qui s'affiche au my_space si c'est ouvert
-			  push_number_to_my_space(data,'');
-
-               //we play that song
-               $('#chatAudio')[0].play();			   
-			}
-			
-			
-			//on regarde qui écrit le message actuellement
-			socket.on('is_typing',function(data){
-			
-			  $('.pencil_'+data.sender_num).html($('#fade_pencil').html());				  		     
-			});
-			
-			
-			//on regarde qui écrit le message actuellement
-			socket.on('not_typing',function(data){
-			
-			  $('.pencil_'+data.sender_num).html('');
-			});
-		   
-		   
-		   //cette socket demande mon numéro
-		    socket.on('your_number', function (data) {
-            
-                socket.emit('my_number',{'interloc_num':my_numero,'interloc_name':my_username,'sender':data.sender});
-			});
-			
-			
-			
-			//cette prend la socket contenant le numéro qui confirme que mon interlocuteur est en ligne
-		    socket.on('his_number', function (data) {
-			
-			    if($.trim(data.interloc_name)!==$.trim($('#interloc').html()))
-				{
-				   $('#interloc').html(data.interloc_name);
-				   
-				   $('.username_'+data.interloc_num).html(data.interloc_name);
-				}
-            
-                $('#interloc').attr('statu','on');
-				
-				$('#statu').html($('#statu_user').attr('connected'));
-
-				window.memory_statu ='connected';
-			});
-		   
-		   
-       
-
-        socket.on('disconnect', function () { //On fermet sa room
-            
-			socket.emit('bye',my_numero);
-			
-			//alert('disconnected');
-        });
-	
-	    /////////////////////////////////////////////DUO  chat/webrtc  FIN//////////////////////////////////////////////	
-		    
+		/////////////////////////////////////////////DUO  chat/webrtc//////////////////////////////////////////////    
 
             window.my_space = 'off';
 			
@@ -201,8 +95,7 @@ $(document).ready(function(){
                      
                     $('#my_person').modal('hide');//on cache la fenêtre modal
 				  
-                    //J'envoi mon flux directement
-                    my_direct(ID);
+                    verif_if_called_busy(ID);
                    
 				}else{
 
@@ -211,14 +104,14 @@ $(document).ready(function(){
 		   
 					    window.localStream = stream;
 
-					    my_direct(ID);
+					    verif_if_called_busy(ID);
                     },
                     function(err){
 					 					
-                        window.notificate_it(err.name,'error','bottomRight');
+                        window.notificate_it(err,'error','bottomRight');
 
-                        $('.waiting_response').fadeOut();
-			            $('#facetimer').modal('hide');
+                        $('#my_person').modal('hide');//on cache la fenêtre modal
+			            $('.number_phone').val('');
 
 			            streamed = false;     				  
 			        });
@@ -226,11 +119,61 @@ $(document).ready(function(){
 		    }
 
 
+		$('#my_person').on('hidden', function () {
+  
+            $('.call_number').fadeIn();
+        })
+
+
+        
+		function verif_if_called_busy(ID){
+
+			socket.emit('verif_if_called_busy',{'caller_ID':my_ID,'called_ID':ID});
+		}
+
+
+		socket.on('verif_if_called_busy',function(data){
+
+			if(window.calling == true){
+
+				socket.emit('called_busy',data.caller_ID)
+			}else{
+
+				socket.emit('called_not_busy',data)
+			}
+		})
+
+
+
+		socket.on('called_not_busy',function(ID){
+
+			my_direct(ID);
+		});
+
+
+
+		socket.on('called_busy',function(){
+
+			window.notificate_it($('#alert').attr('busy') ,'error','bottomRight');
+
+			$('.call_number').fadeIn();
+
+            $('.waiting_response').fadeOut();
+			$('#facetimer').modal('hide');
+
+			window.close_my_space();
+
+			$('#my_person').modal('hide');//on cache la fenêtre modal
+			$('.number_phone').val('');
+		})
+
+
         //Make call
 		function my_direct(ID){
 
-            streamed = true;
-
+            window.calling = true;
+            play_bell();
+            $('.call_number').fadeIn();
             $('#my_person').modal('hide');//on cache la fenêtre modal
 			$('.number_phone').val('');
 
@@ -239,10 +182,14 @@ $(document).ready(function(){
 			window.existingCall = call;
 
             $('#facetimer').modal('show');
+          
 			$('.waiting_response').html($('#Please_wait').html())
-			$('.waiting_response').fadeIn(); 
+			$('.waiting_response').fadeIn();
+
   
             call.on('stream', function(remoteStream) {
+
+            	stop_bell();
 
             	$('.waiting_response').fadeOut();
 
@@ -256,14 +203,19 @@ $(document).ready(function(){
 			   $('.waiting_response').fadeOut();
 			   $('#facetimer').modal('hide');
 
-			   streamed = false; 	            		   
+			   window.calling = false;
+
 		    });	
 		}
 
 
 		peer.on('call', function(call) {
+
+			window.calling = true;
 		
 		    window.existingCall = call;
+
+		    play_bell();
 
 		    $('#facetimer').modal('show');
 			$('.waiting_response').html($('#Please_wait').html())
@@ -289,6 +241,7 @@ $(document).ready(function(){
 					 streamed==true;
                      
 					 call.answer(stream); // Answer the call with an A/V stream.
+					 stop_bell();
 
                     },function(err) {
                   
@@ -303,6 +256,8 @@ $(document).ready(function(){
 
                         $('.waiting_response').fadeOut();
 			            $('#facetimer').modal('hide');
+
+			            window.calling = false;
                     }
 			    );					 
 			}
@@ -316,9 +271,21 @@ $(document).ready(function(){
             });
         });
 
+        
+        socket.on('zut',function() {
+                          
+		    // son interlocuteur n'arrive pas a se connecté
+			window.notificate_it($('#alert').attr('wat'),'error','bottomRight');	
+
+            window.close_my_space();		   
+        });
+
+
 
         //Ici on regarde le numéro écrit au cas où il clique sur le bouton de validation
 		$('.call_number').click(function() { 
+
+			$('.call_number').fadeOut(); //Prevent double call which causes some bugs
 			    
 				var numero = parseInt($('.number_phone').val());
 				
@@ -330,6 +297,8 @@ $(document).ready(function(){
 				    if(numero==$.trim($('.peer').text()))//si cest mon propre numéro
 					{
 					  window.notificate_it($('#alert').attr('form_u_number'),'error','bottomRight');
+
+					  $('.call_number').fadeIn();
 					}
 					else
 					{
@@ -341,7 +310,10 @@ $(document).ready(function(){
 
 					window.notificate_it($('#alert').attr('form_none_number'),'error','bottomRight');
 
+					$('.call_number').fadeIn();
+
 					$('#my_person').modal('hide');
+
 				}		
 		});
 
@@ -426,11 +398,15 @@ $(document).ready(function(){
                my_bell.currentTime = 0;
 		}
 		
+
+
+	/////////////////////////////////////////////DUO  chat/webrtc  FIN//////////////////////////////////////////////	
+
 		
         //cette fonction déclanche les notifications		
         window.notificate_it = function(text_msg,type,position) {
       
-	     text_msg = text_msg.substr(0,150);//100 est le nombre limite de caractère
+	    var text_msg = text_msg.substr(0,150);//100 est le nombre limite de caractère
 		 
 		    switch(type)
 			{
@@ -551,16 +527,6 @@ $(document).ready(function(){
   
         var streamed = false;//false si on déjà accès à sa caméra et true au cas contraire
 	
-	   
-		
-		socket.on('wat',function(data) {
-                          
-		      // son interlocuteur n'arrive pas a se connecté
-			   window.notificate_it('<b>'+$.trim(data.sender_name)+'</b> '+$('#alert').attr('wat'),'error','bottomRight');	
-
-               able_call();			   
-        });
-
 		
 		
 		
