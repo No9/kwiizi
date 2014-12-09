@@ -42,7 +42,7 @@ $lang['form_slogan_form']       = "Titre";
 $lang['form_nom_image']         = "Nom de l'image";
 $lang['form_out_line']          = "Mode Hors ligne ?";
 $lang['form_do_you']            = "Suggestion";
-$lang['form_do_you_text']       = "Kwiki est une webapp. Tous les articles que vous consultez sont automatiquement téléchargés sur votre appareil et vous pouvez avoir accès à ces articles téléchargés en revenant sur l'application, même sans connexion internet.Kwiki est compatible pour les smartphones, tablettes et desktop, et disponible pour le moment en deux langues (français et anglais); il est gratuit, rapide et social et en plus vous pouvez chatter et vous appellez gratuitement au sein du réseau avec une webcam.<br><br>Be fun...Be lol <br><br>PS: Compatibilité(Internet explorer 10+,Chrome version 4.0+,Firefox version 3.5+,Opera version 10.6+,Safari version 4.0+) :)";
+$lang['form_do_you_text']       = "Kwiizi est une webapp. Tous les articles que vous consultez sont automatiquement téléchargés sur votre appareil et vous pouvez avoir accès à ces articles téléchargés en revenant sur l'application, même sans connexion internet.Kwiki est compatible pour les smartphones, tablettes et desktop, et disponible pour le moment en deux langues (français et anglais); il est gratuit, rapide et social et en plus vous pouvez chatter et vous appellez gratuitement au sein du réseau avec une webcam.<br><br>Be fun...Be lol <br><br>PS: Compatibilité(Internet explorer 10+,Chrome version 4.0+,Firefox version 3.5+,Opera version 10.6+,Safari version 4.0+) :)";
 $lang['form_home']              = "Accueil";
 $lang['form_use_yet']           = "Ce numéro est déjà connecté";
 $lang['form_aspire']            = "Aspirez";
@@ -109,6 +109,15 @@ $lang['form_videotek']          = "Vidéo";
 $lang['form_offline']           = "!Vous êtes hors ligne";
 $lang['form_term_search']       = "! Tapez les termes que vous cherchez dans le moteur de recherche de la bibliothèque.";
 $lang['form_browser']           = "Vous devez mettre à jour votre navigateur. Cliquez sur l'un des liens suivants pour téléchargez votre navigateur.";
+$lang['form_up_no_file']        = "Aucun Fichier choisi";
+$lang['form_up_too_big']        = "Fichier trop volumineux.Ne doit pas atteindre 15 Mo";
+$lang['form_up_not_supported']  = "Erreur: fichier non supporté";
+$lang['form_up_error']          = "Erreur: fichier non uploader pour raison inconnu.Vérifiez l'espace du disque";
+$lang['form_up_unknow']         = "Erreur sur la qualité du fichier";
+$lang['form_up_to']             = "vers";
+$lang['form_up_in_sending']     = "Un envoi de fichier est déjà en cours. Veuillez patienter.Vous serez prévenu à la fin";
+$lang['form_up_end_sending']    = "L'envoi des fichier est terminé";
+$lang['form_up_drag']           = "Déposez";
 
 
 

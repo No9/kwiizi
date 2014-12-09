@@ -343,6 +343,12 @@ io.sockets.on('connection', function (socket) {
     	socket.broadcast.to(caller_id).emit('stop_belling');
     })
 
+
+    socket.on('file_sended',function(data){
+
+    	socket.broadcast.to(data.receiver).emit('file_sended',data);
+    })
+
 	/////////////////////////////////////////////DUO  chat/webrtc Fin//////////////////////////////////////////////
 
 

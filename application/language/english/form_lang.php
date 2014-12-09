@@ -40,7 +40,7 @@ $lang['form_slogan_form']       = "Title";
 $lang['form_nom_image']         = "Name of image";
 $lang['form_out_line']          = "Outline mode ?";
 $lang['form_do_you']            = "Suggestion";
-$lang['form_do_you_text']       = "Kwiki is a webapp.All articles your are consulting are automatically downloaded on your device and you can retrieve these articles by comming on this application, even if you don't have an internet acces. Kwiki is compatible with any device(smartphone, tablet and desktop) and disponible in two languages(french and english).Kwiki is free, fast,social and can make free calls to the network with your webcam.<br><br> Be fun...Be lol. <br><br>PS: Compatibility(Internet explorer 10+,Chrome version 4.0+,Firefox version 3.5+,Opera version 10.6+,Safari version 4.0+) :)";
+$lang['form_do_you_text']       = "Kwiizi is a webapp.All articles your are consulting are automatically downloaded on your device and you can retrieve these articles by comming on this application, even if you don't have an internet acces. Kwiki is compatible with any device(smartphone, tablet and desktop) and disponible in two languages(french and english).Kwiki is free, fast,social and can make free calls to the network with your webcam.<br><br> Be fun...Be lol. <br><br>PS: Compatibility(Internet explorer 10+,Chrome version 4.0+,Firefox version 3.5+,Opera version 10.6+,Safari version 4.0+) :)";
 $lang['form_home']              = "Home";
 $lang['form_use_yet']           = "This number is already connected";
 $lang['form_aspire']            = "Aspire";
@@ -107,6 +107,16 @@ $lang['form_videotek']          = "Video";
 $lang['form_offline']           = "!Your are offline";
 $lang['form_term_search']       = "! Type your search.";
 $lang['form_browser']           = "You must update your browser. Click below to choose and download your browser.";
+$lang['form_no_receiver']       = "Your interlocutor is not connected to receive your file";
+$lang['form_up_no_file']        = "No file selected";
+$lang['form_up_too_big']         = "File too big.Not support more than 15 Mo";
+$lang['form_up_not_supported']  = "Error: File not supported";
+$lang['form_up_error']          = "Error: File not uploaded for unknow reason.Check disk space";
+$lang['form_up_unknow']         = "File error";
+$lang['form_up_to']             = "to";
+$lang['form_up_in_sending']     = "There is file in sending. Please wait.You will be prevent in the end";
+$lang['form_up_end_sending']    = "The file sendind is over";
+$lang['form_up_drag']           = "Drop";
 
 
 

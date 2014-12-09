@@ -400,7 +400,251 @@ $(document).ready(function(){
 		
 
 
-	/////////////////////////////////////////////DUO  chat/webrtc  FIN//////////////////////////////////////////////	
+	/////////////////////////////////////////////DUO  chat/webrtc  FIN//////////////////////////////////////////////
+
+
+
+
+
+	/////////////////////////////////////////////Share file///////////////////////////////////////////////////////////	
+    //Testons si le navigateur est comaptible avec le partage de fichier
+    if (window.File && window.FileReader && window.FileList && window.Blob){
+
+        window.filer = true;
+    }else{
+
+        window.filer = false;
+        $('#browser').modal('show');
+    }
+
+
+    $(".drag_file").on('dragover',dragover)
+                 .on("dragend",dragend)  
+                 .on("drop",drop);
+
+
+    $('.upload').on('change',function(evt){ 
+
+        //On récupère le fichier
+        window.files = evt.target.files;
+
+        sender();
+
+        $('.upload').val('');
+    })
+
+    
+    function drop(e) { 
+       
+        e.stopPropagation();
+        
+        e.preventDefault();
+
+        //On envoi le fichier en direct s'il est connecté
+        var dt = e.dataTransfer || (e.originalEvent && e.originalEvent.dataTransfer);
+        window.files = e.target.files || (dt && dt.files); 
+
+        sender();
+  
+        return false;
+    }
+
+
+    function dragover(){ 
+
+        $(this).addClass('hover');
+        return false;
+    }
+
+
+    function dragend(){
+
+        $(this).removeClass('hover');
+        return false;
+    }
+
+
+    function sender(){
+
+        if(window.in_sending!=true){ //If we are not sending a file to another person
+
+            //This is initaitor of multiupload
+            window.denominator = window.files.length;
+            window.numerator = 1;
+            window.indice = 0;
+            window.file_receiver = window.caller_id;
+            window.in_sending = true;
+
+            show_spinner();
+
+            send_file(window.files);//We send files to this function
+        }else{
+
+        	window.notificate_it($('.upload_message').attr('in_sending'),'error','bottomRight');//Prevent if we are aready sending a file
+        }
+    }
+
+
+    //We display loading image
+    function show_spinner(){
+
+        $('.progressor').fadeIn();
+        $('.ended').fadeOut();     
+    }
+
+
+    //We hide image loading
+    function hide_spinner(){
+
+        $('.progressor').fadeOut();
+        $('.ended').fadeIn();
+    }
+
+
+     //We send file (Take one by one)
+    function send_file(files){ 
+
+        //We look at the number of file
+        var nbre_file = files.length;
+
+        if(window.indice < window.denominator){ //If we are allways a file to send
+
+            var ftype = files[window.indice].type;
+            
+            var file = files[window.indice];
+
+            var allowed = ['png','png','gif','zip','rar','pdf','doc','docx','ppt'];
+ 
+            if( $.inArray(file.name.split('.').pop().toLowerCase() ,allowed)!= -1){ 
+                
+                if(file.size < 15728640){ //(15 Mo * 1024*1024)
+                    
+                    send_file_with_ajax(file);
+                }else{
+
+                    window.notificate_it($('.upload_message').attr('up_too_big'),'error','bottomRight');
+                    window.in_sending = false;
+                    hide_spinner();
+                }     
+            }else{
+
+                window.notificate_it($('.upload_message').attr('up_not_supported'),'error','bottomRight');
+                window.in_sending = false;
+                hide_spinner();
+            }
+        }else{
+
+            window.in_sending = false;//We tell him that the sending is finish
+            hide_spinner();
+        }       
+    }
+
+
+    function send_file_with_ajax(file){
+
+        window.file_name = file.name;//We take image file as an message
+        window.type_mime = file.type;
+
+        //We display popup of file
+        play_file_loader();
+
+        window.numerator = 1 + window.numerator;//We add +1 to the number of file to send
+       
+        show_spinner();
+
+       var formdata = new FormData();
+       formdata.append("fichier", file);
+       var ajax = new XMLHttpRequest();
+       ajax.addEventListener("load", actionTerminee, false);
+       ajax.addEventListener("error", enErreur, false);
+       ajax.addEventListener("abort", operationAnnulee, false);
+       ajax.upload.addEventListener("progress", enProgression, false);
+ 
+       ajax.open("POST", $('.message_ajax').attr('url_for_file_upload'));
+       ajax.send(formdata);
+    }
+
+
+
+    function play_file_loader(){
+
+        jQuery(document).ready(function(){
+   
+            percent_loader(0) ;   
+        })
+    }
+
+
+    function percent_loader(percent){
+
+        $('.bar').attr('style','width:'+percent+'%');
+        $('.percenter').html(percent+'%');
+    }
+
+
+    function enProgression(e){
+       var pourcentage = Math.round((e.loaded * 100) / e.total);
+       percent_loader(pourcentage);
+    }
+
+
+    function actionTerminee(e){ 
+
+        var file_name_md5 = e.target.responseText;
+        
+        var data = {'message':file_name_md5,'sender':my_ID,'receiver':window.caller_id,'file_name':window.file_name,'type_file':window.type_file};
+ 
+        socket.emit('file_sended',data);
+        percent_loader(0);
+
+        //send_file_with_ajax_to_database(file_name_md5);
+
+        //On efface le loader pour le remplacer par le nom du fichier envoyé
+        $('.file_name').html(window.file_name+' <span class="glyphicon glyphicon-saved"></span>');
+
+        hide_spinner();
+        
+        window.indice = window.indice + 1; //ON incrménte l'indicce du table pour passer à l'indice suivant
+
+        send_file(window.files);//On r'appelle la fonction d'envo s'l ya d'autre fichier dans la lste d'attente
+    }
+
+    function enErreur(e){ 
+
+        window.notificate_it('Upload Failed','error','bottomRight');
+
+        window.indice = window.indice + 1; //ON incrménte l'indicce du table pour passer à l'indice suivant
+        
+        send_file(window.files);//On r'appelle la fonction d'envo s'l ya d'autre fichier dans la lste d'attente
+        percent_loader(0);
+    }
+
+    function operationAnnulee(e){
+
+        window.notificate_it($('.upload_message').attr('up_'+e),'error','bottomRight');
+
+        window.indice = window.indice + 1; //ON incrménte l'indicce du table pour passer à l'indice suivant
+        
+        send_file(window.files);//On r'appelle la fonction d'envo s'l ya d'autre fichier dans la lste d'attente
+        percent_loader(0);
+
+    }
+
+
+
+    socket.on('file_sended',function(data){ console.log(data);
+
+    	//Hide the loader
+    	hide_spinner();
+
+    	//Put the link
+        $('.file_name').html('<a href="'+$('.message_ajax').attr('url_for_file_upload_dir')+data.message+'" target="_blank" download="'+data.file_name+'" >' +data.file_name+' <span class="glyphicon glyphicon-saved"></span></a>');
+    });
+
+
+
+
+	/////////////////////////////////////////////Share file///////////////////////////////////////////////////////////	
 
 		
         //cette fonction déclanche les notifications		
