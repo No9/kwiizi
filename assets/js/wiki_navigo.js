@@ -1995,6 +1995,42 @@ $(document).ready(function(){
     });
 
 
+    /////////////////////////////////Manage Appcache////////////////////////////////////////////////////////
+    // Activer le nouveau cache quand il est disponible et recharger la page
+    window.applicationCache.addEventListener('updateready', function (){
+  	    
+  	    window.applicationCache.swapCache();
+  	    console.log('updating cache');
+  	    window.location.reload();
+    }, false);
+
+    // Notice some errors
+    window.applicationCache.addEventListener('error', function (evt){
+	
+	    console.log('cache error : ' + evt);
+    }, false);
+
+    // check of manifest version
+    window.applicationCache.addEventListener('checking', function (evt){
+	
+	    console.log('Cache checking : ' + evt);
+    }, false);
+
+   
+    //Download the  new cache when the manifest changed
+    window.applicationCache.addEventListener('obsolete', function (evt){
+	    
+	    console.log('The cache is outdated : ' + evt);
+	    window.applicationCache.update();
+    }, false);
+
+    // The manifest has not changed
+    window.applicationCache.addEventListener('noupdate', function (evt){
+	    console.log('No cache updating : ' + evt);
+    }, false);
+
+    /////////////////////////////////Manage Appcache////////////////////////////////////////////////////////
+
     /*
 
     var lastTime = (new Date()).getTime();
