@@ -118,6 +118,7 @@ $lang['form_up_to']             = "vers";
 $lang['form_up_in_sending']     = "Un envoi de fichier est déjà en cours. Veuillez patienter.Vous serez prévenu à la fin";
 $lang['form_up_end_sending']    = "L'envoi des fichier est terminé";
 $lang['form_up_drag']           = "Déposez";
+$lang['form_up_draganddrop']    = "Déposez votre fichier ici pour l'envoyer:15 Mo max (pdf,doc,docx,ppt,zip,rar et images)";
 
 
 

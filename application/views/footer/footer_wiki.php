@@ -292,7 +292,8 @@
             </form>
         </div>
 
-        <div class="modal-footer">                
+        <div class="modal-footer">
+            <div id="form_up" class="alert alert-info">! <?php echo $this->lang->line('form_up_draganddrop'); ?></div>              
 	        <button class="btn btn-danger" id="end_this_call" data-dismiss="modal" aria-hidden="true">
 	            <i class="icon-facetime-video icon-white"></i> <?php echo $this->lang->line('form_end_call'); ?>
 	        </button>  

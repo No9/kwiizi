@@ -427,8 +427,7 @@ $(document).ready(function(){
 
 
     $(".drag_file").on('dragover',dragover)
-                 .on("dragend",dragend)  
-                 .on("drop",drop);
+                   .on("drop",drop);
 
 
     $('.upload').on('change',function(evt){ 
@@ -452,6 +451,8 @@ $(document).ready(function(){
         var dt = e.dataTransfer || (e.originalEvent && e.originalEvent.dataTransfer);
         window.files = e.target.files || (dt && dt.files); 
 
+        $('#form_up').attr('class','alert alert-info')
+
         sender();
   
         return false;
@@ -460,18 +461,12 @@ $(document).ready(function(){
 
     function dragover(){ 
 
-        $(this).addClass('hover');
+       $('#form_up').attr('class','alert alert-success')
         return false;
     }
 
 
-    function dragend(){
-
-        $(this).removeClass('hover');
-        return false;
-    }
-
-
+   
     function sender(){
 
         if(window.in_sending!=true){ //If we are not sending a file to another person

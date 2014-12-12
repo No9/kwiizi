@@ -117,6 +117,8 @@ $lang['form_up_to']             = "to";
 $lang['form_up_in_sending']     = "There is file in sending. Please wait.You will be prevent in the end";
 $lang['form_up_end_sending']    = "The file sendind is over";
 $lang['form_up_drag']           = "Drop";
+$lang['form_up_draganddrop']    = "Drag and drop your file here to send:15 Mo max (pdf,doc,docx,ppt,zip,rar and images)";
+
 
 
 

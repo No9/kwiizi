@@ -45,7 +45,8 @@ $(document).ready(function(){
 
         	window.device ='mobile';
 
-        	
+        	    $('#form_up').fadeOut();
+
         		$('.one').show();$('.two').hide();
 
 		        $('.dance_for_me').fadeOut();//On retire l'historique de navigation
