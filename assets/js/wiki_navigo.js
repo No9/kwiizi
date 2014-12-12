@@ -2031,6 +2031,8 @@ $(document).ready(function(){
 
     /////////////////////////////////Manage Appcache////////////////////////////////////////////////////////
 
+    
+
     /*
 
     var lastTime = (new Date()).getTime();
