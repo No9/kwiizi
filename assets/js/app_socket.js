@@ -54,7 +54,7 @@ $(document).ready(function(){
 					}
 		});
 	}
- 	
+
 		//url de node js
 		var socket  = io.connect($('#url_node').attr('url'));
 		
@@ -142,10 +142,10 @@ $(document).ready(function(){
 
 		socket.on('verif_if_called_busy',function(data){
 
-			if(window.calling == true){
+			if(window.calling == true){ 
 
 				socket.emit('called_busy',data.caller_ID)
-			}else{
+			}else{ 
 
 				socket.emit('called_not_busy',data)
 			}
@@ -896,9 +896,8 @@ $(document).ready(function(){
 											   
 											   ////////////////////////Manage the menu top///////////////////////////
 											   $('.off_hider').fadeOut();//Hide all menu on top
-											   $('sub_hide').fadeOut(); 
-											   $('.off_hist_caracter').text($('.off_hist').attr('data-original-title')); 
-											   $('.off_note_caracter').text($('.off_note').attr('data-original-title'));
+
+
 											   ////////////////////////Manage the menu top///////////////////////////
 
                                                
@@ -914,9 +913,7 @@ $(document).ready(function(){
 
 									    ////////////////////////Manage the menu top///////////////////////////
 											   $('.off_hider').fadeIn();//Hide all menu on top 
-											   $('sub_hide').fadeIn(); 
-											   $('.off_hist_caracter').text(''); 
-											   $('.off_note_caracter').text('');
+											   
 									    ////////////////////////Manage the menu top///////////////////////////
 
 									}

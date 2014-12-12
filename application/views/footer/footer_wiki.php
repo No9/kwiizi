@@ -263,7 +263,7 @@
         <div class="modal-body drag_file">
         	<form action="#" method="post">
 
-        		<div class="fileUpload label label-warning">
+        		<div class="fileUpload label label-warning" style="display:none;">
                     <span class="glyphicon glyphicon-paperclip"></span>
                     <input type="file" class="upload" />
                 </div>

@@ -66,7 +66,7 @@
 		        </li>
 
 		        <li class="">
-                    <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic off_hist" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white sub_hide"></i> <?php echo $this->lang->line('form_historic');?> <span class="off_hist_caracter"></span></a>
+                    <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white"></i> <?php echo $this->lang->line('form_historic');?></a>
 		        </li>
             </ul>
         </div>

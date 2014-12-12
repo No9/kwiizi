@@ -46,7 +46,6 @@ $(document).ready(function(){
         	window.device ='mobile';
 
         	
-
         		$('.one').show();$('.two').hide();
 
 		        $('.dance_for_me').fadeOut();//On retire l'historique de navigation
@@ -62,13 +61,16 @@ $(document).ready(function(){
 		        $('.print_it').parent().fadeOut();
 
 		        $('.tiler').fadeOut();
-		        
 
+		        $('.fileUpload').fadeIn();
+		        
 		        window.already_mobile = true;
 
         }else{
 
         	window.device ='standart';
+
+		    $('.fileUpload').fadeOut();
 
         	$('.chizer').fadeIn();//On remet le moteur de recher des suivis
 
