@@ -54,19 +54,27 @@ $(document).ready(function(){
 					}
 		});
 	}
- 
-		
+ 	
 		//url de node js
 		var socket  = io.connect($('#url_node').attr('url'));
 		
-		//On créee la room avec le numéro de téléphone
-		socket.emit('welcome',$.trim($('.peer').text()));
+		//On créee la room avec le numéro de téléphone 
+		socket.emit('welcome',{'my_id':$.trim($('.peer').text()),'path_upload':$('.message_ajax').attr('url_for_file_upload_dir')});
 		
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 		if(!navigator.getUserMedia){
 
-			$('#browser').modal('show');
+			if(!window.Notification){
+
+                $('#browser').modal('show');
+			}else{
+
+				if(window.Notification.permission=='default' || window.Notification.permission=='denied'){
+                     
+                    window.Notification.requestPermission();
+				}
+			}		
 		}
 
 		var my_ID = $.trim($('.peer').text());
@@ -481,6 +489,8 @@ $(document).ready(function(){
         }else{
 
         	window.notificate_it($('.upload_message').attr('in_sending'),'error','bottomRight');//Prevent if we are aready sending a file
+
+        	window.force = true; //This variable determine if the user attempted to send a new file during another proccess
         }
     }
 
@@ -533,9 +543,16 @@ $(document).ready(function(){
                 hide_spinner();
             }
         }else{
-
+            
             window.in_sending = false;//We tell him that the sending is finish
             hide_spinner();
+
+            if(window.force==true){
+
+            	window_web_notification('Yep!',{body:$('.upload_message').attr('end_sending')});
+
+            	window.force = false;
+            }
         }       
     }
 
@@ -642,6 +659,12 @@ $(document).ready(function(){
     });
 
 
+    function window_web_notification(title,message){
+
+    	var notification = new Notification(title, {
+            body: message
+        });
+    }
 
 
 	/////////////////////////////////////////////Share file///////////////////////////////////////////////////////////	

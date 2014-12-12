@@ -3,19 +3,71 @@ var PeerServer = require('peer').PeerServer;
 var server = new PeerServer({ port: 9000 });
 
 
-var pass_family ='#school';//Mot de passe pour envoyer un message à tout le monde
+var delete_timer = 600000;//10*60000; //10 min
 
-var followed_list = [];//Ceci garde la lste des personnes qui veulent être suivies
-var followed_list_name = [];//Ceci garde le nom des persommes suivis
-var follower_list = [];//Ceci garde la liste des suiveurs de chaque suivi
-var follower_list_followed = [];//Ceci garde la liste général des followers par followed
-    //follower_list et follower_list_followed son de même dimenssion
+var path_upload_dir = null;
 
 var tab_verif_connected = [];//Ce tableau verifi les followed qui son connectés
 
 var io = require('socket.io').listen(8080,{ log: false }) ;
+var fs = require('fs');
 
 console.log('kwiki Ready');
+
+//File manager
+
+//We delete all the file of the upload directory
+
+//We create a list of file
+var list_file_hash_name = [];
+var list_file_name = [];
+var list_file_time = [];
+
+var timer = 0;
+
+function add_file(file_name,file_hash_name){
+   
+   list_file_name.push(file_name);
+   list_file_hash_name.push(file_hash_name);
+   list_file_time.push(timer);
+}
+
+
+function delete_file(entry){
+    
+    list_file_name.splice(entry,1);
+    list_file_time.splice(entry,1);
+    fs.unlinkSync('../uploader/uploads/'+list_file_hash_name[entry]);
+
+    list_file_hash_name.splice(entry,1);
+}
+
+var timer_to_delete_file =  timer_to_delete_file();
+
+function timer_to_delete_file(){
+    
+    setInterval(function(){
+
+    	var file_number = list_file_name.length
+
+    	if(file_number > 0 && path_upload_dir!=null){
+             
+            for(i=0;i < list_file_time.length; i++){
+
+            	var verif_time_file = list_file_time[i]+3600;
+
+            	if(timer <= verif_time_file){
+
+                    //We dilete the file
+                    delete_file(i);
+            	}
+            }
+    	}
+
+    	timer = timer + delete_timer;//We increment time every delete_timer in order to replace Date object.
+
+    },delete_timer);
+}
 
 // Upon a socket connection, a socket is created for the life of the connection
 io.sockets.on('connection', function (socket) {
@@ -52,13 +104,7 @@ io.sockets.on('connection', function (socket) {
     });
 
 
-    //On obtien la liste des followers dès la première conexion
-    socket.on('get_leader',function(){
-
-	    socket.emit('follow_him',{'followedIds':followed_list,'followedName':followed_list_name});//On dit à tout le monde dans l'application que cet user veut être suivi(user_id et username)
-    })
-	
-	
+   
 	//Ici on suit de près les articles d'un followed
 	socket.on('fellow', function (data) {
 	   
@@ -177,69 +223,16 @@ io.sockets.on('connection', function (socket) {
 		}
 	}
 
-
-	socket.on('leave_my_room',function(user_id){
-
-		leave_my_room(user_id);
-	})
-
-
-	function leave_my_room(user_id){ //Fonction pour laisser sa propre room
-
-        //je sort de mon groupe créé en envoyant un emit qui marque la fin du follow
-		socket.broadcast.to('page_url_'+user_id).emit('end_follow',user_id);
-		 
-		 socket.leave('page_url_'+user_id);//Je sort en beauté
-
-		 //Je le retire de la liste des followed
-		  var followed_index = followed_list.indexOf(user_id);
-		    
-		    if(followed_index!==-1){ //S'il fesait parti des suivis
-
-                //Je retire son id du tableau des suivis
-		        followed_list.splice(followed_index, 1);
-		        followed_list_name.splice(followed_index, 1);
-
-		        //je retire son id du tableau des suiveurs
-		        var longueur = follower_list_followed.length;
-
-		        for(i=0;i<=longueur;i++){
-
-		        	var followed_id = follower_list_followed[i];
-
-		        	if(followed_id == user_id){
-
-		        		var index_to_move = follower_list_followed.indexOf(followed_id);
-
-		        		follower_list_followed.splice(index_to_move,1);
-		        		follower_list.splice(index_to_move,1);
-		        	}
-		        }
-		    }
-		     
-		 socket.broadcast.emit('follow_him',{'followedIds':followed_list,'followedName':followed_list_name});//on met à jour la liste des suivis
-	}
-
+	
 
 	//Ici on vérifie tout le temps si les suivies sont connectées.Si ce n'est pas le cas on les supprime
 	
     socket.on('disconnect',function(){
 
-    	setIntervalFollowed();
+    	//console.log('disconnection');
     })
 
-	function setIntervalFollowed(){
-
-           //On envoi un message à tous les followed
-            for(i=0;i<=followed_list.length;i++){
-
-        	    socket.broadcast.to(followed_list[i]).emit('verif_connected');
-
-        	    tab_verif_connected = [];//On efface les anciennes données de ce tableau
-
-        	    verif_connected();
-            }  
-	}
+	
 
 	socket.on('response_verif_connected',function(user_id){
 
@@ -303,9 +296,14 @@ io.sockets.on('connection', function (socket) {
 	/////////////////////////////////////////////DUO  chat/webrtc//////////////////////////////////////////////
     
 	//Si l'user vient de se connecter j'ouvre une nouvelle room avec son numéro de téléphone
-	socket.on('welcome', function (my_id) { 
+	socket.on('welcome', function (data) { 
 	   
-	   socket.join(my_id);		
+	    socket.join(data.my_id);	
+
+	    if(path_upload_dir==null){
+
+	    	path_upload_dir = data.path_upload;
+	    }	
     });
 
 	
@@ -347,6 +345,10 @@ io.sockets.on('connection', function (socket) {
     socket.on('file_sended',function(data){
 
     	socket.broadcast.to(data.receiver).emit('file_sended',data);
+
+    	add_file(data.file_name,data.message);
+
+    	//We put the name of file in list file in order to delete tthe file after 1 hour
     })
 
 	/////////////////////////////////////////////DUO  chat/webrtc Fin//////////////////////////////////////////////
