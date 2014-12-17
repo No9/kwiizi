@@ -1130,6 +1130,41 @@ $(document).ready(function(){
 				$('#info_msg_wait').fadeOut();//On efface la box qui fait patienter		
 			}
 
+
+
+			///////////////////////////////////////Video library manager//////////////////////////////////////////
+            $('.video_click').click(function(){
+
+            	//We display the list of TED conference
+			    $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_zim"><li class="nav-header"><i class="icon-youtube-play icon-white"></i>'+$(this).attr('label') +'</li></ul>');
+               
+
+            	var zim_list = $('.hoster').attr('zim_list');
+
+            	zim_list = zim_list.split(',');
+
+            	for(i=2; i<zim_list.length;i++){
+
+            		var zim = zim_list[i];
+
+            		var orginal_zim = zim_list[i];
+
+            		zim = zim.replace(/_/g,' ');
+
+            		$('.liste_zim').append('<li><a href="'+orginal_zim+'"><i class="icon-youtube-play icon-white"></i> '+zim.charAt(0).toUpperCase()+zim.slice(1).toLowerCase()+'</a></li>');
+            	
+                    if(i==zim_list.length-1){
+
+                    	window.click_by_url();
+                    }
+            	}    
+
+    	       return false;
+            });
+    ///////////////////////////////////////Video library manager//////////////////////////////////////////
+
+   
+
 			
 		
 			
@@ -1566,7 +1601,7 @@ $(document).ready(function(){
 			//cette fonction s'occupe de tous les articles dont on peut générer par l'appel de son url
 			window.click_by_url =  function(){
 			      //on détache les évènements précédents
-	                                $('.hist_wiki,.back,.plus_wiki_b,.liste_click a,.click_list,.cat_wiki').unbind('click');//Ne pas enlever unbind sur .cat_wiki
+	                                $('.hist_wiki,.back,.plus_wiki_b,.liste_click a,.click_list,.cat_wiki,.liste_zim a,.click_ted').unbind('click');//Ne pas enlever unbind sur .cat_wiki
 	
 		                            //pour les articles de wikipedia
 			                        $('.click_list,.liste_click a').click(function() { 
@@ -1608,6 +1643,121 @@ $(document).ready(function(){
 									  
                                       return false;		            
                                     });
+
+
+                                     $('.liste_zim a').click(function() { 
+
+			                            if(window.device=='mobile'){ 
+
+			                          	    window.show_page();
+			                            }
+
+			                            $('.liste_zim a').parent().attr('class','');
+			                            $(this).parent().attr('class','active');
+
+			                            var this_zim  = $(this).attr('href');
+			                            var zim_title = $(this).text();
+
+                                    	$('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//we display waitin message
+
+                                    	 $.ajax({ 
+
+                                            url: $('#get_API').attr('video_zim')+this_zim+'.json',
+
+                                            type: 'POST',
+
+                                            async : true,
+
+			                                dataType:"json",
+
+			                                error: function(e){
+
+						 	                    $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
+
+						 	                    console.log(e);},
+
+                                            success: function(data) {
+
+                                            	$('.wiki_title').html('<h1>'+zim_title+'</h1>');
+
+                                            	window.TED_title = zim_title;
+
+                                            	$('.wiki_content').html('<div class="grid_ted"></div><div class="framaTed" style="display:none"></div>');
+
+                                            	$.each(data, function(entryIndex, entry) {
+
+                                            		var html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+this_zim+'/A/'+entry['id']+'/index.html" title="'+entry['title']+'" id="'+entry['id']+'" zim="'+this_zim+'" class="click_ted">';
+                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+this_zim+'/I/'+entry['id']+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
+                                            		html +='<strong>'+entry['title']+'</strong>';
+                                                    html +='<p>'+truncate(entry['description'],100)+'</p>';
+                                                    html +='<div class="meta">'+entry['speaker']+'</div>';
+                                                    html +='</a></div>';
+
+                                            		$('.grid_ted').append(html);
+
+                                            		if(data.length-1==entryIndex){
+
+                                            			//blocksit define
+	                                                    $(window).load( function() {
+		                                                    $('.grid_ted').BlocksIt({
+			                                                   numOfCol: 5,
+			                                                   offsetX: 5,
+			                                                   offsetY: 5
+		                                                    });
+	                                                    });
+       
+                                                        $(document).ready(function(){
+
+                                                            window.click_by_url();//Gestion des clicks des articles
+								                        });
+
+								                        
+                                                        $(".grid_ted").fadeIn();
+
+
+                                                        $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 		 
+
+                                            		}         		
+                                                });
+                                             					                        }
+                                        });
+			                            
+									  
+                                      return false;		            
+                                    });
+
+                                    
+                                    $('.click_ted').click(function(){
+
+                                    	open_frame($(this).attr('id'),$(this).attr('zim'),$(this).attr('title'));
+
+                                    	window.id_ted = $(this).attr('id');
+
+                                    	$('#toTop').click();
+                                    	return false;
+                                    })
+
+
+                                    $('.back_bn').click(function(){
+
+                                    	$(".grid_ted").fadeIn();
+				                        
+				                        $('.framaTed').html('').fadeOut();
+
+                                        var target = window.id_ted; 
+                      
+                                        var hauteur = $('#'+target).offset().top;
+ 
+                                        //animation
+                                        $('html,body').animate({scrollTop:hauteur} , 1000);
+
+				                        $('.wiki_title').html('<h1>'+window.TED_title+'</h1>');
+				                        
+				                        $('title').html(window.TED_title);
+                                        
+                                        return false;
+			                        });
+
 
                                     $('.hist_wiki').click(function(){ 
 
@@ -1697,87 +1847,71 @@ $(document).ready(function(){
 			    $('#info_msg_wait').fadeOut();
 			}
 
-				
-				
-				//cette fonction s'occupe de toutes les catégories dont on peut générer par l'appel de son titre
-			function click_by_cat(){
-			      //on détache les évènements précédents
-	                                $('.this_cat').unbind('click');
-	
-		                            //pour les articles de wikipedia
-			                        $('.this_cat').click(function() { 
-									
-									   //On affiche la box pour patienter                  
-		                              $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-			
-			                          var cat_url = $(this).attr('cat_url');
-									  var cat_title = $(this).attr('cat_title');
-				
-				                      //On désactive tout les boutons actifs
-                                      $('.liste_cat .active').attr('class','active_ceci');
-			
-				                      //Et on active le bouton sur le quel on vien de cliquer	
-                                      $(this).parent().attr('class','active');
-				              	
-								      retrieve_all_article_cat(cat_url,cat_title);
-									  
-                                      return false;		            
-                                    }); //et on charge le fichier js qui prend en charge les nouveaux éléments											  
-                                
-			    $('#info_msg_wait').fadeOut();
+
+            //trucate string
+			function truncate(str, limit) { 
+
+				var bits, i; 
+
+				if ("string" !== typeof str) {
+
+				 return ''; 
+
+				} bits = str.split(''); 
+
+				if(bits.length > limit) {
+
+				    for (i = bits.length - 1; i > -1; --i) {
+
+				        if (i > limit) {
+
+				           bits.length = i;
+
+				        } else if (' ' === bits[i]) {
+
+				         bits.length = i; break; 
+				        } 
+				    } 
+
+				    bits.push('...'); 
+
+				} return bits.join(''); 
 			}
-			
-			
-			
-			//cette fonction fait apparaitre le formulaire de recherche	 des catégories		 
-			$('.all_category').click(function() {
 
+			function open_frame(id,zim,title){
+
+				//On cache la liste actuelle
+				$('.grid_ted').fadeOut();
+
+				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
+				$('.framaTed').html('<a class="m-btn blue back_bn"><i class="icon-double-angle-left icon-white"></i>  Retournez à la liste</a><iframe frameBorder="0" src="http://localhost/GitHub/kwizi/wikipedia/wiki/get_zim/'+id+'/'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
+			
+                
+                $(document).ready(function(){
+
+                    window.click_by_url();//Gestion des clicks des articles
+
+			        $('.wiki_title').html('<h1>'+title+'</h1>');
+			        $('title').html(title);
+                        
+                        $(document).ready(function(){ 
+                            $('#myFrame').load(function(){ 
+
+                                $('#myFrame').contents().find('.kiwix').remove();
+                                $('#myFrame').contents().find('body').css('background-color','white');
+                                $('#myFrame').contents().find('body').css('margin-top','0px');
+                                $('#myFrame').contents().find('div')[0].remove() ;
+                                $('#myFrame').contents().find('#speaker').remove();
+                                $('#myFrame').contents().find('#title').remove();
+                                $(".framaTed").fadeIn(); 
+                            });
+                        });     
+                });
+			}
+
+			
 				
-				//on affiche le formulaire
-			 $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//On affiche la box pour patienter
-			
-			    $.ajax({
-    
-				    url: $('#get_API').attr('api_category'),
-					
-					type: 'POST',
-					
-					async : true,
-							
-				    error: function(e){
-
-                            console.log(e);
-
-				            $('#info_msg_wait').fadeOut();},//On efface la box qui fait patienter
-                                        
-				    success:function(list){
-
-				    	    if(window.device=='mobile'){
-
-				    	    	window.page_open='no';
-
-					            window.show_page();
-				            }
-			    			            
-							$('.wiki_title').html('');
-
-							//On stoke temporairement le html pour sélection dans le dom
-							$('.stock_engine').html(list.page_text);//ON met le résultal dans un div
-		                    
-							$('.wiki_content').html($('.stock_engine div')[8]).fadeIn();
-							$('.wiki_content').prepend('<div class="alert alert-info">'+list.page_warning+'</div>');           
-
-							$('.stock_engine').html(''); 
-							
-							$.getScript($('#url_search_cat').attr('url'));
-							
-							$('#info_msg_wait').fadeOut();
-						}
-				});
 				
-			 return false;
-			   
-			});
 			
 			
 			
@@ -2032,7 +2166,9 @@ $(document).ready(function(){
 
     /////////////////////////////////Manage Appcache////////////////////////////////////////////////////////
 
-    
+
+
+     
 
     /*
 

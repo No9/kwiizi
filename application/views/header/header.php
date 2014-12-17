@@ -62,7 +62,11 @@
 		        </li>
 					
                 <li class="">
-                      <a href="#" title="<?php echo $this->lang->line('form_call_note'); ?>" data-placement="bottom" class="bulle sender_message off_hider"><i class="icon-facetime-video icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_call'); ?></span>--></a>
+                      <a href="#" title="<?php echo $this->lang->line('form_call_note'); ?>" data-placement="bottom" class="bulle sender_message off_hider"><i class="icon-user icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_call'); ?></span>--></a>
+		        </li>
+
+		        <li class="">
+                      <a href="#" title="<?php echo $this->lang->line('form_videotek'); ?>" label="<?php echo $this->lang->line('form_videotek'); ?>" data-placement="bottom" class="bulle off_hider video_click"><i class="icon-youtube-play icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_videotek'); ?></span>--></a>
 		        </li>
 
 		        <li class="">

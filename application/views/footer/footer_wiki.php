@@ -402,7 +402,7 @@
 	<div class="ted_video" js="<?php echo base_url();?>assets/js/video.js"></div>
 	
 	   
-		<div id="get_API" get_random_article="<?php echo site_url().'/wikipedia/wiki/get_random_article'; ?>" ping="<?php echo site_url().'/wikipedia/wiki/ping' ; ?>" local_db="<?php echo WEB_STORAGE_NAME ; ?>" api_category_list="<?php echo site_url().'/wikipedia/wiki/list_article' ; ?>" api_category="<?php echo site_url().'/wikipedia/wiki/get_category' ; ?>" api="<?php echo site_url().'/wikipedia/wiki/get_article' ; ?>" api_search="<?php echo site_url().'/wikipedia/wiki/search' ; ?>" api_search_plus="<?php echo site_url().'/wikipedia/wiki/search_plus' ; ?>"></div>
+		<div id="get_API" get_random_article="<?php echo site_url().'/wikipedia/wiki/get_random_article'; ?>" ping="<?php echo site_url().'/wikipedia/wiki/ping' ; ?>" local_db="<?php echo WEB_STORAGE_NAME ; ?>" video_zim="<?php echo base_url().'assets/TED/' ; ?>" api_category="<?php echo site_url().'/wikipedia/wiki/get_category' ; ?>" api="<?php echo site_url().'/wikipedia/wiki/get_article' ; ?>" api_search="<?php echo site_url().'/wikipedia/wiki/search' ; ?>" api_search_plus="<?php echo site_url().'/wikipedia/wiki/search_plus' ; ?>"></div>
 
 		<div class="hoster" url="<?php echo HOSTER ; ?>" port_kiwix="<?php echo KIWIX_PORT ; ?>" host="<?php echo HOST ; ?>" host_wiki="<?php echo HOST_WIKI ; ?>" zim="<?php echo ZIM ; ?>" kiwix="<?php echo KIWIX ; ?>" zim_list="<?php echo ZIM_LIST ; ?>" url_for_seek="http://<?php echo HOSTER ; ?>:<?php echo KIWIX_PORT ; ?>/search?content="></div>
 		
@@ -440,6 +440,7 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_search.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.scrollToTop.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.loadingdots.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/blocksit.min.js"></script>
 
 	
 

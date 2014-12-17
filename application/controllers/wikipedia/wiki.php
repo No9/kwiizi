@@ -334,93 +334,6 @@ public function get_id_title()
 
 
 
-
-
-//CEtte fonction afficle le formulaire de recherche des catégories
-public function category_form()
-    {?>
-     	 <h1><?php echo $this->lang->line('form_search_cat'); ?></h1> 	
-	     
-		    <div class="input-append">
-		     <input class="input-xlarge string_cat" type="text"><button class="btn btn-info click_cat" type="button"><i class="icon-search icon-white"></i></button>            
-            </div>
-
-			<div class="alert alert-info">
-                <?php echo $this->lang->line('form_loader'); ?>  
-            </div>
-			
-			<div class="alert alert-error"> 
-                <?php echo $this->lang->line('form_warning'); ?>  
-            </div>
-			
-   <?php
-   }   
-
-
-//CEtte fonction liste les 	catégories d'article
-public function all_category()
-    {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('chaine','','required|trim|xss_clean');
-	 	  	
-	    if($this->form_validation->run())
-		{  		            
-		 $json_url = $this->input->post('url_api').'api.php?action=query&list=allcategories&acprop=size&format=json&aclimit=50&acprefix='.urlencode($this->input->post('chaine'));
- 
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		}   
-   }
-   
-   
-   
-   
- //CEtte fonction liste toutes les pages d'une catégorie
-public function all_page_category()
-    {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('category','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('continue','','required|trim|xss_clean');
-	 	  	
-	    if($this->form_validation->run())
-		{
-		  $continue = $this->input->post('continue');
-            
-			if($continue =='new_babi')//on fait la requête pour la première fois sur la catégorie		
-		    {
-    		 $json_url = $this->input->post('url_api').'api.php?action=query&list=categorymembers&format=json&cmlimit=500&cmtitle=Category:'.urlencode($this->input->post('category'));
-            }
-			else//On fait la requête pour une N ième fois
-			{
-			  $json_url = $this->input->post('url_api').'api.php?action=query&list=categorymembers&format=json&cmlimit=500&cmtitle=Category:'.urlencode($this->input->post('category')).'&cmcontinue='.urlencode($this->input->post('continue'));
-			}
-			
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		
-		}   
-   }
-   
-   
-   
-  //CEtte fonction liste plus de catégorie d'articles
-public function plus_all_category()
-    {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('chaine','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('from','','required|trim|xss_clean');
-	 	  	
-	    if($this->form_validation->run())
-		{  		            
-		 $json_url = $this->input->post('url_api').'api.php?action=query&list=allcategories&acprop=size&format=json&aclimit=50&acprefix='.$this->input->post('chaine').'&acfrom='.urlencode($this->input->post('from'));
- 
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		}   
-   }
-
-
-
 //CEtte fonction liste des articles au hasard
 public function list_random()
     {
@@ -440,9 +353,50 @@ public function list_random()
    
    
    //CEtte fonction sert de ping pour voir si la webapp est connecté au serveur
-public function ping_it()
+    public function ping_it()
     {
      echo 'ok'; //c'est tout!
+    }
+
+
+
+    public function get_zim($id,$zim){ //http://localhost:8100/ted_business_05_2014/A/1998/index.html
+
+    	echo str_replace('../../',HOST_WIKI.'/'.$zim.'/',file_get_contents('http://'.HOSTER.':'.KIWIX_PORT.'/'.$zim.'/A/'.$id.'/index.html'));
+    }
+
+
+
+    
+    public function list_a_zim($zim){
+  
+        $response = file_get_contents('http://'.HOSTER.':'.KIWIX_PORT.'/'.$zim.'/');
+
+        $response = mb_convert_encoding($response, 'HTML-ENTITIES', "UTF-8");
+
+    	$document = new DOMDocument();
+    	$document->preserveWhiteSpace = false;
+        $document->formatOutput       = true;
+       
+        if($response)
+        {
+            libxml_use_internal_errors(true);
+            $document->loadHTML($response);
+
+            //On obtient le contenu de l'article
+            $tags           = $document->getElementById('grid-container');
+         
+            $full_text      = $this->DOMinnerHTML($tags);
+            
+            libxml_clear_errors();
+
+            $reponses['page_text'] = $full_text;
+  
+	        // on a notre objet $reponse (un array en fait)
+            // reste juste à l'encoder en JSON et l'envoyer
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode($reponses); 
+        } 
     } 
 
 
