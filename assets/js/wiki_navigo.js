@@ -1895,7 +1895,7 @@ $(document).ready(function(){
 			function open_frame_gutenberg(zim,title){ 
                 
                 $('#toTop').click();
-                
+
                 $('.wiki_content').html($('#Please_wait').html()); 
 			
 				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
@@ -1917,6 +1917,7 @@ $(document).ready(function(){
                                 $('.xlink').remove();
                                 $('.zim_info').remove();
                                 $('.wiki_content').html($('.content_gutenberg').html()).fadeIn();
+                                $('.content_gutenberg').html('');
                             });
                         });     
                 });
