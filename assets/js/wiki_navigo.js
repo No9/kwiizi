@@ -6,6 +6,8 @@ $(document).ready(function(){
 
 	var popupWindow;
 
+	var notty_timeout = 120000; //Second for notification message
+
 
 	var hoster = $('.hoster').attr('url');
 	var port_kiwix = $('.hoster').attr('port_kiwix');
@@ -240,35 +242,6 @@ $(document).ready(function(){
         window.hide_page();
     })
 
-
-    //ON récupère la page d'accueil de WIKIpedia
-    var get_welcome = get_welcome();
-
-    function get_welcome(){
-
-    	$.getJSON($('#get_API').attr('api_category') , function(data) {
-        
-            $('.get_category').html(data.page_text);
-
-            $('.firstHeading').fadeOut();
-
-            $(document).ready(function(){ 
-
-               //action à effectuer sur les liens qui sont dans l'article.
-                $('.get_category a:not(.new,.toc a,.internal)').unbind('click');
-                $('.get_category a:not(.new,.toc a,.internal)').click(function() { 
-
-                    	$('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//on affiche le message pour patienter
-			         
-			            var page_url = $(this).attr('href').replace($('.hoster').attr('kiwix'),'');
-
-				  		retrieve_article_url(page_url,false);
-				
-					    return false;                    
-		        });
-		    });
-        });
-    }
 		
 	
 	function retrieve_article_text(full_article,page_url) {
@@ -1616,8 +1589,13 @@ $(document).ready(function(){
 
 			                            if($(this).parent().parent().attr('type')=='gutenberg') { //If it's a result of gutenberg library,we open the book in a new window
                                            
-                                            window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+                                            //window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+
+                                           open_frame_gutenberg($(this).attr("href"),$(this).text());
                                     
+			                           
+                                           $('.liste_zim a').parent().attr('class','');
+			                               $(this).parent().attr('class','active');
 			                            }else{
 
                                             //This is specialy for TED video
@@ -1631,16 +1609,16 @@ $(document).ready(function(){
 		                                    $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
 			
 			                                var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
-
-				                            //On désactive tous les boutons actifs
-                                            $('.liste_click .active').attr('class','active_ceci');
-			
-				                            //Et on active le bouton sur le quel on vient de cliquer	
-                                            $(this).parent().attr('class','active');
 								      
 								            retrieve_article_url(page_url,type);
 			                            }     
 									  
+									  //On désactive tous les boutons actifs
+                                       $('.liste_click .active').attr('class','active_ceci');
+			
+				                      //Et on active le bouton sur le quel on vient de cliquer	
+                                      $(this).parent().attr('class','active');
+                                      
                                       return false;		            
                                     });
 
@@ -1733,6 +1711,8 @@ $(document).ready(function(){
 
                                     	window.id_ted = $(this).attr('id');
 
+                                    	window.notty_it($('.ted_video_message').attr('help_language'));
+
                                     	$('#toTop').click();
                                     	return false;
                                     })
@@ -1741,7 +1721,7 @@ $(document).ready(function(){
                                     $('.back_bn').click(function(){
 
                                     	$(".grid_ted").fadeIn();
-				                        
+
 				                        $('.framaTed').html('').fadeOut();
 
                                         var target = window.id_ted; 
@@ -1880,13 +1860,15 @@ $(document).ready(function(){
 
 			function open_frame(id,zim,title){
 
+                $('#toTop').click();
+
 				//On cache la liste actuelle
 				$('.grid_ted').fadeOut();
 
-				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
-				$('.framaTed').html('<a class="m-btn blue back_bn"><i class="icon-double-angle-left icon-white"></i>  Retournez à la liste</a><iframe frameBorder="0" src="http://localhost/GitHub/kwizi/wikipedia/wiki/get_zim/'+id+'/'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
+				$('.framaTed').html('<a class="m-btn blue back_bn"><i class="icon-double-angle-left icon-white"></i>  '+$('.ted_video_message').attr('go_back')+'</a><iframe frameBorder="0" src="'+$('.ted_video').attr('url')+id+'/'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
 			
-                
+                //On ouvre la page du iframe http://localhost/GitHub/kwizi/
+
                 $(document).ready(function(){
 
                     window.click_by_url();//Gestion des clicks des articles
@@ -1900,10 +1882,41 @@ $(document).ready(function(){
                                 $('#myFrame').contents().find('.kiwix').remove();
                                 $('#myFrame').contents().find('body').css('background-color','white');
                                 $('#myFrame').contents().find('body').css('margin-top','0px');
-                                $('#myFrame').contents().find('div')[0].remove() ;
+                                $('#myFrame').contents().find('div')[0].remove();
                                 $('#myFrame').contents().find('#speaker').remove();
                                 $('#myFrame').contents().find('#title').remove();
-                                $(".framaTed").fadeIn(); 
+                                $('.framaTed').fadeIn();
+                            });
+                        });     
+                });
+			}
+
+
+			function open_frame_gutenberg(zim,title){ 
+                
+                $('#toTop').click();
+                
+                $('.wiki_content').html($('#Please_wait').html()); 
+			
+				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
+				$('.content_gutenberg').html('<iframe frameBorder="0" src="'+$('.hoster').attr('gutenberg_url')+'get_zim_gutenberg'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
+			
+               
+                $(document).ready(function(){
+
+			        $('.wiki_title').html('<h1>'+title+'</h1>');
+			        $('title').html(title);
+                        
+                        $(document).ready(function(){ 
+                            $('#myFrame').load(function(){ 
+                                $('#myFrame').contents().find('.kiwix').remove();
+                                $('#myFrame').contents().find('div')[0].remove() ;
+                                $('#myFrame').contents().find('body').css('background-color','white');
+                                $('#myFrame').contents().find('body').css('margin-top','0px');
+                                $('.content_gutenberg').html($('#myFrame').contents().find('body').html().replace(/="..\//g,'="'+$('.hoster').attr('host_wiki')+'/'+$('.hoster').attr('gutenberg')+'/'));
+                                $('.xlink').remove();
+                                $('.zim_info').remove();
+                                $('.wiki_content').html($('.content_gutenberg').html()).fadeIn();
                             });
                         });     
                 });
@@ -2165,6 +2178,31 @@ $(document).ready(function(){
     }, false);
 
     /////////////////////////////////Manage Appcache////////////////////////////////////////////////////////
+
+
+
+    ////////////////////////////////////Manage top notification /////////////////////////////////////////////
+    //cette fonction déclanche l'apparition de la notification
+			window.notty_it = function(message)
+			{
+				if(window.showing_note!==true){
+					//We display note
+                    $.ClassyNotty({
+                       content: message,
+                       showTime: true,
+	                   timeout: notty_timeout                                             
+                    });
+
+                    window.showing_note = true;
+
+                    setTimeout(function(){
+
+                    	window.showing_note=false;
+
+                    },notty_timeout);
+				}    
+            } 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

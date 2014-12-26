@@ -119,6 +119,13 @@ $lang['form_up_in_sending']     = "Un envoi de fichier est déjà en cours. Veui
 $lang['form_up_end_sending']    = "L'envoi des fichier est terminé";
 $lang['form_up_drag']           = "Déposez";
 $lang['form_up_draganddrop']    = "Déposez votre fichier ici pour l'envoyer:15 Mo max (pdf,doc,docx,ppt,zip,rar et images)";
+$lang['form_help_ted']          = "Posez votre souris sur la vidéo et cliquez sur la bulle au pieds de la video pour sélectionner votre language.";
+$lang['form_help_back']         = "Cliquez pour revenir à la liste";
+$lang['form_f_me_info']         = "Clique là si tu être suivi";
+$lang['form_f_me_copy']         = "Envoie cette identifiant aux personnes désirants vous suivre";
+$lang['form_f_enter']           = "Entrez l'identifiant de la session à suivre.";
+$lang['form_f_me']              = "Suivez moi";
+
 
 
 

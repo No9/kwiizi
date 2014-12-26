@@ -25,6 +25,7 @@ define('DOMAINE_NAME','kwiki');
 define('HOSTER', 'localhost');
 define('KIWIX_PORT', 8100);
 define('ZIM', 'wikipedia_fr_all_11_2013');
+define('GUTENBERG','gutenberg_fr_all_10_2014');
 
 //List of all zim file
 define('ZIM_LIST','wikipedia_fr_all_11_2013,gutenberg_fr_all_10_2014,ted_business_05_2014,ted_entertainment_05_2014');

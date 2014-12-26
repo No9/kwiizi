@@ -118,6 +118,12 @@ $lang['form_up_in_sending']     = "There is file in sending. Please wait.You wil
 $lang['form_up_end_sending']    = "The file sendind is over";
 $lang['form_up_drag']           = "Drop";
 $lang['form_up_draganddrop']    = "Drag and drop your file here to send:15 Mo max (pdf,doc,docx,ppt,zip,rar and images)";
+$lang['form_help_ted']          = "Put your mouse on the video and click in the bubble on bottom the video to select your language.";
+$lang['form_help_back']         = "Click to comeback to te list";
+$lang['form_f_me_info']         = "Click here if you want to be followed";
+$lang['form_f_me_copy']         = "Send this ID to all person who want to follow you:";
+$lang['form_f_enter']           = "Feel the ID of the session that you want to follow";
+$lang['form_f_me']              = "Follow me";
 
 
 

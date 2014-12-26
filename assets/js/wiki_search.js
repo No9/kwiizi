@@ -145,13 +145,11 @@ $(document).ready(function(){
 
                                                 var nav_wikipedia     = '<li class="active"><a href="#tab1" data-toggle="tab"><i class="icon-globe"></i> '+$('.result_label').attr('wikipedia')+'</a></li>';
                                                 var nav_gutenberg     = '<li><a href="#tab2" data-toggle="tab"><i class="icon-book"></i> '+$('.result_label').attr('library')+'</a></li>';
-                                                var nav_ted           = '<li><a href="#tab3" data-toggle="tab"><i class="icon-youtube-play"></i> '+$('.result_label').attr('video')+'</a></li>';
                                                 var content_wikipedia = '<div class="tab-pane active tab_wikipedia" id="tab1"><ul class="nav nav-list bs-docs-sidenav liste_click wikipedia" counter="50"><li class="nav-header"><i class="icon-globe icon-white"></i> '+$('.resultat').attr('message')+': <span class="badge badge-success header_result">'+papi.wikipedia.header+'</span></li></ul><button class="btn btn-info plus_wiki_wikipedia" type="button"><i class="icon-plus icon-white"></i></button></div>';
                                                 var content_gutenberg = '<div class="tab-pane tab_gutenberg" id="tab2"><ul class="nav nav-list bs-docs-sidenav liste_click gutenberg" type="gutenberg" counter="50"><li class="nav-header"><i class="icon-book icon-white"></i> '+$('.resultat').attr('message')+': <span class="badge badge-success header_result">'+papi.gutenberg.header+'</span></li></ul><button class="btn btn-info plus_wiki_gutenberg" type="button"><i class="icon-plus icon-white"></i></button></div>';
-                                                var content_ted       = '<div class="tab-pane ted" id="tab3"></div>';
 
-                                                var all_list = nav_wikipedia+nav_gutenberg+nav_ted;
-                                                var all_content = content_wikipedia+content_gutenberg+content_ted;
+                                                var all_list = nav_wikipedia+nav_gutenberg;
+                                                var all_content = content_wikipedia+content_gutenberg;
 												
 												$('.liste').html('<div class="tabbable"><ul class="nav nav-tabs">'+all_list+'</ul><div class="tab-content">'+all_content+'</div></div>');
                                                 
@@ -173,36 +171,6 @@ $(document).ready(function(){
 
 												$('.stock_engine_wikipedia').html('');//On efface le contenu de ce div pour économiser la mémoire de l'user
 												$('.stock_engine_gutenberg').html('');//On efface le contenu de ce div pour économiser la mémoire de l'user
-
-												//Specially for TED videos
-												$('.ted').html('<div class="tabbable"><ul class="nav nav-tabs all_ted_list"></ul><div class="tab-content all_ted_content"></div></div>').fadeIn('slow');
-
-
-												for(i=0;i<papi.ted.length;i++){
-
-													if(i==0){ //If it is the first tab,we open it at default
-
-													    $('.all_ted_list').append('<li class="active"><a href="#tabindex_'+i+'" data-toggle="tab"><span class="badge badge-info">'+i+'</span></a></li>');
-													    $('.all_ted_content').append('<div class="tab-pane active ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i> '+papi.ted[i].ted_zim_name.replace(/_/g,' ')+'</li></ul></div>');
-													}else{
-
-													    $('.all_ted_list').append('<li><a href="#tabindex_'+i+'" data-toggle="tab"><span class="badge badge-info">'+i+'</span></a></li>');
-													    $('.all_ted_content').append('<div class="tab-pane ted_content_'+i+'" id="tabindex_'+i+'"><ul class="nav nav-list bs-docs-sidenav liste_click ted_list_'+i+'" type="ted" ted_zim_file="'+papi.ted[i].ted_zim_name+'" counter="50"><li class="nav-header"><i class="icon-globe icon-youtube-play"></i> '+papi.ted[i].ted_zim_name.replace(/_/g,' ')+'</li></ul></div>');
-													}
-
-													if($.trim(papi.ted[i].header.toLowerCase()).split(' ')[0]=='no'){
-                                                        
-                                                        $('.ted_content_'+i).html('<div class="alert alert-error">'+papi.ted[i].header+'</div>');
-                                                    }
-
- 
-										            $('.stock_engine_ted').html(papi.ted[i].result);//ON met le résultal dans un div
-												    $('.ted_list_'+i).append($('.stock_engine_ted .results ul').html()).fadeIn('slow');//On extrait du résultat ce qui nous interesse
-												    $('.stock_engine_ted').html('');//On efface le contenu de ce div pour économiser la mémoire de l'user
-												}
-
-                                                
-												$('#tab3').attr('style',' ');//This line resolves a small bug of the TED tab
 
                                                 
                                                   //The wikipedia pagination

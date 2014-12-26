@@ -200,6 +200,40 @@
     </div>
 
     <div class="not_news" not_news ="<?php echo $this->lang->line('form_not_news'); ?>"></div>
+
+
+
+
+    <!-- pour le numéro de téléphone-->		
+	<div class="modal hide fade" id="follow_me" aria-labelledby="follow_meLabel" aria-hidden="false" data-backdrop="static">
+        
+        <div class="modal-body">
+		    
+			<div class="alert alert-block">
+				<p>
+				    <div class="div_follow_me"><?php echo $this->lang->line('form_f_me_info'); ?>:<a href="#" class="label label-info"><?php echo $this->lang->line('form_f_me'); ?></a></div>
+				    <div class="load_id_follow" style="display:none;"><?php echo $this->lang->line('form_f_me_copy'); ?>:<span class="text-info load_id"></span></div>
+                </p>
+            </div>
+
+             <?php echo $this->lang->line('form_or'); ?>
+			
+            <p>
+               <span class=" alert alert-info"><?php echo $this->lang->line('form_f_enter'); ?></span>		
+			   <form class="form-horizontal">
+                    <div class="control-group">
+                        <div class="controls">	    
+                                <input class="span2 follow_enter_id" placeholder="<?php echo $this->lang->line('form_number'); ?>" id="follow_id" size="16" type="text" autofocus>
+				                <button class="btn btn-primary join_id" type="button"><i class="icon-ok icon-white"> </i>OK</button>
+					            <button class="btn btn-warning" type="button" data-dismiss="modal" aria-hidden="true"> <i class="icon-remove icon-white"> </i></button>
+                           
+                        </div>
+                    </div>
+                </form>			
+			</p>
+        </div>    
+    </div>
+
 	
 	
 			
@@ -399,18 +433,23 @@
 
 	<span class="not_allow_family" message="<?php echo $this->lang->line('form_not_allow_family'); ?>"></span>
 
-	<div class="ted_video" js="<?php echo base_url();?>assets/js/video.js"></div>
+	<div class="ted_video" url="<?php echo site_url().'/wikipedia/wiki/get_zim/';?>"></div>
+
+	<span class="ted_video_message" help_language="<?php echo $this->lang->line('form_help_ted'); ?>" go_back="<?php echo $this->lang->line('form_help_back'); ?>"></span>
+
 	
 	   
 		<div id="get_API" get_random_article="<?php echo site_url().'/wikipedia/wiki/get_random_article'; ?>" ping="<?php echo site_url().'/wikipedia/wiki/ping' ; ?>" local_db="<?php echo WEB_STORAGE_NAME ; ?>" video_zim="<?php echo base_url().'assets/TED/' ; ?>" api_category="<?php echo site_url().'/wikipedia/wiki/get_category' ; ?>" api="<?php echo site_url().'/wikipedia/wiki/get_article' ; ?>" api_search="<?php echo site_url().'/wikipedia/wiki/search' ; ?>" api_search_plus="<?php echo site_url().'/wikipedia/wiki/search_plus' ; ?>"></div>
 
-		<div class="hoster" url="<?php echo HOSTER ; ?>" port_kiwix="<?php echo KIWIX_PORT ; ?>" host="<?php echo HOST ; ?>" host_wiki="<?php echo HOST_WIKI ; ?>" zim="<?php echo ZIM ; ?>" kiwix="<?php echo KIWIX ; ?>" zim_list="<?php echo ZIM_LIST ; ?>" url_for_seek="http://<?php echo HOSTER ; ?>:<?php echo KIWIX_PORT ; ?>/search?content="></div>
+		<div class="hoster" gutenberg="<?php echo GUTENBERG ; ?>" gutenberg_url="<?php echo site_url().'/wikipedia/wiki/' ; ?>" url="<?php echo HOSTER ; ?>" port_kiwix="<?php echo KIWIX_PORT ; ?>" host="<?php echo HOST ; ?>" host_wiki="<?php echo HOST_WIKI ; ?>" zim="<?php echo ZIM ; ?>" kiwix="<?php echo KIWIX ; ?>" zim_list="<?php echo ZIM_LIST ; ?>" url_for_seek="http://<?php echo HOSTER ; ?>:<?php echo KIWIX_PORT ; ?>/search?content="></div>
 		
 	    <div id="site_url"  url="<?php echo site_url().'/wikipedia/wiki'; ?>"></div>
 		
 		<div id="site_url_base" url="<?php echo site_url(); ?>"> </div>
 		
 		<div class="followed_user_id" user_id=""> </div>
+
+        <div class="content_gutenberg" style="display:none;"></div>
 		
 		
 		<div id="chat_conv" alone="<?php echo $this->lang->line('form_alone'); ?>" bye="<?php echo $this->lang->line('form_bye'); ?>" kwiki="Begoo"></div>
@@ -439,6 +478,7 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_contact.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_search.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.scrollToTop.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.classynotty.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.loadingdots.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/blocksit.min.js"></script>
 

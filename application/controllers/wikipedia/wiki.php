@@ -110,246 +110,11 @@ public function explodeIt_and_FeelPAgeId()
 
 	
 	
-//Ici je demande qu'on me suive	
-public function follow_me()
-    {
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 
-            echo $this->wikis->follow_me();
-		}           
+//Feel the id of a Follow Me session
+	public function get_id_follow_me()
+	{
+		echo random_string('alpha',8);
 	}
-
-
-//Ici je demande qu'on ne me suive plus
-public function follow_me_over()
-    {
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 		    
-          $this->wikis->leader_del($this->session->userdata('user_id'));
-		}         
-	}
-
-
-//Ici je demande à suivre un user
-public function follow_him($user_id)
-    {
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in') and $user_id!=$this->session->userdata('user_id'))
-	    { 		    
-          $result = $this->wikis->follow_him($user_id);
-		  
-		    if($result)
-			{
-			   echo 'yes';
-			}
-		}         
-	}
-	
-	
-//Ici je demande à ne plus suivre toute personne
-public function stop_follow_him($user_id)
-    {
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 		    
-          $result = $this->wikis->stop_follow_him($user_id);
-		  
-		    if($result)
-			{
-			   echo 'yes';
-			}
-		}         
-	}
-
-
-
-
-//Ici un cherche à savoir si on a de nouveaux commentaires pour le chat en cours
-public function if_new_com()
-    {	   
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 
-		    //on définit les règles de succès: 	      
-	      $this->form_validation->set_rules('last_com_time','','required|trim|xss_clean|numeric');
-      
-         	if($this->form_validation->run())
-		    {
-	   	     //on renvoi "1" s'il ya de nouveaux commentaires
-		     echo $this->wikis->if_new_com($this->input->post('last_com_time'));             			
-			}
-		}
-	}
-
-
-
-//Ici on récupère les nouveaux commentaires
-public function new_com()
-    {	  
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 
-		    //on définit les règles de succès: 	      
-	      $this->form_validation->set_rules('last_com_time','','required|trim|xss_clean|numeric');
-          
-         	if($this->form_validation->run())
-		    {
-		     $reponse = $this->wikis->new_com($this->input->post('last_com_time')); 
-        
-                if($reponse!==false)
-                {
-				    //on encode la réponse qui est un array
-				  header('Content-Type: application/json');
-                  echo json_encode($reponse);	                   					
-                }				
-			}
-		}
-	}
-
-
-
-	
-//Ici on renvoi juste le timestamp du serveur	
-public function my_last_time()
-    {	   
-	   echo time();
-    }
-
-
-
-
-	
-//je sélectionne les dernieres personnes qui veulent qu'on les suive
-public function leader()
-    {	   
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 
-	   	  //J'envoi à l'usine à  gaz
-		  $result = $this->wikis->leader();
-		   
-			if($result)
-			{
-			    foreach ($result as $row)
-                {
-				    ?>
-                    
-				        <a href="#" class="follow_him" user_id="<?php echo $row->follow_user ; ?>"  user_name="<?php echo $row->last_username ; ?>" url_user_id="<?php echo site_url().'/wikipedia/wiki/follow_him/'.$row->follow_user; ?>">
-					       <?php echo $row->last_username ; ?>
-						</a>
-						<span class="divider">|</span>
-				 
-				    <?php 
-				 
-				}
-			}
-			else
-			{?>
-			   <span></span>
-			 <?php
-			}
-        }	
-	}
-
-
-
-//je sélectionne les dernieres personnes qui veulent qu'on les suive dans la recherche
-public function find_leader()
-    {	   
-	   //on vérifie si l'user est connecté 
-        if($this->session->userdata('logged_in'))
-	    { 
-	   	   //on définit les règles de succès: 	      
-	      $this->form_validation->set_rules('chaine','','required|trim|xss_clean');
-          
-         	if($this->form_validation->run())
-		    {	  
-		     //J'envoi à l'usine à  gaz
-		      $result = $this->wikis->find_leader($this->input->post('chaine'));
-		    
-			    if($result)
-			    { ?>
-				   <div class="bs-docs-example">
-					  
-					    <ul class="nav nav-list bs-docs-sidenav">
-						
-						<?php
-			        foreach ($result as $row)
-                    {?>						
-						<li class="active_ceci">
-						
-							<a href="#" class="follow_him" user_id="<?php echo $row->follow_user ; ?>" user_name="<?php echo $row->last_username ; ?>" url_user_id="<?php echo site_url().'/wikipedia/wiki/follow_him/'.$row->follow_user; ?>">
-						
-								<i class="icon-chevron-right" style="float:right;"></i>
-			
-			                    <?php echo $row->last_username ; ?>
-							
-							</a>
-					
-						</li>
-					
-				     <?php
-				    } ?>
-				        </ul>
-					</div>
-					
-					<?php
-                }				
-			}
-        }	
-	}
-
-
-//CEtte fonction sélectionne un article au hasard
-public function random()
-   {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-		  	
-	    if($this->form_validation->run())
-		{  		            
-		 $json_url = $this->input->post('url_api').'api.php?action=query&list=random&rnnamespace=0&format=json';
- 
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		}   
-   }
-
-
-//CEtte fonction récupère l'id d'un article
-public function get_id_title()
-   {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('page_title','','required|trim|xss_clean');
-		  	
-	    if($this->form_validation->run())
-		{  		            
-		 $json_url = $this->input->post('url_api').'api.php?action=query&prop=info&format=json&titles='.urlencode($this->input->post('page_title'));
- 
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		}   
-   } 
-
-
-
-//CEtte fonction liste des articles au hasard
-public function list_random()
-    {
-     //on définit les règles de succès: 	      
-	 $this->form_validation->set_rules('url_api','','required|trim|xss_clean');
-	 $this->form_validation->set_rules('nbre_article','','required|trim|xss_clean|numeric');
-		  	
-	    if($this->form_validation->run())
-		{  		            
-		 $json_url = $this->input->post('url_api').'api.php?action=query&list=random&rnnamespace=0&format=json&rnlimit='.$this->input->post('nbre_article');
- 
-         echo file_get_contents($json_url);//on renvoi la réponse		  
-		}   
-   } 
-   
-   
    
    
    //CEtte fonction sert de ping pour voir si la webapp est connecté au serveur
@@ -360,13 +125,17 @@ public function list_random()
 
 
 
-    public function get_zim($id,$zim){ //http://localhost:8100/ted_business_05_2014/A/1998/index.html
+    public function get_zim($id,$zim){ 
 
     	echo str_replace('../../',HOST_WIKI.'/'.$zim.'/',file_get_contents('http://'.HOSTER.':'.KIWIX_PORT.'/'.$zim.'/A/'.$id.'/index.html'));
     }
 
+    public function get_zim_gutenberg($zim,$letter,$title){ //http://localhost:8100/gutenberg_fr_all_10_2014/A/Formules%20pour%20l'esprit.20013.html
 
+    	echo file_get_contents(HOST_WIKI.'/'.$zim.'/'.$letter.'/'.$title);
+    }
 
+    
     
     public function list_a_zim($zim){
   
@@ -571,29 +340,12 @@ public function list_random()
             	case 1:
             		$gutenberg = array('header' =>$header,'footer'=>$footer,'result'=>$result);
             		break;
-            	
-            	default:
-            	    if($increment_ted==false){
-
-            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result,'ted_zim_name'=>$all_zim_file[$i]);
-
-            		    $ted = array($this_ted);
-
-            		    $increment_ted = true;        
-            	    }else{
-
-            		    $this_ted = array('header' =>$header,'footer'=>$footer,'result'=>$result,'ted_zim_name'=>$all_zim_file[$i]);
-
-            	    	array_push($ted, $this_ted);
-            	    }	
-                break;
             }
 
             if($i==count($all_zim_file)-1){
 
                 $reponses['wikipedia']              = $wikipedia;
 		        $reponses['gutenberg']              = $gutenberg;
-		        $reponses['ted']                    = $ted;
 		        $reponses['statu']                  = 'success';
   
 	            // on a notre objet $reponse (un array en fait)
@@ -689,85 +441,6 @@ public function list_random()
         echo json_encode($reponses);  
     }
 
-
-
-    //Cette fonction va chercher les catégories d'articles de wikipedia sur Kiwix
-    public function get_category(){
-  
-        $response = file_get_contents(KIWIX.'/A/Catégorie:Accueil.html');
-
-    	    $document = new DOMDocument();
-    	    $document->preserveWhiteSpace = false;
-            $document->formatOutput       = true;
-       
-            if($response)
-            {
-              libxml_use_internal_errors(true);
-              $document->loadHTML($response);
-
-              //On obtient le titre de la page
-                $list = $document->getElementsByTagName("title");
-                if ($list->length > 0) {
-                     $title_text = $list->item(0)->textContent;
-                }
-
-                //On obtient le contenu de l'article
-              $tags           = $document->getElementById('bodyContent');
-         
-              $full_text      = $this->DOMinnerHTML($tags);
-            
-              libxml_clear_errors();
-            }		  
-		
-
-		$reponses['page_title']              = $title_text;
-		$reponses['page_text']               = $full_text;
-		$reponses['page_warning']            = $this->lang->line('form_warning');
-  
-	    // on a notre objet $reponse (un array en fait)
-        // reste juste à l'encoder en JSON et l'envoyer
-        header('Content-Type: application/json');
-        echo json_encode($reponses);  
-    }
-
-
-
-    //Cette fonction va chercher les d'articles d'une catégorie dans wikipedia sur Kiwix
-    public function list_article(){
-  
-        //on définit les règles de succès: 	      
-	    $this->form_validation->set_rules('category','category','required|trim');
-  	
-	    if($this->form_validation->run()) 
-		{ 	            
-		   
-            $response = file_get_contents(KIWIX.str_replace(" ","%20",str_replace("'","%27",$this->input->post("category"))));
-
-    	    $document = new DOMDocument();
-    	    $document->preserveWhiteSpace = false;
-            $document->formatOutput       = true;
-       
-            if($response)
-            {
-              libxml_use_internal_errors(true);
-              $document->loadHTML($response);
-
-                //On obtient le contenu de l'article
-              $tags           = $document->getElementById('bodyContent');
-         
-              $full_text      = $this->DOMinnerHTML($tags);
-            
-              libxml_clear_errors();
-            }
-
-		  $reponses['page_text']               = $full_text;
-  
-	      // on a notre objet $reponse (un array en fait)
-          // reste juste à l'encoder en JSON et l'envoyer
-          header('Content-Type: application/json');
-          echo json_encode($reponses); 		  
-		}	
-    }
 
 
     //fait un test de ping de onnexion
