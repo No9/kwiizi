@@ -97,7 +97,7 @@ $lang['form_notif_communiquer'] = "Chatter en privé avec vos contacts.";
 $lang['form_notif_call']        = "Lancez même des appels vidéos pour faire simple!.";
 $lang['form_notif_historique']  = "Vos articles visités sont automatiquement enregistrés.";
 $lang['form_no_call']           = "La version de votre navigateur n'est pas à jour pour permettre les appels vidéos.Cliquez sur l'un des liens suivants pour télécharger et installer un nouveau navigateur.";
-$lang['form_no_historic']       = "Aucune historique enregistré.";
+$lang['form_no_historic']       = "Aucun historique enregistré.";
 $lang['form_short']             = "Votre recherche doit comporter au moins 3 caractères.";
 $lang['form_download_img']      = "Télécharger l'image.";
 $lang['form_not_allow_family']  = "Désolé...vous n'êtes pas permis d'utiliser cette option.";
@@ -122,7 +122,7 @@ $lang['form_up_draganddrop']    = "Déposez votre fichier ici pour l'envoyer:15 
 $lang['form_help_ted']          = "Posez votre souris sur la vidéo et cliquez sur la bulle au pieds de la video pour sélectionner votre language.";
 $lang['form_help_back']         = "Cliquez pour revenir à la liste";
 $lang['form_f_me_info']         = "Clique là si tu être suivi";
-$lang['form_f_me_copy']         = "Envoie cette identifiant aux personnes désirants vous suivre";
+$lang['form_f_me_copy']         = "Envoie cet identifiant aux personnes désirants vous suivre";
 $lang['form_f_enter']           = "Entrez l'identifiant de la session à suivre.";
 $lang['form_f_me']              = "Suivez moi";
 
