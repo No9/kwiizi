@@ -1111,6 +1111,10 @@ $(document).ready(function(){
             	//We display the list of TED conference
 			    $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_zim"><li class="nav-header"><i class="icon-youtube-play icon-white"></i>'+$(this).attr('label') +'</li></ul>');
                
+                if(window.device=='mobile'){
+
+					window.hide_page();
+				}
 
             	var zim_list = $('.hoster').attr('zim_list');
 
@@ -1804,6 +1808,8 @@ $(document).ready(function(){
                                     	window.notty_it($('.ted_video_message').attr('help_language'));
 
                                     	$('#toTop').click();
+
+                                    	$('.zim_engine').fadeOut();
                                     	return false;
                                     })
 
@@ -1811,6 +1817,9 @@ $(document).ready(function(){
                                     $('.back_bn').click(function(){
 
                                     	$(".grid_ted").fadeIn();
+
+                                    	$('.zim_engine').fadeIn();
+
 
 				                        $('.framaTed').html('').fadeOut();
 
