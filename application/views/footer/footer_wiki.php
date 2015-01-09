@@ -340,7 +340,8 @@
     <div class="message_ajax" url_for_file_upload_dir="<?php echo base_url();?>assets/uploader/uploads/"  url_for_file_upload="<?php echo base_url();?>assets/uploader/processupload.php" url_for_send="<?php echo site_url();?>/user/record_message" no_receiver="<?php echo $this->lang->line('form_no_receiver'); ?>"></div>
     
 
-
+    <div class="search_on_zim" search_zim="<?php echo $this->lang->line('form_search_video'); ?>" ></div>
+    
 	
 	
 	

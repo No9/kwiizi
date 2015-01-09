@@ -124,6 +124,8 @@ $lang['form_f_me_info']         = "Click here if you want to be followed";
 $lang['form_f_me_copy']         = "Send this ID to all person who want to follow you:";
 $lang['form_f_enter']           = "Feel the ID of the session that you want to follow";
 $lang['form_f_me']              = "Follow me";
+$lang['form_search_video']      = "Research";
+
 
 
 

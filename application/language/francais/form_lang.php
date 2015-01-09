@@ -125,6 +125,7 @@ $lang['form_f_me_info']         = "Clique là si tu être suivi";
 $lang['form_f_me_copy']         = "Envoie cet identifiant aux personnes désirants vous suivre";
 $lang['form_f_enter']           = "Entrez l'identifiant de la session à suivre.";
 $lang['form_f_me']              = "Suivez moi";
+$lang['form_search_video']      = "Recherche";
 
 
 

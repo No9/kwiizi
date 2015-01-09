@@ -1633,7 +1633,8 @@ $(document).ready(function(){
 			                            $('.liste_zim a').parent().attr('class','');
 			                            $(this).parent().attr('class','active');
 
-			                            var this_zim  = $(this).attr('href');
+			                            window.this_zim  = $(this).attr('href');
+			                   
 			                            var zim_title = $(this).text();
 
                                     	$('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//we display waitin message
@@ -1656,16 +1657,80 @@ $(document).ready(function(){
 
                                             success: function(data) {
 
+                                            	window.this_json_zim = data;//On garde le fichier zim pour la recherche
+
                                             	$('.wiki_title').html('<h1>'+zim_title+'</h1>');
 
                                             	window.TED_title = zim_title;
 
-                                            	$('.wiki_content').html('<div class="grid_ted"></div><div class="framaTed" style="display:none"></div>');
+                                            	$('.wiki_content').html('<input class="zim_engine" type="text" placeholder="'+$('.search_on_zim').attr('search_zim')+'"><br> <div class="grid_ted"></div><div class="framaTed" style="display:none"></div>');
+                                                
+                                                play_this_zim();  					                        }
+                                        });
+			                            
+									  
+                                      return false;		            
+                                    });
 
-                                            	$.each(data, function(entryIndex, entry) {
 
-                                            		var html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+this_zim+'/A/'+entry['id']+'/index.html" title="'+entry['title']+'" id="'+entry['id']+'" zim="'+this_zim+'" class="click_ted">';
-                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+this_zim+'/I/'+entry['id']+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
+                                    $('.zim_engine').focus(function(){
+
+    	                                $('.zim_engine').unbind('keyup');
+
+                                        $('.zim_engine').keyup(function(evenement){
+
+                                        	window.list_find = [];
+                                            window.list_find_index = [];
+
+
+                                            var string = $('.zim_engine').val().toLowerCase();
+
+                                            if(string.length!==0){ 
+
+                                                var regex = new RegExp(string, "i");
+                                                var counter = 0;
+                                           
+                                                $.each(window.this_json_zim, function(key, entry){
+                                            	
+
+                                            	counter++;
+
+                                            	var this_entry_speaker = entry.speaker.toLowerCase();
+                                            	var this_entry_title = entry.title.toLowerCase();
+                                            	var this_entry_description = entry.description.toLowerCase();
+
+                                                if((this_entry_speaker.indexOf(string) != -1) || (this_entry_title.indexOf(string) != -1) || (this_entry_description.indexOf(string) != -1)) {
+                  
+                                                        if(list_find.length==0 || list_find.indexOf(entry['id'])==-1){
+
+                                                            window.list_find[entry['id']] = entry;
+                                                            window.list_find_index.push(entry['id']);    
+                                                        }      
+                                                }
+
+
+                                                if(window.this_json_zim.length==counter+1){
+                                                            	
+                                                    display_array_find();    
+                                                } 
+                                            });
+                                        }else{
+
+                                        	play_this_zim();
+                                        }
+                                            
+                                        });
+                                    })
+
+
+                                    function play_this_zim() {
+
+                                    	$('.grid_ted').html('');
+                                    	
+                                    	$.each(window.this_json_zim, function(entryIndex, entry) {
+
+                                            		var html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/A/'+entry['id']+'/index.html" title="'+entry['title']+'" id="'+entry['id']+'" zim="'+window.this_zim+'" class="click_ted">';
+                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/I/'+entry['id']+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
                                             		html +='<strong>'+entry['title']+'</strong>';
                                                     html +='<p>'+truncate(entry['description'],100)+'</p>';
                                                     html +='<div class="meta">'+entry['speaker']+'</div>';
@@ -1673,7 +1738,7 @@ $(document).ready(function(){
 
                                             		$('.grid_ted').append(html);
 
-                                            		if(data.length-1==entryIndex){
+                                            		if(window.this_json_zim.length-1==entryIndex){
 
                                             			//blocksit define
 	                                                    $(window).load( function() {
@@ -1697,12 +1762,37 @@ $(document).ready(function(){
 
                                             		}         		
                                                 });
-                                             					                        }
-                                        });
-			                            
-									  
-                                      return false;		            
-                                    });
+                                    }
+
+
+                                    function display_array_find() {
+
+                                    	$('.grid_ted').html('');
+
+                                    	var html;
+
+                                    	for(i=0;i<window.list_find_index.length;i++){
+
+                                    		var entry = window.list_find[window.list_find_index[i]];
+
+                                    				html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/A/'+entry.id+'/index.html" title="'+entry.title+'" id="'+entry.id+'" zim="'+window.this_zim+'" class="click_ted">';
+                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/I/'+entry.id+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
+                                            		html +='<strong>'+entry.title+'</strong>';
+                                                    html +='<p>'+truncate(entry.description,100)+'</p>';
+                                                    html +='<div class="meta">'+entry.speaker+'</div>';
+                                                    html +='</a></div>';
+
+                                                    $('.grid_ted').append(html);
+
+                                            if(i==window.list_find_index.length-1){
+                                               
+                                                window.click_by_url();//Gestion des clicks des articles
+								                       
+                                            }
+                                    			
+                                    	}
+                                    }
+
 
                                     
                                     $('.click_ted').click(function(){
