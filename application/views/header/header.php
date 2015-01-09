@@ -53,8 +53,8 @@
     <div class="navbar navbar-inverse">
     
         <div class="navbar-inner">
-            <a class="brand listing one" href="#"><i class="icon-chevron-left"></i> &nbsp;&nbsp;Kwiizi v2.6</a>
-            <a class="brand two" href="#"></i>Kwiizi v2.6</a>
+            <a class="brand listing one" href="#"><i class="icon-chevron-left"></i> &nbsp;&nbsp;Kwiizi v2.7</a>
+            <a class="brand two" href="#"></i>Kwiizi v2.7</a>
             <ul class="nav pull-right">
 
             	<li class="">
