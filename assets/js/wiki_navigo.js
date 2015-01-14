@@ -185,7 +185,7 @@ $(document).ready(function(){
 		
 		var historique_complet = 100;
 		
-		var historique_simple = 6;//historique qui s'affiche au menu de navigation
+		var historique_simple = 4;//historique qui s'affiche au menu de navigation
 
         
         var page_content_js = $('#js_wiki_click').attr('page_content'); 
