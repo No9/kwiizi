@@ -22,6 +22,8 @@ public function __construct()
 	    $this->load->helper('text');
 
 	    $this->load->helper('string');
+
+      $this->load->helper('file');
 		
 		//C'est cette ligne de code qui détecte la langue du navigateur et affiche le site dans la langue correspondante
 		$this->lang->load('form', $this->config->item('language'));
@@ -54,8 +56,8 @@ public function hi()
 		{ 
 		 //On fait un array des données à transmettre aux entetes et corps de page
 		 $data = array(
-            'title'    => 'Kwiki',
-		    'h1'       => 'Kwiki',
+        'title'    => 'Kwiizi',
+		    'h1'       => 'Kwiizi',
 			'top'      => 'wikipedia',
 			'nbre_user'=> $this->users->nbre_user()
                            );
@@ -71,8 +73,8 @@ public function index()
 	{ 	
 	    //On fait un array des données à transmettre aux entetes et corps de page
 		$data = array(
-            'title'    => 'Kwiki',
-		    'h1'       => 'Kwiki',
+            'title'    => 'Kwiizi',
+		    'h1'       => 'Kwiizi',
 			'top'      => 'wikipedia',
         );
 			 
@@ -178,15 +180,16 @@ public function explodeIt_and_FeelPAgeId()
 	    $this->form_validation->set_rules('type','type','required|trim');
   	
 	    if($this->form_validation->run()) 
-		{ 	            
+		  { 	            
 		   
-            $response = file_get_contents(HOST_WIKI.str_replace(" ","%20",str_replace("'","%27",$this->input->post("page_url"))));
+          $response = file_get_contents(HOST_WIKI.str_replace(" ","%20",str_replace("'","%27",$this->input->post("page_url"))));
 
-            $response = mb_convert_encoding($response, 'HTML-ENTITIES', "UTF-8");
+          $response = mb_convert_encoding($response, 'HTML-ENTITIES', "UTF-8");
 
     	    $document = new DOMDocument();
-    	    $document->preserveWhiteSpace = false;
-            $document->formatOutput       = true;
+
+    	    $document->preserveWhiteSpace   = false;
+          $document->formatOutput         = true;
        
             if($response)
             {
@@ -285,32 +288,51 @@ public function explodeIt_and_FeelPAgeId()
 	    $this->form_validation->set_rules('string','string','required|trim');
   	
 	    if($this->form_validation->run()) 
-		{ 	          
+		  { 
+        $this->record_search($this->input->post('string'));	//Store search on a json file
+
 		    $string = str_replace(' ','+',$this->input->post('string'));//On remplace les espaces par des +
 
 		    $string = str_replace("'","%27",$string);//Des apostrophes par des %27
 
 		    $this->go_and_search($string);	  
-		}else{
+		  }else{
 
-			$header = false;
+			  $header = false;
 
-			$footer = false;
+			  $footer = false;
 
             $result = validation_errors();
 
             $statu  = 'fail';
 
             $reponses['header']              = $header;
-		    $reponses['footer']              = $footer;
-		    $reponses['result']              = $result;
-		    $reponses['statu']               = $statu;
+		        $reponses['footer']              = $footer;
+		        $reponses['result']              = $result;
+		        $reponses['statu']               = $statu;
   
 	        // on a notre objet $reponse (un array en fait)
             // reste juste à l'encoder en JSON et l'envoyer
             header('Content-Type: application/json');
             echo json_encode($reponses); 
-		} 
+		  } 
+    }
+
+
+    
+    //Store search on a json file
+    function record_search($string){
+
+      $str_data = file_get_contents(base_url().'assets/json/search.json');
+
+      $data = json_decode($str_data,true);
+ 
+      array_push($data["search"]["search"],$string);
+      array_push($data["search"]["user"],$this->session->userdata('user_id'));
+      
+      $data["search"]["number_request"] = $data["search"]["number_request"] +1;
+
+      write_file('./assets/json/search.json',json_encode($data));
     }
 
 

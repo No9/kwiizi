@@ -43,6 +43,14 @@ $(document).ready(function(){
 
     	var largeur = $(window).width();
 
+    	if(largeur<=1323){
+
+		    $('.dance_for_me').fadeOut();//On retire l'historique de navigation
+    	}else{
+		    $('.dance_for_me').fadeIn();//On retire l'historique de navigation
+
+    	}
+
         if(largeur<=largeur_mobile){
 
         	window.device ='mobile';
@@ -2000,7 +2008,7 @@ $(document).ready(function(){
 				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
 				$('.content_gutenberg').html('<iframe frameBorder="0" src="'+$('.hoster').attr('gutenberg_url')+'get_zim_gutenberg'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
 			
-               
+               console.log($('.content_gutenberg').html())
                 $(document).ready(function(){
 
 			        $('.wiki_title').html('<h1>'+title+'</h1>');
