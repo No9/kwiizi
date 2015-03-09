@@ -126,6 +126,10 @@ $lang['form_f_me_copy']         = "Envoie cet identifiant aux personnes désiran
 $lang['form_f_enter']           = "Entrez l'identifiant de la session à suivre.";
 $lang['form_f_me']              = "Suivez moi";
 $lang['form_search_video']      = "Recherche";
+$lang['form_medecine']          = "Medecine";
+$lang['form_linux']             = "Linux";
+$lang['form_plus']              = "Plus";
+
 
 
 

@@ -2,66 +2,38 @@ $(document).ready(function(){
 
      //ce fichier s'occupe de la recherche
 
-        $('.watermark_search_valid').unbind('click');
-
-        $('.watermark_search').unbind('focus');
-
-		//C'est ici qu'on lis le contenu de rechercher en appuyant sur la touche "entré" pour traiter
-		$('.watermark_search').focus(function() {
-
-		    $('.watermark_search').unbind('keyup');
-
-		    
-		    //On fait le focus sur la vrai recherche 
-           $('.begoo').val($('watermark_search').val());			
-			
-			$('.watermark_search').keyup(function(evenement){ 
-
-				wipe_val();
-			
-			// Si evenement.which existe, codeTouche vaut celui-ci.
-				 // Sinon codeTouche vaut evenement.keyCode.
-                var codeTouche = evenement.which || evenement.keyCode;
-               
-			    if(codeTouche==13)//On lance la recherche si on appui sur la touche Entré
-				{	
-                  $('.watermark_search_valid').click();		   
-			    }
-            });
-			
-	     return false;	 
-        });
-
-
-
           //Pour le focus sur Begoo
-    $('.begoo').focus(function(){
+    $('.input_search').focus(function(){ 
 
-    	 $('.begoo').unbind('keyup');
+    	$('.input_search').unbind('keyup');
 
-        $('.begoo').keyup(function(evenement){
+        $('.input_search').keyup(function(evenement){
 
         	wipe_val();
 
- 
-           //On fait le focus sur la vrai recherche 
-           $('.watermark_search').val($('.begoo').val());
-
            // Si evenement.which existe, codeTouche vaut celui-ci.
-				 // Sinon codeTouche vaut evenement.keyCode.
+		   // Sinon codeTouche vaut evenement.keyCode.
                 var codeTouche = evenement.which || evenement.keyCode;
 
                 if(codeTouche==13)//On lance la recherche si on appui sur la touche Entré
 				{	
-                  $('.watermark_search_valid').click();	  
-			    }   
-        })  
-    })
+                  search_the_string();
 
+                  $('.witch_zim').fadeIn();
 
-    $('.begoo_click').click(function(){
+                  return false;	  
+			    }  
+        });
 
-    	$('.watermark_search_valid').click();
+        return false;  	 
+    });
+
+    $('.zim_click').click(function  () {
+        
+        $('.zim_click').removeClass('green');
+        $('.zim_click').removeClass('disabled');
+        $(this).addClass('green');
+        $(this).addClass('disabled');
     })
 
 
@@ -71,21 +43,20 @@ $(document).ready(function(){
 
     	if(window.kwiki_inline=='off'){
 
-    		$('.wiper').val('');
+    		$('.input_search').val('');
 
-    		$('.wiper').attr('placeholder',$('.offline_app').attr('message'));
+    		$('.input_search').attr('placeholder',$('.offline_app').attr('message'));
     	}
     }
 		
 		
 		
 		//C'est ici qu'on lit contenu de rechercher en appuyant sur recherche pour traiter
-		$('.watermark_search_valid').click(function() {	 
-
+		function search_the_string() {	
 						    
-			if($.trim($('.watermark_search').val())!=='')
+			if($.trim($('.input_search').val())!=='')
 			{
-				var chaine = $(".watermark_search").val().toLowerCase();
+				var chaine = $(".input_search").val().toLowerCase();
 
 				if(chaine.length <= 2 ){
 
@@ -96,139 +67,363 @@ $(document).ready(function(){
 					//On affiche certains menu cachés
 					$('.install').fadeIn();
 
-					$('.begoo').blur();
+                    window.search_term = chaine;
+                    
+                    if(window.zim_tab){
+                        go_search(chaine,window.zim_tab,false);
 
-                        var form_data = {string: chaine};
+                    }else{
 
-						//On affiche la box pour patienter
-                        $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-					   
-				        $.ajax({ 
-
-                         url: $('#get_API').attr('api_search'),
-
-                         type: 'POST',
-
-                         async : true,
-
-						 dataType:"json",
-
-						 error: function(e){
-
-						 	           $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-
-						 	           console.log(e);},
-
-                         data: form_data,
-
-                         success: function(papi) { 
-                         	            if(window.device=='mobile'){
-
-                         	            	window.hide_page();
-                         	            }
-
-									  //regardons si on a un résultat
-										//sinon
-										    if(papi.statu =='fail')
-											{
-										      //on affiche le message d'erreur
-											  $('.liste').html('<div class="alert alert-block"> '+papi.result+' </div>');
-											}
-											
-										//si oui
-										    if(papi.statu =='success')
-											{ 
-											    //We look if there is a result on wikipedia or on Gutenberg
-											    var wikipedia_result = $.trim(papi.wikipedia.header.toLowerCase()).split(' ');
-											    var gutenberg_result = $.trim(papi.gutenberg.header.toLowerCase()).split(' ');
-
-
-                                                var nav_wikipedia     = '<li class="active"><a href="#tab1" data-toggle="tab"><i class="icon-globe"></i> '+$('.result_label').attr('wikipedia')+'</a></li>';
-                                                var nav_gutenberg     = '<li><a href="#tab2" data-toggle="tab"><i class="icon-book"></i> '+$('.result_label').attr('library')+'</a></li>';
-                                                var content_wikipedia = '<div class="tab-pane active tab_wikipedia" id="tab1"><ul class="nav nav-list bs-docs-sidenav liste_click wikipedia" counter="50"><li class="nav-header"><i class="icon-globe icon-white"></i> '+$('.resultat').attr('message')+': <span class="badge badge-success header_result">'+papi.wikipedia.header+'</span></li></ul><button class="btn btn-info plus_wiki_wikipedia" type="button"><i class="icon-plus icon-white"></i></button></div>';
-                                                var content_gutenberg = '<div class="tab-pane tab_gutenberg" id="tab2"><ul class="nav nav-list bs-docs-sidenav liste_click gutenberg" type="gutenberg" counter="50"><li class="nav-header"><i class="icon-book icon-white"></i> '+$('.resultat').attr('message')+': <span class="badge badge-success header_result">'+papi.gutenberg.header+'</span></li></ul><button class="btn btn-info plus_wiki_gutenberg" type="button"><i class="icon-plus icon-white"></i></button></div>';
-
-                                                var all_list = nav_wikipedia+nav_gutenberg;
-                                                var all_content = content_wikipedia+content_gutenberg;
-												
-												$('.liste').html('<div class="tabbable"><ul class="nav nav-tabs">'+all_list+'</ul><div class="tab-content">'+all_content+'</div></div>');
-                                                
-                                                if(wikipedia_result[0]=='no'){
-                                                    
-                                                    $('.tab_wikipedia').html('<div class="alert alert-error">'+papi.wikipedia.header+'</div>');  
-											    }
-
-											    if(gutenberg_result[0]=='no'){ 
-                                                    
-                                                    $('.tab_gutenberg').html('<div class="alert alert-error">'+papi.gutenberg.header+'</div>');  
-											    } 
-
-										        $('.stock_engine_wikipedia').html(papi.wikipedia.result);//ON met le résultal dans un div
-										        $('.stock_engine_gutenberg').html(papi.gutenberg.result);//ON met le résultal dans un div
-
-												$('.wikipedia').append($('.stock_engine_wikipedia .results ul').html()).fadeIn('slow');//On extrait du résultat ce qui nous interesse
-												$('.gutenberg').append($('.stock_engine_gutenberg .results ul').html()).fadeIn('slow');//On extrait du résultat ce qui nous interesse
-
-												$('.stock_engine_wikipedia').html('');//On efface le contenu de ce div pour économiser la mémoire de l'user
-												$('.stock_engine_gutenberg').html('');//On efface le contenu de ce div pour économiser la mémoire de l'user
-
-                                                
-                                                  //The wikipedia pagination
-												$('.stock_engine_wikipedia').html(papi.wikipedia.footer);//ON met les pagination des resultats
-
-												var page_resultat_wikipedia = $('.stock_engine_wikipedia .footer li a').length;
-
-												//Stockage des url des pages de resultat
-												window.nbre_page_resultat_wikipedia = new Array();
-												
-												for(i=0;i<page_resultat_wikipedia;i++){
-
-                                                    window.nbre_page_resultat_wikipedia.push($('.stock_engine_wikipedia .footer li a')[i].href);
-
-                                                    if(i==page_resultat_wikipedia-1){
-                                                    	
-                                                    	$('.stock_engine_wikipedia').html('');//O efface le contenu de ce div pour économiser la mémoire de l'user
-
-                                                    	window.nbre_page_resultat_actuel_wikipedia = 2;
-                                                    }
-												} 
-
-
-												  //The gutenberg pagination
-												$('.stock_engine_gutenberg').html(papi.gutenberg.footer);//ON met les pagination des resultats
-
-												var page_resultat_gutenberg = $('.stock_engine_gutenberg .footer li a').length;
-
-												//Stockage des url des pages de resultat
-												window.nbre_page_resultat_gutenberg = new Array();
-												
-												for(i=0;i<page_resultat_gutenberg;i++){
-
-                                                    window.nbre_page_resultat_gutenberg.push($('.stock_engine_gutenberg .footer li a')[i].href);
-
-                                                    if(i==page_resultat_gutenberg-1){
-                                                    	
-                                                    	$('.stock_engine_gutenberg').html('');//O efface le contenu de ce div pour économiser la mémoire de l'user
-
-                                                    	window.nbre_page_resultat_actuel_gutenberg = 2;
-                                                    }
-												} 
-		
-
-												$(document).ready(function(){
-
-                                                    window.click_by_url();//Gestion des clicks des articles
-                                                    //$(window).scrollTop($(document).height());	
-												});					                         						                         
-											}
-                                 
-                                 $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 		 
-								}
-                            });
+                        go_search(chaine,'wikipedia',false);
+                        $('.zim_click').removeClass('green');
+                        $('.zim_click').removeClass('disabled');
+                        $('.zim_wikipedia').addClass('green');
+                        $('.zim_wikipedia').addClass('disabled');     
                     }
-			}			
-            return false;
+					
+                }
+			}
+        }
+
+
+       
+       //Make the search
+        function go_search(string,zim,type_zim) { 
+       	   
+       	  var form_data = {string:string,zim:zim,type_zim:type_zim};
+
+       	    //On affiche la box pour patienter
+            $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
+
+            $.ajax({ 
+
+                    url: $('#get_API').attr('api_search'),
+
+                    type: 'POST',
+
+                    async : true,
+
+				    dataType:"json",
+
+				    error: function(e){
+
+						 	$('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
+
+						 	console.log(e);},
+
+                    data: form_data,
+
+                    success: function(papi) {
+
+                    	switch (papi.zim){
+
+                    		case 'wikipedia':
+                    		    list_wikipedia(papi);
+                    		    break;
+
+                    		case 'gutenberg':
+                    		    list_gutenberg(papi);
+                    		    break;
+
+                    		case 'TED':
+                    		    list_TED(papi);
+                    		    break;
+
+                            case 'ubuntu':
+                                list_ubuntu(papi);
+                                break;
+
+                            case 'medecine':
+                                list_medecine(papi);
+                                break;
+                    	}
+                    }
+            });
+        }
+
+
+
+        function list_wikipedia (papi) {
+
+        	//We get image of article in a json file
+        	$.getJSON($('#url_json').attr('url')+'image.json?'+ new Date().getTime(), function(data) { 
+
+                $('.stock_engine_wikipedia').html(papi.result);//ON met le résultal dans un div
+
+                var nber_li = $('.stock_engine_wikipedia li').length;
+
+                $('.liste').html('<div class="receive_list collection"></div>');
+
+                for(i=0;i<nber_li;i++){
+
+                	var src_image = data.image.page_url.indexOf($('.stock_engine_wikipedia li a').eq(i).text());
+
+            	    if(src_image==-1){
+
+            		    //We display list without image
+            		    var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_wikipedia li a').eq(i).html()+'" href="'+$('.stock_engine_wikipedia li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+            		    var b = '<span class="titre_article">'+$('.stock_engine_wikipedia li a').eq(i).html()+'</span><br>';
+            		    var c = '<span class="cite">'+$('.stock_engine_wikipedia li cite').eq(i).html()+'</span>';
+            		    var d = '</a>';
+            		    $('.receive_list').append(a+b+c+d);
+
+            	    }else{
+            		    //With image
+            		    var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_wikipedia li a').eq(i).html()+'" href="'+$('.stock_engine_wikipedia li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+            		    var b = '<span><img style="float:left;margin-right:5px;height:100%;" src="'+data.image.src[src_image]+'">';
+            		    var c = '<span class="titre_article">'+$('.stock_engine_wikipedia li a').eq(i).html()+'</span><br>';
+            		    var d = '<span class="cite">'+$('.stock_engine_wikipedia li cite').eq(i).html()+'</span></span>';
+            		    var e = '</a>';
+            		   $('.receive_list').append(a+b+c+d+e);
+            	    }
+
+            	    if(i==nber_li-1){
+                        
+                        $(document).ready(function(){
+
+                            window.click_by_url();//Gestion des clicks des articles
+                            //$(window).scrollTop($(document).height());
+
+                            $('.stock_engine_wikipedia').html('');//Wipe the temporally container
+
+                            $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter	
+					    });
+            	    }
+                }
+            });  
+        }
+
+
+
+        function list_gutenberg (papi) {
+            
+            $('.stock_engine_gutenberg').html(papi.result);//ON met le résultal dans un div
+
+            var nber_li = $('.stock_engine_gutenberg li').length;
+
+            $('.liste').html('<div class="receive_list collection"></div>');
+
+            for(i=0;i<nber_li;i++){
+
+                    //We display list without image
+                    var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_gutenberg li a').eq(i).html()+'" href="'+$('.stock_engine_gutenberg li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+                    var b = '<span class="titre_article">'+$('.stock_engine_gutenberg li a').eq(i).html()+'</span><br>';
+                    var c = '<span class="cite">'+$('.stock_engine_gutenberg li cite').eq(i).html()+'</span>';
+                    var d = '</a>';
+                    $('.receive_list').append(a+b+c+d);
+               
+
+                if(i==nber_li-1){
+                        
+                        $(document).ready(function(){
+
+                            window.click_by_url();//Gestion des clicks des articles
+                            //$(window).scrollTop($(document).height());
+
+                            $('.stock_engine_gutenberg').html('');//Wipe the temporally container
+
+                            $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 
+                        });
+                }
+            }   
+        }
+
+
+        function list_TED (papi) {
+            
+            var list_zim = papi.result; 
+            
+            window.list_find = [];
+            window.zim_ted   = [];
+
+            var string = window.search_term.toLowerCase();
+
+            $('.liste').html('<div class="receive_list collection"></div>');
+             
+            for (var i = 0; i < list_zim.length; i++) {
+
+                var zim_file = list_zim[i].split('#');
+
+                zim_file = zim_file[1];
+
+                $.ajax({ 
+
+                    url: $('#url_json').attr('url')+'TED/'+zim_file+'.json?'+ new Date().getTime(),
+
+                    type: 'POST',
+
+                    async : false,
+
+                    dataType:"json",
+
+                    error: function(e){
+
+                            $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
+
+                            console.log(e);},
+
+                    success: function(data) {
+
+                           //On fouille le terme
+                        var regex = new RegExp(string, "i");
+                        var counter = 0;
+
+                        //We record this name of zim fie before get inside the $.each
+                        window.this_zim = zim_file;
+
+                        $.each(data, function(key, entry){ 
+                                                
+                            counter++;
+
+                            var this_entry_speaker = entry.speaker.toLowerCase();
+                            var this_entry_title = entry.title.toLowerCase();
+                            var this_entry_description = entry.description.toLowerCase();
+
+                            if((this_entry_speaker.search(regex) != -1) || (this_entry_title.search(regex) != -1) || (this_entry_description.search(regex) != -1)) {
+                          
+                                list_video (entry,window.this_zim);                               
+                            }  
+                        });
+                    }
+                });
+                
+               
+                if(i==list_zim.length-1){ 
+
+                    window.click_by_url();
+                }    
+            }
+        }
+
+
+        function list_video (entry,zim_file) {
+
+            var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+entry.title+'" href="'+entry.id+'" zim="TED" zim_file="'+zim_file+'">';
+            var b = '<span><img style="float:left;margin-right:5px;height:100%;" src="'+$('.hoster').attr('host_wiki')+'/'+zim_file+'/I/'+entry.id+'/thumbnail.jpg">';
+            var c = '<span class="titre_article">'+entry.title+' <i>('+entry.speaker+')</i></span><br>';
+            var d = '<span class="cite">'+entry.description+'</span></span>';
+            var e = '</a>';
+            $('.receive_list').append(a+b+c+d+e);
+        }
+
+
+
+         function list_ubuntu (papi) {
+
+            $('.stock_engine_wikipedia').html(papi.result);//ON met le résultal dans un div
+
+            var nber_li = $('.stock_engine_wikipedia li').length;
+
+            $('.liste').html('<div class="receive_list collection"></div>');
+
+            for(i=0;i<nber_li;i++){
+
+                var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_wikipedia li a').eq(i).html()+'" href="'+$('.stock_engine_wikipedia li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+                var b = '<span class="titre_article">'+$('.stock_engine_wikipedia li a').eq(i).html()+'</span><br>';
+                var c = '<span class="cite">'+$('.stock_engine_wikipedia li cite').eq(i).html()+'</span>';
+                var d = '</a>';
+                
+                $('.receive_list').append(a+b+c+d);
+
+                if(i==nber_li-1){
+                        
+                    $(document).ready(function(){
+
+                        window.click_by_url();//Gestion des clicks des articles
+                        //$(window).scrollTop($(document).height());
+
+                        $('.stock_engine_wikipedia').html('');//Wipe the temporally container
+
+                        $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 
+                    });
+                }
+            }          
+        }
+
+
+
+
+        $('.zim_wikipedia').click(function () {
+
+            window.zim_tab = 'wikipedia';
+            go_search(window.search_term,window.zim_tab,false);
         });
+
+        $('.zim_gutenberg').click(function () {
+
+            window.zim_tab = 'gutenberg';           
+            go_search(window.search_term,window.zim_tab,false);
+        });
+
+        $('.zim_TED').click(function () {
+            
+            window.zim_tab = 'TED';
+            go_search(window.search_term,window.zim_tab,false);
+        });
+
+        $('.zim_linux').click(function () {
+            
+            window.zim_tab = 'ubuntu';
+            go_search(window.search_term,window.zim_tab,false);
+        });
+
+
+        $('.zim_medecine').click(function () {
+            
+            window.zim_tab = 'medecine';
+            go_search(window.search_term,window.zim_tab,false);
+        });
+        
+
+        function list_medecine (papi) {
+
+            //We get image of article in a json file
+            $.getJSON($('#url_json').attr('url')+'image_medecine.json?'+ new Date().getTime(), function(data) { 
+
+                $('.stock_engine_wikipedia').html(papi.result);//ON met le résultal dans un div
+
+                var nber_li = $('.stock_engine_wikipedia li').length;
+
+                $('.liste').html('<div class="receive_list collection"></div>');
+
+                for(i=0;i<nber_li;i++){
+
+                    var src_image = data.image.page_url.indexOf($('.stock_engine_wikipedia li a').eq(i).text());
+
+                    if(src_image==-1){
+
+                        //We display list without image
+                        var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_wikipedia li a').eq(i).html()+'" href="'+$('.stock_engine_wikipedia li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+                        var b = '<span class="titre_article">'+$('.stock_engine_wikipedia li a').eq(i).html()+'</span><br>';
+                        var c = '<span class="cite">'+$('.stock_engine_wikipedia li cite').eq(i).html()+'</span>';
+                        var d = '</a>';
+                        $('.receive_list').append(a+b+c+d);
+
+                    }else{
+                        //With image
+                        var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+$('.stock_engine_wikipedia li a').eq(i).html()+'" href="'+$('.stock_engine_wikipedia li a').eq(i).attr('href')+'" zim="'+papi.zim+'" zim_file="'+papi.zim_file+'">';
+                        var b = '<span><img style="float:left;margin-right:5px;height:100%;" src="'+data.image.src[src_image]+'">';
+                        var c = '<span class="titre_article">'+$('.stock_engine_wikipedia li a').eq(i).html()+'</span><br>';
+                        var d = '<span class="cite">'+$('.stock_engine_wikipedia li cite').eq(i).html()+'</span></span>';
+                        var e = '</a>';
+                       $('.receive_list').append(a+b+c+d+e);
+                    }
+
+                    if(i==nber_li-1){
+                        
+                        $(document).ready(function(){
+
+                            window.click_by_url();//Gestion des clicks des articles
+                            //$(window).scrollTop($(document).height());
+
+                            $('.stock_engine_wikipedia').html('');//Wipe the temporally container
+
+                            $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 
+                        });
+                    }
+                }
+            });  
+        }
 		
 });
 

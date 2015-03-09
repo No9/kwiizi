@@ -58,7 +58,6 @@ $(document).ready(function(){
 						success:function(papi) {
                                                     if(papi.statu=='success')
 													{
-													  console.log(papi);
 						                                $.each(papi.titres, function(entryIndex, entry) {
 														
 														    

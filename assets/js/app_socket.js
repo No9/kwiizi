@@ -2,9 +2,9 @@ $(document).ready(function(){
 				
 		//Appending HTML5 Audio Tag in HTML Body
 		
-            $('<audio id="chatAudio"><source src="'+$('#song').attr('url_chat')+'.ogg" type="audio/ogg"><source src="'+$('#song').attr('url_chat')+'.wav" type="audio/wav"><source src="'+$('#song').attr('url_chat')+'.mp3" type="audio/mpeg"></audio>').appendTo('body');
+            //$('<audio id="chatAudio"><source src="'+$('#song').attr('url_chat')+'.ogg" type="audio/ogg"><source src="'+$('#song').attr('url_chat')+'.wav" type="audio/wav"><source src="'+$('#song').attr('url_chat')+'.mp3" type="audio/mpeg"></audio>').appendTo('body');
 		
-		    $('<audio id="bellAudio" loop><source src="'+$('#song').attr('url_bell')+'.ogg" type="audio/ogg"><source src="'+$('#song').attr('url_bell')+'.wav" type="audio/wav"><source src="'+$('#song').attr('url_bell')+'.mp3" type="audio/mpeg"></audio>').appendTo('body');
+		    //$('<audio id="bellAudio" loop><source src="'+$('#song').attr('url_bell')+'.ogg" type="audio/ogg"><source src="'+$('#song').attr('url_bell')+'.wav" type="audio/wav"><source src="'+$('#song').attr('url_bell')+'.mp3" type="audio/mpeg"></audio>').appendTo('body');
 		
 		var unread = 0;//le nombre de message non lus
 		

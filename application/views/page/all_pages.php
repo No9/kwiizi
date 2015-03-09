@@ -15,8 +15,6 @@
                     $this->load->view('header/top');
                 break;					
 			}
-		
-	$this->load->view('menu_side/menu');
 	
 //Et cest terminéé! cette page a la palme d'être la moin lourde du site
 ?>

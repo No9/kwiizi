@@ -1,23 +1,52 @@
 
-	    </div>     
-	    
-	</div>
-
-</div>
 
 
             <!-- Block qui la box qui fait patienter pendans le chargement ajax -->
 	        <div id="Please_wait"style="display:none;"> 
                  
-                <div class="container_load">
-	                <div class="content_load">
-                        <div class="ball"></div>
-                        <div class="ball1"></div>
-                        <!-- <?php echo $this->lang->line('statu_wait'); ?> -->
-                    </div>
-                </div>
+                <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
 
-	        
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+
+	        <!-- <?php echo $this->lang->line('statu_wait'); ?> -->
 
 	        </div>	
               
@@ -249,15 +278,13 @@
             </div>
 			
             <p>		
-			   <form class="form-horizontal">
+			    <form class="form-horizontal">
                     <div class="control-group">
                         <label class="control-label" for="telephone"><?php echo $this->lang->line('form_number'); ?></label>
-                        <div class="controls">
-						    
+                        <div class="controls">						    
                                 <input class="span2 number_phone" verif_friend="<?php echo site_url().'/user/user/verif_friend'; ?>" placeholder="<?php echo $this->lang->line('form_number'); ?>" id="telephone" size="16" type="text" autofocus>
 				                <button class="btn btn-primary call_number" type="button"><i class="icon-facetime-video icon-white"> </i>OK</button>
-					            <button class="btn btn-warning" type="button" data-dismiss="modal" aria-hidden="true"> <i class="icon-remove icon-white"> </i></button>
-                           
+					            <button class="btn btn-warning" type="button" data-dismiss="modal" aria-hidden="true"> <i class="icon-remove icon-white"> </i></button>                          
                         </div>
                     </div>
                 </form>			
@@ -446,7 +473,9 @@
 		
 	    <div id="site_url"  url="<?php echo site_url().'/wikipedia/wiki'; ?>"></div>
 		
-		<div id="site_url_base" url="<?php echo site_url(); ?>"> </div>
+        <div id="site_url_base" url="<?php echo site_url(); ?>"> </div>
+		
+        <div id="url_json" url="<?php echo base_url().'assets/json/'; ?>"> </div>
 		
 		<div class="followed_user_id" user_id=""> </div>
 
@@ -464,7 +493,7 @@
 	<div id="url_peer" host="<?php echo PEER_HOST; ?>" port="<?php echo PEER_PORT; ?>"> </div>
 
 
-
+     
 
 	
 	
@@ -473,7 +502,7 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery/jquery.blockUI.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery/jquery.indexeddb.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery/IndexedDBShim.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/materialize.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/header.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/click.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_contact.js"></script>

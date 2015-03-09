@@ -210,7 +210,7 @@ text-shadow: 0 /*{b-bar-shadow-x}*/ 1px /*{b-bar-shadow-y}*/ 1px /*{b-bar-shadow
 }
 
 
-/*profil dans la messagerie instantanée*/
+/*profil dans la messagerie instantanÃ©e*/
 .profil_msg{
 float:left;
 padding-right:20px;
@@ -303,7 +303,7 @@ border:solid 2px #006699;
 font-size:14px;
 }
 
-/*Ceci est pour le comptage des caractères du talk*/
+/*Ceci est pour le comptage des caractÃ¨res du talk*/
 #bar
 {
 background-color:#5fbbde;
@@ -413,8 +413,9 @@ font-size: 11px;
 
 
 /* style du lexique*/
-.toc
+.lexique
 {
+  
   margin-top: 10px !important; 
   margin-right: 0px; 
   margin-bottom: 15px; 
@@ -450,7 +451,7 @@ font-size: 11px;
   background-repeat: initial initial;
 }
 
-.toc ul ol
+.lexique ul ol
 {
   margin-top: 0px; 
   margin-right: 0px;
@@ -465,7 +466,7 @@ font-size: 11px;
   list-style-image: initial;
 }
 
-.toc li
+.lexique li
 {
    margin-top: 5px; 
    margin-right: 0px; 
@@ -478,7 +479,7 @@ font-size: 11px;
 }
 
 
-/*décoration des titres des articles*/
+/*dÃ©coration des titres des articles*/
 .contenu_wiki h1,.contenu_wiki h2,.contenu_wiki h3,.contenu_wiki h4{
 
 border-bottom: 1px solid rgba(0,0,0,0.15);
@@ -813,3 +814,41 @@ padding: 0.1em;
 .dance_for_me{
    width: 80%;
 }
+
+.titre_article{
+
+  font-weight: bold;
+  font-size: 1.3em;
+}
+
+.cite{
+  color: black;
+}
+
+
+.infobox_v3{
+  float: right;
+}
+
+.receive_list .list_link{
+  height: 100px;
+}
+
+.witch_zim .green{
+   color:white;
+}
+
+
+.liste.side-nav.fixed {
+  overflow: hidden; }
+
+
+
+
+.liste.side-nav.fixed a.active .cite {
+      color: white; }
+  .liste.side-nav.fixed .liste.collapsible-accordion {
+    background-color: #FFF; }
+  .liste.side-nav.fixed:hover {
+    overflow-y: auto; }
+

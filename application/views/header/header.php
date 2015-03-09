@@ -9,9 +9,12 @@
 	<title>{title}</title>
 	
 	<link rel="icon" href="<?php echo base_url(); ?>assets/img/favo_icon.png" />
-	
-	<link href="<?php echo base_url();?>assets/css/bootstrap.min.css" rel="stylesheet">   
-	<link href="<?php echo base_url();?>assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="<?php echo base_url();?>assets/css/materialize.min.css"  media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+     
     <link href="<?php echo base_url();?>assets/css/jquery-ui.css" rel="stylesheet">
 	
     <link type="text/css" href="<?php echo base_url();?>assets/css/jquery.classynotty.css" rel="stylesheet"/>
@@ -46,46 +49,8 @@
 </head>
 
 
-<body>
+<body style="">
 
-<!-- Navbar   
-    ================================================== -->
-    <div class="navbar navbar-inverse">
-    
-        <div class="navbar-inner">
-            <a class="brand listing one" href="#"><i class="icon-chevron-left"></i> &nbsp;&nbsp;Kwiizi v2.7.1</a>
-            <a class="brand two" href="#"></i>Kwiizi v2.7.1</a>
-            <ul class="nav pull-right">
 
-            	<li class="">
-                      <a href="<?php echo site_url().'/wikipedia/wiki'; ?>" class="bulle off_hider" data-placement="bottom" title="home"><i class="icon-home icon-white"></i>  <!-- <span class="lang"><?php echo $this->lang->line('form_home'); ?></span> --></a>
-		        </li>
-					
-                <li class="">
-                      <a href="#" title="<?php echo $this->lang->line('form_call_note'); ?>" data-placement="bottom" class="bulle sender_message off_hider"><i class="icon-user icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_call'); ?></span>--></a>
-		        </li>
-
-		        <li class="">
-                      <a href="#" title="<?php echo $this->lang->line('form_videotek'); ?>" label="<?php echo $this->lang->line('form_videotek'); ?>" data-placement="bottom" class="bulle off_hider video_click"><i class="icon-youtube-play icon-white"></i> <!-- <span class="lang"><?php echo $this->lang->line('form_videotek'); ?></span>--></a>
-		        </li>
-
-		        <li class="">
-                    <a href="<?php echo site_url().'/search/search_wiki/historic/'; ?>" data-placement="bottom" class=" bulle historic" title="<?php echo $this->lang->line('form_historic');?> !"><i class="icon-time icon-white"></i> <?php echo $this->lang->line('form_historic');?></a>
-		        </li>
-            </ul>
-        </div>
-
-    </div>
-   
-						 
-		
-		<div id="statuMessage" class="alert alert-info ">
-		    <button type="button" class="close" data-dismiss="alert">×</button>
-			<div id="Message">
-			</div>
-			
-		</div>
-		<div id="yann" style="display:none">		
-		</div>
 
 	

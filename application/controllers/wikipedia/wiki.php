@@ -171,17 +171,47 @@ public function explodeIt_and_FeelPAgeId()
     } 
 
 
+    //Cette fonction exploite le moteur derecherche de Kiwix
+    public function record_image(){
+
+       //on définit les règles de succès:         
+      $this->form_validation->set_rules('image_src','image_src','required|trim');
+      $this->form_validation->set_rules('image_article','image_article','required|trim');
+      $this->form_validation->set_rules('json_zim','json_zim','required|trim');
+
+      if($this->form_validation->run()) 
+      { 
+        if($this->input->post("json_zim")=='wikipedia'){
+          $json_zim = 'image.json';
+        }else{
+           $json_zim = 'image_medecine.json';
+        }
+        
+        $str_data = file_get_contents(base_url().'assets/json/'.$json_zim);
+        
+        $data = json_decode($str_data,true);
+ 
+        array_push($data["image"]["page_url"],$this->input->post("image_article"));
+        array_push($data["image"]["src"],$this->input->post("image_src"));
+      
+        $data["image"]["number_image"] = $data["image"]["number_image"] +1;
+
+        write_file('./assets/json/'.$json_zim,json_encode($data));
+      }
+    }
+
+
 
     //Cette fonction va chercher les articles de wikipedia sur Kiwix
     public function get_article(){
 
     	 //on définit les règles de succès: 	      
 	    $this->form_validation->set_rules('page_url','page_url','required|trim');
-	    $this->form_validation->set_rules('type','type','required|trim');
-  	
+      $this->form_validation->set_rules('type','type','required|trim');
+      $this->form_validation->set_rules('witch_zim','witch_zim','required|trim');
+
 	    if($this->form_validation->run()) 
 		  { 	            
-		   
           $response = file_get_contents(HOST_WIKI.str_replace(" ","%20",str_replace("'","%27",$this->input->post("page_url"))));
 
           $response = mb_convert_encoding($response, 'HTML-ENTITIES', "UTF-8");
@@ -206,7 +236,7 @@ public function explodeIt_and_FeelPAgeId()
                 //On obtient le contenu de l'article
               $tags           = $document->getElementById('content');
          
-              $full_text      = $this->DOMinnerHTML($tags);
+              $full_text      = $this->DOMinnerHTML($tags,$this->input->post("witch_zim"));
             
               libxml_clear_errors();
             }		  
@@ -235,7 +265,7 @@ public function explodeIt_and_FeelPAgeId()
                 //On obtient le contenu de l'article
               $tags        = $document->getElementById('bodyContent');
          
-              $full_text   = $this->DOMinnerHTML($tags);
+              $full_text   = $this->DOMinnerHTML($tags,'wikipedia');
               
               libxml_clear_errors();
             }
@@ -263,9 +293,10 @@ public function explodeIt_and_FeelPAgeId()
 
 
       //On extrait uniquement le contenu
-    function DOMinnerHTML($element) 
+    function DOMinnerHTML($element,$witch_zim) 
     { 
-       $innerHTML = ""; 
+       $innerHTML = "";
+
        $children = $element->childNodes; 
        
         foreach ($children as $child) 
@@ -275,7 +306,12 @@ public function explodeIt_and_FeelPAgeId()
            $innerHTML.=trim($tmp_dom->saveHTML()); 
         }
 
-       return str_replace('/'.ZIM,KIWIX,$innerHTML);
+        if ($witch_zim=='wikipedia') {
+          return str_replace('/'.ZIM,KIWIX,$innerHTML);
+        } else {              
+          return str_replace('../',HOST_WIKI.'/wikipedia_en_medicine_09_2014_2/',$innerHTML);
+        }
+
     } 
 
 
@@ -285,17 +321,19 @@ public function explodeIt_and_FeelPAgeId()
     public function search(){
 
     	 //on définit les règles de succès: 	      
-	    $this->form_validation->set_rules('string','string','required|trim');
+      $this->form_validation->set_rules('string','string','required|trim');
+      $this->form_validation->set_rules('zim','zim','required|trim');
+	    $this->form_validation->set_rules('type_zim','type_zim','required|trim');
   	
 	    if($this->form_validation->run()) 
 		  { 
-        $this->record_search($this->input->post('string'));	//Store search on a json file
+        $this->record_search($this->input->post('string')); //Store search on a json file
 
 		    $string = str_replace(' ','+',$this->input->post('string'));//On remplace les espaces par des +
 
 		    $string = str_replace("'","%27",$string);//Des apostrophes par des %27
 
-		    $this->go_and_search($string);	  
+		    $this->go_and_search($string,$this->input->post('zim'),$this->input->post('type_zim'));  
 		  }else{
 
 			  $header = false;
@@ -338,56 +376,52 @@ public function explodeIt_and_FeelPAgeId()
 
      
 
-    function go_and_search($string){
+    function go_and_search($string,$zim,$type){
 
-    	$all_zim_file = explode(",",ZIM_LIST);
+      //We get the zim file now
+      $str_data = file_get_contents(base_url().'assets/json/zim.json');
 
-    	$increment_ted = false;//This variable is specially to initialise all ted videos
+      if($zim=='TED'){ //If it this TED article, we get the json file
 
-    	for ($i=0; $i < count($all_zim_file) ; $i++) { 
-    		
-    		$response = file_get_contents('http://'.HOSTER.':'.KIWIX_PORT.'/search?content='.$all_zim_file[$i].'&pattern='.$string.'+');
+        $data = json_decode($str_data,true);
 
-    		$header = $this->get_class_by_name($response,'header');
-
-            $footer = $this->get_class_by_name($response,'footer');
-
-            $result = $this->get_class_by_name($response,'results');
-
-            switch ($i) {
-            	case 0:
-            		$wikipedia = array('header' =>$header,'footer'=>$footer,'result'=>$result);
-            		break;
-
-            	case 1:
-            		$gutenberg = array('header' =>$header,'footer'=>$footer,'result'=>$result);
-            		break;
-            }
-
-            if($i==count($all_zim_file)-1){
-
-                $reponses['wikipedia']              = $wikipedia;
-		        $reponses['gutenberg']              = $gutenberg;
-		        $reponses['statu']                  = 'success';
+        $reponses['result']            = $data['zim_list']['TED'];
+        $reponses['zim']               = $zim;
+        $reponses['type_zim']          = $type;
   
-	            // on a notre objet $reponse (un array en fait)
-               // reste juste à l'encoder en JSON et l'envoyer
-               header('Content-Type: application/json');
-               echo json_encode($reponses);  
-            }
-    	}	
+        header('Content-Type: application/json');
+        echo json_encode($reponses); 
+
+      }else{//If it this order Zim file
+
+          $data = json_decode($str_data,true);
+
+          $response = file_get_contents('http://'.HOSTER.':'.KIWIX_PORT.'/search?content='.$data['zim_list']["$zim"].'&pattern='.$string.'+');
+
+          $header   = $this->get_class_by_name($response,'header');
+
+          $footer   = $this->get_class_by_name($response,'footer');
+
+          $result   = $this->get_class_by_name($response,'results');
+
+          $response = array('header' =>$header,'footer'=>$footer,'result'=>$result,'zim'=>$zim,'zim_file'=>$data['zim_list']["$zim"]);
+
+          header('Content-Type: application/json');
+          echo json_encode($response); 
+      }
     }
 
 
     function get_class_by_name($text,$classname) //On prend le contenu dune class par son DOM
     {
-	  $dom = new DomDocument();
+	    $dom = new DomDocument();
 
       libxml_use_internal_errors(true);
 
       $dom->loadHTML($text);
 
       $finder = new DomXPath($dom);
+
       $nodes  = $finder->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' $classname ')]");
 
 
@@ -399,9 +433,7 @@ public function explodeIt_and_FeelPAgeId()
         	}else{
 
         		return $node->nodeValue;
-        	}
-            
-            
+        	}   
         }
      libxml_clear_errors();
     }

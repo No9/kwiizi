@@ -41,6 +41,16 @@ $(document).ready(function(){
 
     function tailleur(){ 
 
+    	$('.dropdown-button').dropdown({
+            inDuration: 300,
+            outDuration: 225,
+            constrain_width: false, // Does not change width of dropdown to that of the activator
+            hover: false, // Activate on click
+            alignment: 'left', // Aligns dropdown to left or right edge (works with constrain_width)
+            gutter: 0, // Spacing from edge
+            belowOrigin: false // Displays dropdown below the button
+        });
+
     	var largeur = $(window).width();
 
     	if(largeur<=1323){
@@ -93,8 +103,8 @@ $(document).ready(function(){
 
         	$('.contenu_liste').fadeIn();
 
-        	$('.liste').attr('class','liste span5').attr('ref','yes');
-            $('.contenu_liste').attr('class','contenu_liste span7');
+        	//$('.liste').attr('class','liste col s5').attr('ref','yes');
+            //$('.contenu_liste').attr('class','contenu_liste span7');
 
             if($('.liste').attr('ref')=='yes' && window.device=='standart' && window.list_open=='no'){
 
@@ -115,13 +125,16 @@ $(document).ready(function(){
         }
     }
 
- 
+    
+    var hauteur = $('.liste').attr('style','height:'+$(window).height()+'px;');
+    
     $(window).resize(function() {
 
         tailleur();
 
         console.log(window.device);
 
+        $('.liste').attr('style','height:'+$(window).height()+'px;');
     });
 
     window.page_open='yes';
@@ -252,7 +265,7 @@ $(document).ready(function(){
 
 		
 	
-	function retrieve_article_text(full_article,page_url) {
+	function retrieve_article_text(full_article,page_url) { 
 			
 		  window.full_text = full_article;
 			
@@ -287,134 +300,13 @@ $(document).ready(function(){
 		  $('.look_wiki').attr('page_title',title_push);//relève la page qu'il consulte
 										
 										
-		//On enregistre en local l'article en local
-		window.recording_all_article(full_article,page_url,title_push);
+		
                                     
 	    article_ready();//On applique des actions sur le texte                               
 	}
 
 
-	window.recording_all_article = function(full_article,page_url,title_push){
-
-		//on enregistre l'article en local
-		if(window.indexedDB || window.openDatabase){
-										   
-		    //maintenant regardons si la page_url existe en local
-			var objectStore = $.indexedDB(dbName).objectStore("article");
-											
-			var promise_article = objectStore.get(page_url);
-                                          
-            promise_article.done(function(result, event){
-										 
-                if(result == undefined)
-				{
-				  var promise_add = objectStore.add(full_article,page_url); // Adds data to the objectStore    
-                                                    
-				    promise_add.done(function(result, event){
-												
-                        var objectStore_all_art = $.indexedDB(dbName).objectStore("all_article");	
-												 
-				        var promise_all_page_url = objectStore_all_art.get('table_article_url');// tableau des pageurl
-														 
-                        //On soccupe des urls des pages "page_url"														 
-				        promise_all_page_url.done(function(result_all_page_url, event){
-													
-				          var table_article_url = result_all_page_url;
-										 
-                            if(result_all_page_url==undefined)
-					        {
-				             //on créée le tableau
-				             var table_article_url = new Array();
-																  
-					         objectStore_all_art.add(table_article_url,'table_article_url');//et on enregistre ce tableau
-					        }
-				           //on ajoute le dernier article dans la liste du tableau
-														
-			                table_article_url.unshift(page_url);//on ajoute le nouvel id
-														 
-				            objectStore_all_art.put(table_article_url,'table_article_url');//et on enregistre ce tableau d'id
-														      
-                        });
-														
-			            //ON s'occupe des titre
-				        var promise_all_page_title = objectStore_all_art.get('table_article_title');// tableau des articles
-													
-					    promise_all_page_title.done(function(result_all_page_title, event){
-													
-						    var table_article_title = result_all_page_title;
-										 
-                            if(result_all_page_title==undefined)
-						    {
-				             //on créée le tableau
-				                var table_article_title = new Array();
-																  
-							    objectStore_all_art.add(table_article_title,'table_article_title');//et on enregistre ce tableau
-						    }
-			           
-					        //on ajoute le dernier article dans la liste du tableau
-														
-			                table_article_title.unshift(title_push);//on ajoute le nouveau titre
-											   
-						    objectStore_all_art.put(table_article_title,'table_article_title');//et on enregistre ce tableau de titre
-			                                                  
-                        });
-				    });									
-			    }
-												
-            });										  
-		}
-	    else
-		{
-			if($.jStorage.storageAvailable())//est ce que le navigateur supporte le webstorage?
-            {
-			 // on enregistre en local le texte
-			 var total_storage = ($.jStorage.storageSize()/1024)/1024;//la taille est en méga
-                                         
-				if(total_storage < 4.5)//si la taille maxi est inférieur à 4,5 Mo
-				{
-	              //on met en local
-				  put_article(page_url,title_push,text_push);
-				}
-				else //on supprime le dernier article
-				{
-				 //console.log('stokage plein.Suppression du dernier article');
-											 
-				 //on vérifie si le tableau des articles existe
-				 var all_article = $.jStorage.get('all_article');
-											  
-					if(all_article)
-					{
-					 //prennons ce tableau
-					 //comptons son nombre d'entré
-					 nbre_artcles = all_article.length;
-												  
-					 //console.log(nbre_artcles+' articles au total dont le premier va être supprimé');
-												  
-					 //suppression du premier article
-					 //sélection au préable du dernier élément du tableau
-					 var last_article = nbre_artcles-1;
-												   
-					 var old_article = all_article[last_article];
-													  
-					   //console.log('Suppression de "'+$.jStorage.get('title_'+old_article)+'"');
-													   
-					   //et on supprime cette article
-					   $.jStorage.deleteKey('title_'+old_article);
-					   $.jStorage.deleteKey('text_'+old_article);
-												       
-					   all_article.pop();//.pop() supprime le dernier élément du tableau
-													
-					    //je met à jour dans le cache le tableau des derniers articles
-						$.jStorage.set('all_article',all_article)
-													 
-						 //on met en local
-						 put_article(page_url,title_push,text_push);
-												  
-				    }
-				}
-			}
-		}
-	}
+	
 
 
 	
@@ -463,7 +355,7 @@ $(document).ready(function(){
 		  //On affiche la box pour patienter
           $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
 			
-		  retrieve_article_url(page_url,false);
+		  retrieve_article_url(page_url);
 		
 		});
 		
@@ -713,7 +605,7 @@ $(document).ready(function(){
     var list_leader_name = liste_leader.followedName;//{'source':list_leader_name}
     */
 
-    $('.typeahead').typeahead();
+    //$('.typeahead').typeahead();
 			//c'est ici qu'on perform la recherche
             $('.user_searchs').keyup(function(){
                   
@@ -863,7 +755,9 @@ $(document).ready(function(){
 
             
 			//on affiche l'article en passanrt par la base de donnée 
-            function retrieve_article_server(page_url,recorder,type) {
+            function retrieve_article_server(page_url,recorder) {
+
+            	var type = false;
 			
 			       //on récupère l'article
 			       if(type==false){
@@ -876,17 +770,19 @@ $(document).ready(function(){
                                         
 							type: 'POST',
 							
-							data: {'page_url':page_url,'type':type},
+							data: {'page_url':page_url,'type':type,'witch_zim':window.witch_zim},
                                         
 							async : true,
 
 							dataType:"json",
 								            
-							error: function(e){ console.log(e)
+							error: function(e){ 
 							                  $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
 											},
                                         
-							success:function(page_aff) {
+							success:function(page_aff) { 
+
+								       window.url_image = page_url;
 
 	                                   retrieve_article_text(page_aff,page_url); 
 									}
@@ -894,7 +790,9 @@ $(document).ready(function(){
             }
 
 			
-		    function retrieve_article_url(page_url,type){
+		    function retrieve_article_url(page_url){
+
+		    	window.url_image = false;
 	    
 				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
 			    {
@@ -903,10 +801,9 @@ $(document).ready(function(){
                        
 						if(result==undefined)//sil ya pas l'article,on le prend  au serveur
 						{ 
-						
 						    var recorder = 'yes';
 					     
-					        retrieve_article_server(page_url,recorder,type);//on prend l'article au serveur
+					        retrieve_article_server(page_url,recorder);//on prend l'article au serveur
 						}
 						else
 						{ 
@@ -1013,7 +910,7 @@ $(document).ready(function(){
        
 
             //actions à faire à l'affichage d'un article
-            function article_ready(){
+            function article_ready(){ 
 			
 			    //faire un unbind des évènement dans la page 
                 //$('.extiw,.new,.external,.toc a,.internal,mw-magiclink-isbn,.mw-redirect').unbind('click');//on détache le click s'il était présent avant				
@@ -1026,6 +923,28 @@ $(document).ready(function(){
 					//This is for ted conference
 					$('.wiki_content').html($('.wiki_content').html().replace('../../',$('.hoster').attr('host_wiki')+'/'+window.ted_zim_file+'/' ));
 
+                     //We modify the url of link of the article if it is for Medecine article
+					if(window.witch_zim=='medecine'){
+
+					   var lien = $('.wiki_content a:not(.external)').length;
+
+					    for (var i = 0; i < lien; i++) {
+					        
+					        $('.wiki_content a:not(.external)').eq(i).attr('href','/wikipedia_en_medicine_09_2014_2/A/'+$('.wiki_content a:not(.external)').eq(i).attr('href'));
+					        $('.wiki_content a:not(.external)').eq(i).addClass('list_link');
+					        $('.wiki_content a:not(.external)').eq(i).attr('zim','medecine');
+					        $('.wiki_content a:not(.external)').eq(i).attr('zim_file','wikipedia_en_medicine_09_2014_2');
+
+					        if(i==lien-1){ 
+
+					        	$(document).ready(function(){
+
+                                    window.click_by_url();
+                                });
+					        }
+					    };                         
+					}
+
 					
 					//on cha,ge le titre de la page
 					$('title').html($('.wiki_title').text());
@@ -1034,53 +953,129 @@ $(document).ready(function(){
 		            //On met une axtérisque sur la distinction des pages non rédigées
 		   	        $('.new').append('<sup>(Page not found)</sup>');
 		   	        //Et on met un signal sur les liens externes
-		   	        $('.extiw').append('<i class="icon-info-sign"></i><sup>*</sup>');
+		   	        $('.extiw').append('<i class="tiny mdi-action-lock-outline"></i><sup>*</sup>');
 					
 			
 			        //On affiche l'url des pages externes
-		   	        $('.external').html($('.external').html()+' <i class="icon-info-sign"></i><sup>*</sup>');
-	               
+		   	        $('.external').html($('.external').html()+' <i class="tiny mdi-action-lock-outline"></i><sup>*</sup>');
 
-                    //action à effectuer sur les liens qui sont dans l'article.
-                    $('.wiki_content a:not(.new,.toc a,.internal),area').unbind('click');
-                    $('.wiki_content a:not(.new,.toc a,.internal),area').click(function() { 
+                    
+                    //We design the link in the model of wikipedia
+                    if(window.save_zim=='wikipedia'){
 
-                    	$('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//on affiche le message pour patienter
-			         
-			            var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
-			            
+                    	var links = $('.wiki_content a:not(.new,.toc a,.internal),area').length;
 
-				  		retrieve_article_url(page_url,false);
-				
-					    return false;                    
-			        });
+		   	                $('.wiki_content a:not(.new,.toc a,.internal),area').addClass('list_link');
+                            $('.wiki_content a:not(.new,.toc a,.internal),area').attr('zim',window.save_zim);
+                            $('.wiki_content a:not(.new,.toc a,.internal),area').attr('zim_file',window.save_zim_file);
+
+                        $(document).ready(function(){
+
+                            window.click_by_url();
+                         });
+                     }
+
+                    if(window.save_zim=='ubuntu'){
+                    	//We put the attr zim="ubuntu" and zim_file="ubuntudoc_fr_01_2009" in any link on the article
+                        $('.wiki_content .wikilink1').addClass('list_link');
+                        $('.wiki_content .wikilink1').attr('zim','ubuntu');
+                        $('.wiki_content .wikilink1').attr('zim_file','ubuntudoc_fr_01_2009');
+                                	
+                        $(document).ready(function(){
+
+                            window.click_by_url();
+                        });
+
+                        var nbre_image = $('.wiki_content img').length;
+
+                        if(nbre_image >0){
+
+                        	for (var i = 0; i < nbre_image; i++) {
+                        		//We activ the click on each image to enlarge the image. Pretty Cool!
+                                var src = $('.wiki_content img').eq(i).attr('src').replace('/ubuntudoc_fr_01_2009',$('.hoster').attr('host_wiki')+'/ubuntudoc_fr_01_2009');
+                                $('.wiki_content img').eq(i).attr('src',src);
+                                $('.wiki_content img').eq(i).parent().removeAttr('href');
+                     
+                                $('.wiki_content img').eq(i).addClass('materialboxed');
+                                $('.wiki_content img').eq(i).attr('data-caption',$('.wiki_content img').attr('title'));
+
+                                if(i==nbre_image-1){
+
+                                	$(document).ready(function(){ 
+	                                        
+	                                   $('.materialboxed').materialbox();//To enlarge the piture                                         
+                                    })
+                                }
+                        	}                       	
+                        }    
+                    }
+
+                    
+                    //We select the right zim_file to keep image
+                    var image_zim;
+
+                    if(window.witch_zim=='wikipedia'){
+                        
+                        image_zim = 'image.json';
+                    }else{
+                    	
+                    	image_zim = 'image_medecine.json';
+                    }
 
 
-			        $('.wiki_content img').addClass('image');
+                    //We record te first image to illustrate the article
+        	        $.getJSON($('#url_json').attr('url')+image_zim, function(data) {
 
-			        //Ceci est pour les images cliquable pour agrandissement
-					$('.image').unbind('click');//ON détaches les clicks précédents
+        	        	var image = $('.thumbinner img').attr('src');
+        	        	var image2 = $('.infobox_v2 img').attr('src');
 
-					
-					$('.image').click(function() {
-                        //On récupère l'images
-                       var chiizz = '<img src="'+$(this).attr('src')+'" />';
+        	        	if(window.witch_zim=='medecine'){
+        	        		image = $('.infobox img').attr('src');
+        	        	}
 
-                       $('.click_download').attr('href',$(this).attr('src'));//On fait le lien de téléchargement de l'image
-					   
-					   //je vide l'image précédent si il en avait
-					   $('.my_place').html($('#Please_wait').html());
-					   $('.my_title').html('');
-					   
-					   //et on met la nouvelle image
-					   $('.my_place').html(chiizz);
-					   $('.my_title').html($('.my_place > img').attr('alt'));
-					   
-                        $('.big_tof').click();	
+        	        	if(image!=undefined && image2!=undefined) {
 
-                        $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter						
-			         	return false;	            
-                    });
+        	        		var src_image = data.image.page_url.indexOf(window.article_title);
+                        
+        	        	    if(src_image==-1){ //If this image is not recorded
+                            
+                                var article_title = window.article_title
+
+                                record_image(image2,article_title);
+        	        	    }
+        	        	} else{
+                            
+                            if(image2!=undefined){
+
+        	        		    var src_image = data.image.page_url.indexOf(window.article_title);
+                        
+        	        	        if(src_image==-1){ //If this image is not recorded
+                            
+                                    var article_title = window.article_title
+
+                                    record_image(image2,article_title);
+        	        	        }
+        	        	    }else{
+
+        	        		    if(image!=undefined){
+
+        	        			    var src_image = data.image.page_url.indexOf(window.article_title);
+                        
+        	        	            if(src_image==-1){ //If this image is not recorded
+                            
+                                       var article_title = window.article_title
+
+                                        record_image(image,article_title);
+        	        	            }
+        	        		    }
+        	        	    } 
+        	        	}              	    
+        	        })
+                    
+
+                    $('.wiki_content img').parent().removeAttr('href') ;
+                    $('.wiki_content img').addClass('materialboxed');
+                    $('.materialboxed').materialbox();//To enlarge the piture
 
                 });
 				
@@ -1092,7 +1087,7 @@ $(document).ready(function(){
 				{ 
 					socket.emit('fellow',{'room':my_user_id,'page_url': $('.look_wiki').html(),'full':window.full_text}); //emit to 'room' except this socket	
 				}
-				
+
 				$('.special_nav').fadeIn();//on affiche le boutons cachés du navigo
 				   
 				//$('.look_wiki').attr('if_article','yes');//signale que le navigo est tout ouvert
@@ -1104,11 +1099,21 @@ $(document).ready(function(){
 
 		        $('#title').fadeOut();
 				                      
-				$('body').animate({scrollTop : '0px'},1000);//on te scroll au debut de la page
+				//$('body').animate({scrollTop : '0px'},1000);//on te scroll au debut de la page
 
-				$('#toTop').click();
+
+				//We record the article on localdatabase
+		        window.recording_all_article($('.wiki_content').html(),window.save_url,window.save_title);
+				
+
 
 				$('#info_msg_wait').fadeOut();//On efface la box qui fait patienter		
+			}
+
+
+			function record_image(image,article_title){
+
+				$.post($('#site_url').attr('url')+'/record_image' , {'image_src': image,'image_article':article_title,'json_zim':window.witch_zim});
 			}
 
 
@@ -1578,272 +1583,258 @@ $(document).ready(function(){
 				}
 			}
 			
+
 			
-			
+			function local_recorded(url) {
+				
+				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
+			    {
+					
+					$.indexedDB(dbName).objectStore("article").get(url).done(function(result, event){
+                       
+						if(result==undefined)//sil ya pas l'article,on le prend  au serveur
+						{ 
+						    return false; 
+						}
+						else
+						{  
+						  //On apprete le titre et le texte
+						  var title_push = result.page_title; 
+											  
+						  var text_push = result.page_text;
+
+						  
+						  $('.wiki_title').html('<h1>'+title_push+'</h1>');		     		
+						  $('.wiki_content').html(text_push);	
+                                      
+	                        $(function(){article_ready()});//On applique des actions sur le texte
+						}
+                    });
+					
+					$.indexedDB(dbName).objectStore("article").get(url).fail(function(error, event){ 
+
+					   return false;
+                    });
+			}else{
+
+				return false;
+			}
+		}
+
+
+
+		window.recording_all_article = function(full_article,page_url,title_push){
+
+		//on enregistre l'article en local
+		if(window.indexedDB || window.openDatabase){ 
+
+			//We convert to Json
+            var jsonfy = {'page_title':title_push,'page_text':full_article,'page_url':page_url};
+			  
+		    //maintenant regardons si la page_url existe en local
+			var objectStore = $.indexedDB(dbName).objectStore("article");
+											
+			var promise_article = objectStore.get(page_url);
+                                          
+            promise_article.done(function(result, event){
+										 
+                if(result == undefined)
+				{
+				  var promise_add = objectStore.add(jsonfy,page_url); // Adds data to the objectStore    
+                                                    
+				    promise_add.done(function(result, event){ 
+												
+                        var objectStore_all_art = $.indexedDB(dbName).objectStore("all_article");	
+												 
+				        var promise_all_page_url = objectStore_all_art.get('table_article_url');// tableau des pageurl
+														 
+                        //On soccupe des urls des pages "page_url"														 
+				        promise_all_page_url.done(function(result_all_page_url, event){ 
+													
+				          var table_article_url = result_all_page_url;
+										 
+                            if(result_all_page_url==undefined)
+					        {
+				             //on créée le tableau
+				             var table_article_url = new Array();
+																  
+					         objectStore_all_art.add(table_article_url,'table_article_url');//et on enregistre ce tableau
+					        }
+				           //on ajoute le dernier article dans la liste du tableau
+														
+			                table_article_url.unshift(page_url);//on ajoute le nouvel id
+														 
+				            objectStore_all_art.put(table_article_url,'table_article_url');//et on enregistre ce tableau d'id
+														      
+                        });
+														
+			            //ON s'occupe des titre
+				        var promise_all_page_title = objectStore_all_art.get('table_article_title');// tableau des articles
+													
+					    promise_all_page_title.done(function(result_all_page_title, event){
+													
+						    var table_article_title = result_all_page_title;
+										 
+                            if(result_all_page_title==undefined)
+						    {
+				             //on créée le tableau
+				                var table_article_title = new Array();
+																  
+							    objectStore_all_art.add(table_article_title,'table_article_title');//et on enregistre ce tableau
+						    }
+			           
+					        //on ajoute le dernier article dans la liste du tableau
+														
+			                table_article_title.unshift(title_push);//on ajoute le nouveau titre
+											   
+						    objectStore_all_art.put(table_article_title,'table_article_title');//et on enregistre ce tableau de titre
+			                                                  
+                        });
+				    });									
+			    }
+												
+            });										  
+		}
+	    else
+		{
+			if($.jStorage.storageAvailable())//est ce que le navigateur supporte le webstorage?
+            {
+			 // on enregistre en local le texte
+			 var total_storage = ($.jStorage.storageSize()/1024)/1024;//la taille est en méga
+                                         
+				if(total_storage < 4.5)//si la taille maxi est inférieur à 4,5 Mo
+				{
+	              //on met en local
+				  put_article(page_url,title_push,text_push);
+				}
+				else //on supprime le dernier article
+				{
+				 //console.log('stokage plein.Suppression du dernier article');
+											 
+				 //on vérifie si le tableau des articles existe
+				 var all_article = $.jStorage.get('all_article');
+											  
+					if(all_article)
+					{
+					 //prennons ce tableau
+					 //comptons son nombre d'entré
+					 nbre_artcles = all_article.length;
+												  
+					 //console.log(nbre_artcles+' articles au total dont le premier va être supprimé');
+												  
+					 //suppression du premier article
+					 //sélection au préable du dernier élément du tableau
+					 var last_article = nbre_artcles-1;
+												   
+					 var old_article = all_article[last_article];
+													  
+					   //console.log('Suppression de "'+$.jStorage.get('title_'+old_article)+'"');
+													   
+					   //et on supprime cette article
+					   $.jStorage.deleteKey('title_'+old_article);
+					   $.jStorage.deleteKey('text_'+old_article);
+												       
+					   all_article.pop();//.pop() supprime le dernier élément du tableau
+													
+					    //je met à jour dans le cache le tableau des derniers articles
+						$.jStorage.set('all_article',all_article)
+													 
+						 //on met en local
+						 put_article(page_url,title_push,text_push);
+												  
+				    }
+				}
+			}
+		}
+	}
 
 			
 			
 			//cette fonction s'occupe de tous les articles dont on peut générer par l'appel de son url
 			window.click_by_url =  function(){
-			      //on détache les évènements précédents
-	                                $('.hist_wiki,.back,.plus_wiki_b,.liste_click a,.click_list,.cat_wiki,.liste_zim a,.click_ted').unbind('click');//Ne pas enlever unbind sur .cat_wiki
+
+				                    $('.urlextern,.mf_,.not_link,.wikilink2').click(function  () {
+				                    	return false;
+				                    })
+			                        
+			                        //on détache les évènements précédents
+	                                $('.hist_wiki,.plus_wiki_b,.liste_click a,.click_list,.liste_zim a,.click_ted,.list_link').unbind('click');//Ne pas enlever unbind sur .cat_wiki
 	
 		                            //pour les articles de wikipedia
-			                        $('.click_list,.liste_click a').click(function() { 
+			                        $('.click_list,.liste_click a,.list_link').click(function() {
 
+			  
 			                            if(window.device=='mobile'){ 
 
 			                          	    window.show_page();
 			                            }
 
-			                            var type = false;
-                                           
+			                            $('#toTop').click();
 
-			                            if($(this).parent().parent().attr('type')=='gutenberg') { //If it's a result of gutenberg library,we open the book in a new window
-                                           
-                                            //window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+			                            //We save information about this click
+			                            window.save_title     = $(this).attr('title');
+			                            window.save_url       = $(this).attr('href');
+			                            window.save_zim       = $(this).attr('zim');
+			                            window.save_zim_file  = $(this).attr('zim_file');
 
-                                           open_frame_gutenberg($(this).attr("href"),$(this).text());
-                                    
-			                           
-                                           $('.liste_zim a').parent().attr('class','');
-			                               $(this).parent().attr('class','active');
-			                            }else{
-
-                                            //This is specialy for TED video
-                                           
-			                                if($(this).parent().parent().attr('type')=='ted'){ 
-
-			                                	var type = $(this).parent().parent().attr('ted_zim_file');
-			                                } 
-                                            
-                                            //On affiche la box pour patienter                  
-		                                    $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-			
-			                                var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
-								      
-								            retrieve_article_url(page_url,type);
-			                            }     
-									  
-									  //On désactive tous les boutons actifs
-                                       $('.liste_click .active').attr('class','active_ceci');
-			
-				                      //Et on active le bouton sur le quel on vient de cliquer	
-                                      $(this).parent().attr('class','active');
-                                      
-                                      return false;		            
-                                    });
-
-
-                                     $('.liste_zim a').click(function() { 
-
-			                            if(window.device=='mobile'){ 
-
-			                          	    window.show_page();
-			                            }
-
-			                            $('.liste_zim a').parent().attr('class','');
-			                            $(this).parent().attr('class','active');
-
-			                            window.this_zim  = $(this).attr('href');
-			                   
-			                            var zim_title = $(this).text();
-
-                                    	$('#info_msg_wait').html($('#Please_wait').html()).fadeIn();//we display waitin message
-
-                                    	 $.ajax({ 
-
-                                            url: $('#get_API').attr('video_zim')+this_zim+'.json',
-
-                                            type: 'POST',
-
-                                            async : true,
-
-			                                dataType:"json",
-
-			                                error: function(e){
-
-						 	                    $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-
-						 	                    console.log(e);},
-
-                                            success: function(data) {
-
-                                            	window.this_json_zim = data;//On garde le fichier zim pour la recherche
-
-                                            	$('.wiki_title').html('<h1>'+zim_title+'</h1>');
-
-                                            	window.TED_title = zim_title;
-
-                                            	$('.wiki_content').html('<input class="zim_engine" type="text" placeholder="'+$('.search_on_zim').attr('search_zim')+'"><br> <div class="grid_ted"></div><div class="framaTed" style="display:none"></div>');
-                                                
-                                                play_this_zim();  					                        }
-                                        });
 			                            
-									  
+			                            var local_record = local_recorded(window.save_url);
+
+			                            if(local_record!=true){
+
+                                            //We change the link to active
+                                            $('.list_link').removeClass('active');
+                                            $(this).addClass('active');
+
+                                            var type_zim = $(this).attr('zim');
+
+                                            switch(type_zim){
+
+                                        	    case 'wikipedia':
+                                        	        //On affiche la box pour patienter                  
+		                                            $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
+			                                        var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
+								                
+								                    window.article_title = $(this).attr('title');
+								                    window.witch_zim = 'wikipedia';
+								                    retrieve_article_url(page_url);
+                                        	        break;
+
+                                        	    case 'gutenberg':
+                                        	        //window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+                                                    open_frame_gutenberg($(this).attr("href"),$(this).attr('title'));
+                                        	        break;
+
+                                        	    case 'TED':
+                                    	            open_frame($(this).attr('href'),$(this).attr('zim_file'),$(this).attr('title'));
+
+                                    	            window.id_ted = $(this).attr('href');
+
+                                    	            window.notty_it($('.ted_video_message').attr('help_language'));
+                                    	            return false;                                             
+                                        	        break;
+
+                                        	    case 'ubuntu':
+                                        	        if($(this).attr('href')!=''){
+                                                       //On affiche la box pour patienter                  
+                                                       open_frame_gutenberg($(this).attr("href"),$(this).attr('title'));
+                                        	        }                                       	   
+                                        	        break;
+
+                                        	    case 'medecine':
+                                        	        //On affiche la box pour patienter                  
+		                                            $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
+			                                        var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
+								                
+								                    window.article_title = $(this).attr('title');
+								                    window.witch_zim = 'medecine';
+								                    retrieve_article_url(page_url);
+                                        	        break;
+                                            }
+                                        }
+  
                                       return false;		            
                                     });
-
-
-                                    $('.zim_engine').focus(function(){
-
-    	                                $('.zim_engine').unbind('keyup');
-
-                                        $('.zim_engine').keyup(function(evenement){
-
-                                        	window.list_find = [];
-                                            window.list_find_index = [];
-
-
-                                            var string = $('.zim_engine').val().toLowerCase();
-
-                                            if(string.length!==0){ 
-
-                                                var regex = new RegExp(string, "i");
-                                                var counter = 0;
-                                           
-                                                $.each(window.this_json_zim, function(key, entry){
-                                            	
-
-                                            	counter++;
-
-                                            	var this_entry_speaker = entry.speaker.toLowerCase();
-                                            	var this_entry_title = entry.title.toLowerCase();
-                                            	var this_entry_description = entry.description.toLowerCase();
-
-                                                if((this_entry_speaker.indexOf(string) != -1) || (this_entry_title.indexOf(string) != -1) || (this_entry_description.indexOf(string) != -1)) {
-                  
-                                                        if(list_find.length==0 || list_find.indexOf(entry['id'])==-1){
-
-                                                            window.list_find[entry['id']] = entry;
-                                                            window.list_find_index.push(entry['id']);    
-                                                        }      
-                                                }
-
-
-                                                if(window.this_json_zim.length==counter+1){
-                                                            	
-                                                    display_array_find();    
-                                                } 
-                                            });
-                                        }else{
-
-                                        	play_this_zim();
-                                        }
-                                            
-                                        });
-                                    })
-
-
-                                    function play_this_zim() {
-
-                                    	$('.grid_ted').html('');
-                                    	
-                                    	$.each(window.this_json_zim, function(entryIndex, entry) {
-
-                                            		var html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/A/'+entry['id']+'/index.html" title="'+entry['title']+'" id="'+entry['id']+'" zim="'+window.this_zim+'" class="click_ted">';
-                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/I/'+entry['id']+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
-                                            		html +='<strong>'+entry['title']+'</strong>';
-                                                    html +='<p>'+truncate(entry['description'],100)+'</p>';
-                                                    html +='<div class="meta">'+entry['speaker']+'</div>';
-                                                    html +='</a></div>';
-
-                                            		$('.grid_ted').append(html);
-
-                                            		if(window.this_json_zim.length-1==entryIndex){
-
-                                            			//blocksit define
-	                                                    $(window).load( function() {
-		                                                    $('.grid_ted').BlocksIt({
-			                                                   numOfCol: 5,
-			                                                   offsetX: 5,
-			                                                   offsetY: 5
-		                                                    });
-	                                                    });
-       
-                                                        $(document).ready(function(){
-
-                                                            window.click_by_url();//Gestion des clicks des articles
-								                        });
-
-								                        
-                                                        $(".grid_ted").fadeIn();
-
-
-                                                        $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter 		 
-
-                                            		}         		
-                                                });
-                                    }
-
-
-                                    function display_array_find() {
-
-                                    	$('.grid_ted').html('');
-
-                                    	var html;
-
-                                    	for(i=0;i<window.list_find_index.length;i++){
-
-                                    		var entry = window.list_find[window.list_find_index[i]];
-
-                                    				html ='<div class="grid"><a href="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/A/'+entry.id+'/index.html" title="'+entry.title+'" id="'+entry.id+'" zim="'+window.this_zim+'" class="click_ted">';
-                                            		html +='<div class="imgholder"><img src="'+$('.hoster').attr('host_wiki')+'/'+window.this_zim+'/I/'+entry.id+'/thumbnail.jpg" class="img-polaroid pull-right"/></div>';
-                                            		html +='<strong>'+entry.title+'</strong>';
-                                                    html +='<p>'+truncate(entry.description,100)+'</p>';
-                                                    html +='<div class="meta">'+entry.speaker+'</div>';
-                                                    html +='</a></div>';
-
-                                                    $('.grid_ted').append(html);
-
-                                            if(i==window.list_find_index.length-1){
-                                               
-                                                window.click_by_url();//Gestion des clicks des articles
-								                       
-                                            }
-                                    			
-                                    	}
-                                    }
-
-
-                                    
-                                    $('.click_ted').click(function(){
-
-                                    	open_frame($(this).attr('id'),$(this).attr('zim'),$(this).attr('title'));
-
-                                    	window.id_ted = $(this).attr('id');
-
-                                    	window.notty_it($('.ted_video_message').attr('help_language'));
-
-                                    	$('#toTop').click();
-
-                                    	$('.zim_engine').fadeOut();
-                                    	return false;
-                                    })
-
-
-                                    $('.back_bn').click(function(){
-
-                                    	$(".grid_ted").fadeIn();
-
-                                    	$('.zim_engine').fadeIn();
-
-
-				                        $('.framaTed').html('').fadeOut();
-
-                                        var target = window.id_ted; 
-                      
-                                        var hauteur = $('#'+target).offset().top;
- 
-                                        //animation
-                                        $('html,body').animate({scrollTop:hauteur} , 1000);
-
-				                        $('.wiki_title').html('<h1>'+window.TED_title+'</h1>');
-				                        
-				                        $('title').html(window.TED_title);
-                                        
-                                        return false;
-			                        });
 
 
                                     $('.hist_wiki').click(function(){ 
@@ -1853,7 +1844,7 @@ $(document).ready(function(){
 			                            var page_url = $(this).attr('href').replace($('.hoster').attr('kiwix'),'');
 
 
-				  		                retrieve_article_url(page_url,false);
+				  		                retrieve_article_url(page_url);
 				
 					                    return false;                   
                                     }); 
@@ -1927,9 +1918,7 @@ $(document).ready(function(){
                                         return false;   
                                     });
 
-                $('.back').click(function() { 
-                	aspirated();
-                }); 									
+               									
                                 
 			    $('#info_msg_wait').fadeOut();
 			}
@@ -1967,12 +1956,8 @@ $(document).ready(function(){
 
 			function open_frame(id,zim,title){
 
-                $('#toTop').click();
 
-				//On cache la liste actuelle
-				$('.grid_ted').fadeOut();
-
-				$('.framaTed').html('<a class="m-btn blue back_bn"><i class="icon-double-angle-left icon-white"></i>  '+$('.ted_video_message').attr('go_back')+'</a><iframe frameBorder="0" src="'+$('.ted_video').attr('url')+id+'/'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
+				$('.wiki_content').html('<iframe frameBorder="0" src="'+$('.ted_video').attr('url')+id+'/'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
 			
                 //On ouvre la page du iframe http://localhost/GitHub/kwizi/
 
@@ -2001,14 +1986,11 @@ $(document).ready(function(){
 
 			function open_frame_gutenberg(zim,title){ 
                 
-                $('#toTop').click();
-
                 $('.wiki_content').html($('#Please_wait').html()); 
 			
 				//On ouvre la page du iframe http://localhost/GitHub/kwizi/#
 				$('.content_gutenberg').html('<iframe frameBorder="0" src="'+$('.hoster').attr('gutenberg_url')+'get_zim_gutenberg'+zim+'" width="100%" style="height:100em;padding-top:5px" name="myFrame" id="myFrame"></iframe>');
 			
-               console.log($('.content_gutenberg').html())
                 $(document).ready(function(){
 
 			        $('.wiki_title').html('<h1>'+title+'</h1>');
@@ -2020,11 +2002,16 @@ $(document).ready(function(){
                                 $('#myFrame').contents().find('div')[0].remove() ;
                                 $('#myFrame').contents().find('body').css('background-color','white');
                                 $('#myFrame').contents().find('body').css('margin-top','0px');
+                                $('#myFrame').contents().find('.toc').eq(0).addClass('lexique');
                                 $('.content_gutenberg').html($('#myFrame').contents().find('body').html().replace(/="..\//g,'="'+$('.hoster').attr('host_wiki')+'/'+$('.hoster').attr('gutenberg')+'/'));
                                 $('.xlink').remove();
                                 $('.zim_info').remove();
                                 $('.wiki_content').html($('.content_gutenberg').html()).fadeIn();
                                 $('.content_gutenberg').html('');
+                                $('.urlextern').append('<i class="tiny mdi-action-lock-outline"></i>');
+
+                                article_ready();                               
+                                
                             });
                         });     
                 });
@@ -2313,8 +2300,6 @@ $(document).ready(function(){
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-     
 
     /*
 
