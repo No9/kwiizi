@@ -293,9 +293,7 @@ $(document).ready(function(){
 		    }
 
 		    window.list_historic.push(data_historic);
-		    
-		    retrieve_historic(data_historic);
-									   
+		    						   
 		  $('.look_wiki').html(page_url);//relève la page qu'il consulte
 		  $('.look_wiki').attr('page_title',title_push);//relève la page qu'il consulte
 										
@@ -965,9 +963,9 @@ $(document).ready(function(){
 
                     	var links = $('.wiki_content a:not(.new,.toc a,.internal),area').length;
 
-		   	                $('.wiki_content a:not(.new,.toc a,.internal),area').addClass('list_link');
-                            $('.wiki_content a:not(.new,.toc a,.internal),area').attr('zim',window.save_zim);
-                            $('.wiki_content a:not(.new,.toc a,.internal),area').attr('zim_file',window.save_zim_file);
+		   	                $('.wiki_content a:not(.new,.toc a,.external),area').addClass('list_link');
+                            $('.wiki_content a:not(.new,.toc a,.external),area').attr('zim',window.save_zim);
+                            $('.wiki_content a:not(.new,.toc a,.external),area').attr('zim_file',window.save_zim_file);
 
                         $(document).ready(function(){
 
@@ -1462,34 +1460,6 @@ $(document).ready(function(){
 					}
 						
 			}
-			
-			
-	  //ceci affiche l'historique dans le menu de haut
-        function retrieve_historic(){
-        
-		    //on efface les anciens liens
-		    $('.push_liste').html('');
-
-		    for(i=0;i<window.list_historic.length;i++){
-
-		    	var data = window.list_historic[i];
-
-			    $('.push_liste').prepend('<li><a href="'+data.page_url+'" class="hist_wiki">'+data.page_title+'</a> <span class="divider">|</span></li>');
-		   
-                if(i==window.list_historic.length-1){
-
-                	window.click_by_url();
-                }
-		    }
-
-			if(window.device=='standart'){
-
-				$('.dance_for_me').fadeIn();
-
-				$(".dance_for_me").effect('shake',{},500);//O'oooh! yes baby shake it! heuuu...on attitre l'attention sur les historiques de navigation
-			}	
-        }
-
 
         
 		
@@ -1753,7 +1723,7 @@ $(document).ready(function(){
 			//cette fonction s'occupe de tous les articles dont on peut générer par l'appel de son url
 			window.click_by_url =  function(){
 
-				                    $('.urlextern,.mf_,.not_link,.wikilink2').click(function  () {
+				                    $('.urlextern,.mf_,.not_link,.wikilink2,.external').click(function  () {
 				                    	return false;
 				                    })
 			                        
@@ -1810,7 +1780,7 @@ $(document).ready(function(){
 
                                     	            window.id_ted = $(this).attr('href');
 
-                                    	            window.notty_it($('.ted_video_message').attr('help_language'));
+                                    	            //window.notty_it($('.ted_video_message').attr('help_language'));
                                     	            return false;                                             
                                         	        break;
 
@@ -2280,22 +2250,8 @@ $(document).ready(function(){
     //cette fonction déclanche l'apparition de la notification
 			window.notty_it = function(message)
 			{
-				if(window.showing_note!==true){
-					//We display note
-                    $.ClassyNotty({
-                       content: message,
-                       showTime: true,
-	                   timeout: notty_timeout                                             
-                    });
-
-                    window.showing_note = true;
-
-                    setTimeout(function(){
-
-                    	window.showing_note=false;
-
-                    },notty_timeout);
-				}    
+				// toast(message, displayLength, className, completeCallback);
+                toast(message, 4000) // 4000 is the duration of the toast    
             } 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

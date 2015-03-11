@@ -128,6 +128,8 @@ $lang['form_search_video']      = "Research";
 $lang['form_medecine']          = "Medecine";
 $lang['form_linux']             = "Linux";
 $lang['form_plus']              = "Plus";
+$lang['form_no_result']         = "No result";
+
 
 
 

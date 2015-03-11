@@ -17,7 +17,6 @@
      
     <link href="<?php echo base_url();?>assets/css/jquery-ui.css" rel="stylesheet">
 	
-    <link type="text/css" href="<?php echo base_url();?>assets/css/jquery.classynotty.css" rel="stylesheet"/>
 	
 	<link type="text/css" href="<?php echo base_url();?>assets/css/scrollToTop.css" rel="stylesheet"/>
 	
@@ -37,12 +36,6 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/node/peer.js"></script>
 	
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/app_socket.js"></script>
-	
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.noty.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/default.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bottomRight.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/centerLeft.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/topCenter.js"></script>
 	
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/humane.min.js"></script>
 

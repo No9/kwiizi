@@ -115,28 +115,33 @@ $(document).ready(function(){
 
                     success: function(papi) {
 
-                    	switch (papi.zim){
+                        var result = no_result(papi,zim);//We display message if there is no zim
 
-                    		case 'wikipedia':
-                    		    list_wikipedia(papi);
-                    		    break;
+                        if(result==true){
 
-                    		case 'gutenberg':
-                    		    list_gutenberg(papi);
-                    		    break;
+                            switch (papi.zim){
 
-                    		case 'TED':
-                    		    list_TED(papi);
-                    		    break;
+                                case 'wikipedia':
+                                list_wikipedia(papi);
+                                break;
 
-                            case 'ubuntu':
+                                case 'gutenberg':
+                                list_gutenberg(papi);
+                                break;
+
+                                case 'TED':
+                                list_TED(papi);
+                                break;
+
+                                case 'ubuntu':
                                 list_ubuntu(papi);
                                 break;
 
-                            case 'medecine':
+                                case 'medecine':
                                 list_medecine(papi);
                                 break;
-                    	}
+                            }
+                        } 	
                     }
             });
         }
@@ -144,6 +149,7 @@ $(document).ready(function(){
 
 
         function list_wikipedia (papi) {
+             
 
         	//We get image of article in a json file
         	$.getJSON($('#url_json').attr('url')+'image.json?'+ new Date().getTime(), function(data) { 
@@ -230,7 +236,7 @@ $(document).ready(function(){
 
 
         function list_TED (papi) {
-            
+
             var list_zim = papi.result; 
             
             window.list_find = [];
@@ -239,6 +245,8 @@ $(document).ready(function(){
             var string = window.search_term.toLowerCase();
 
             $('.liste').html('<div class="receive_list collection"></div>');
+            $('.receive_list').html('<div class="display_no z-depth-3 card-panel red lighten-2"><span class="white-text text-darken-2"><i class="small mdi-alert-error"></i>'+$('.no_result').attr('message')+'</span></div>');
+
              
             for (var i = 0; i < list_zim.length; i++) {
 
@@ -298,6 +306,8 @@ $(document).ready(function(){
 
         function list_video (entry,zim_file) {
 
+            $('.display_no').hide();
+
             var a ='<a class="list_link collection-item waves-effect waves-teal" title="'+entry.title+'" href="'+entry.id+'" zim="TED" zim_file="'+zim_file+'">';
             var b = '<span><img style="float:left;margin-right:5px;height:100%;" src="'+$('.hoster').attr('host_wiki')+'/'+zim_file+'/I/'+entry.id+'/thumbnail.jpg">';
             var c = '<span class="titre_article">'+entry.title+' <i>('+entry.speaker+')</i></span><br>';
@@ -341,39 +351,6 @@ $(document).ready(function(){
         }
 
 
-
-
-        $('.zim_wikipedia').click(function () {
-
-            window.zim_tab = 'wikipedia';
-            go_search(window.search_term,window.zim_tab,false);
-        });
-
-        $('.zim_gutenberg').click(function () {
-
-            window.zim_tab = 'gutenberg';           
-            go_search(window.search_term,window.zim_tab,false);
-        });
-
-        $('.zim_TED').click(function () {
-            
-            window.zim_tab = 'TED';
-            go_search(window.search_term,window.zim_tab,false);
-        });
-
-        $('.zim_linux').click(function () {
-            
-            window.zim_tab = 'ubuntu';
-            go_search(window.search_term,window.zim_tab,false);
-        });
-
-
-        $('.zim_medecine').click(function () {
-            
-            window.zim_tab = 'medecine';
-            go_search(window.search_term,window.zim_tab,false);
-        });
-        
 
         function list_medecine (papi) {
 
@@ -424,7 +401,78 @@ $(document).ready(function(){
                 }
             });  
         }
-		
+
+
+
+
+        function no_result (papi,zim) {
+
+            if(zim=='TED'){ 
+                return true;
+              //action
+            }else{
+                var result = $.trim(papi.header);
+                result = result.split(' ');
+                result = result[0];
+
+                if(result=='No'){
+
+                   display_no_result();
+
+                   $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
+
+                   return false;              
+                }else{
+                    return true;
+                }
+            }          
+        }
+
+
+        function display_no_result () {
+            
+            $('.liste').html('<div class="z-depth-3 card-panel red lighten-2"><span class="white-text text-darken-2"><i class="small mdi-alert-error"></i>'+$('.no_result').attr('message')+'</span></div>');
+        }
+        
+
+        $('.zim_wikipedia').click(function () {
+
+            window.zim_tab = 'wikipedia';
+            go_search($('.input_search').val(),window.zim_tab,false);
+        });
+
+        $('.zim_gutenberg').click(function () {
+
+            window.zim_tab = 'gutenberg';           
+            go_search($('.input_search').val(),window.zim_tab,false);
+        });
+
+        $('.zim_TED').click(function () {
+            
+            window.zim_tab = 'TED';
+            go_search($('.input_search').val(),window.zim_tab,false);
+        });
+
+        $('.zim_linux').click(function () {
+            
+            window.zim_tab = 'ubuntu';
+            go_search($('.input_search').val(),window.zim_tab,false);
+        });
+
+
+        $('.zim_medecine').click(function () {
+            
+            window.zim_tab = 'medecine';
+            go_search($('.input_search').val(),window.zim_tab,false);
+        });
+
+        $('.zim_click').click(function(){
+            
+            $('.liste').animate({scrollTop : '0px'},1000);//on te scroll au debut de la page
+        })
+
+
+
 });
 
 	

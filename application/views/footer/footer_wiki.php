@@ -457,7 +457,9 @@
 	 
 	<span class="notif_search" short="<?php echo $this->lang->line('form_short'); ?>"></span>
 	
-	<span class="offline_app" message="<?php echo $this->lang->line('form_offline'); ?>"></span>
+    <span class="offline_app" message="<?php echo $this->lang->line('form_offline'); ?>"></span>
+
+	<span class="no_result" message="<?php echo $this->lang->line('form_no_result'); ?>"></span>
 
 	<span class="not_allow_family" message="<?php echo $this->lang->line('form_not_allow_family'); ?>"></span>
 
@@ -508,7 +510,6 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_contact.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/wiki_search.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.scrollToTop.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.classynotty.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.loadingdots.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/blocksit.min.js"></script>
 
