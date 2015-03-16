@@ -1,6 +1,6 @@
     <div class="row">
        
-        <div class="col s5 liste side-nav fixed" id="nav-mobile" style="top:0px;position:fixed;" ref="yes"></div>
+        <div class="col s5 liste side-nav fixed" id="nav-mobile" style="top:0px;position:fixed;" list_article="true" ref="yes"></div>
 
         <div class="col s7 principal" style="height:500px;">
 

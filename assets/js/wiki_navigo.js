@@ -8,6 +8,8 @@ $(document).ready(function(){
 
 	var notty_timeout = 120000; //Second for notification message
 
+	var nbre_historic = 50;//Number of article recorded
+
 
 	var hoster = $('.hoster').attr('url');
 	var port_kiwix = $('.hoster').attr('port_kiwix');
@@ -277,22 +279,6 @@ $(document).ready(function(){
 		  $('.wiki_title').html('<h1>'+title_push+'</h1>');
 							     						
 		  $('.wiki_content').html(text_push);
-
-		  //On affiche l'article à l'histocque vertical
-		    var data_historic = {page_url:page_url,page_title:title_push}
-		    
-		    if(window.list_historic){
-                 
-                if(window.list_historic.length>historique_simple){
-
-                	window.list_historic.shift();
-                }   
-		    }else{
-
-		    	window.list_historic = new Array();
-		    }
-
-		    window.list_historic.push(data_historic);
 		    						   
 		  $('.look_wiki').html(page_url);//relève la page qu'il consulte
 		  $('.look_wiki').attr('page_title',title_push);//relève la page qu'il consulte
@@ -819,8 +805,13 @@ $(document).ready(function(){
 						  $('.look_wiki').html(page_url);//relève la page qu'il consulte
 						  $('.look_wiki').attr('page_title',title_push);//relève la page qu'il consulté
 							
-                                      
-	                        $(function(){article_ready()});//On applique des actions sur le texte
+	                        $(document).ready(function(){ 
+                                article_ready();
+
+                                window.click_by_url();
+	                        });
+
+
 						}
                         event; // Success Event
                     });
@@ -908,7 +899,7 @@ $(document).ready(function(){
        
 
             //actions à faire à l'affichage d'un article
-            function article_ready(){ 
+            function article_ready(){
 			
 			    //faire un unbind des évènement dans la page 
                 //$('.extiw,.new,.external,.toc a,.internal,mw-magiclink-isbn,.mw-redirect').unbind('click');//on détache le click s'il était présent avant				
@@ -938,6 +929,8 @@ $(document).ready(function(){
 					        	$(document).ready(function(){
 
                                     window.click_by_url();
+
+                                    record_historic(true);
                                 });
 					        }
 					    };                         
@@ -964,12 +957,14 @@ $(document).ready(function(){
                     	var links = $('.wiki_content a:not(.new,.toc a,.internal),area').length;
 
 		   	                $('.wiki_content a:not(.new,.toc a,.external),area').addClass('list_link');
-                            $('.wiki_content a:not(.new,.toc a,.external),area').attr('zim',window.save_zim);
+		   	                $('.wiki_content a:not(.new,.toc a,.external),area').attr('zim',window.save_zim);
                             $('.wiki_content a:not(.new,.toc a,.external),area').attr('zim_file',window.save_zim_file);
 
                         $(document).ready(function(){
 
                             window.click_by_url();
+
+                            record_historic(true);
                          });
                      }
 
@@ -982,6 +977,7 @@ $(document).ready(function(){
                         $(document).ready(function(){
 
                             window.click_by_url();
+                            record_historic(true);
                         });
 
                         var nbre_image = $('.wiki_content img').length;
@@ -1116,42 +1112,57 @@ $(document).ready(function(){
 
 
 
-			///////////////////////////////////////Video library manager//////////////////////////////////////////
-            $('.video_click').click(function(){
+			function record_historic(save){
 
-            	//We display the list of TED conference
-			    $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_zim"><li class="nav-header"><i class="icon-youtube-play icon-white"></i>'+$(this).attr('label') +'</li></ul>');
-               
-                if(window.device=='mobile'){
+			    //We build data 
+			    var historic_title = [window.save_title];
+			    var historic_list  = [window.save_url,window.save_zim,window.save_zim_file,save];
+			    var whole_list = [];
+			    whole_list.push(historic_list);
 
-					window.hide_page();
+				var get_historic_title = $.jStorage.get('historic_title',false);
+				var get_historic_list  = $.jStorage.get('historic_list',false);
+
+				//We create historic if it does not exist
+				if(get_historic_title==false){ 
+					
+					$.jStorage.set('historic_title',historic_title);
+					$.jStorage.set('historic_list',whole_list);
+				}else{
+
+                    //We dont record this article if it the last article of the array
+					historic_title_nber = get_historic_title.length;
+					if(get_historic_title[historic_title_nber-1]!==window.save_title){
+
+					   //Now we record the article in the end of any list
+				       get_historic_title.push(window.save_title);
+				       get_historic_list.push(historic_list);
+
+                       $.jStorage.set('historic_title',get_historic_title);
+                       $.jStorage.set('historic_list',get_historic_list);
+					}
 				}
+                //We ensure that there is only 50 articles recorded on the browser
+                
+                if(get_historic_title!=false){
+                    
+                    historic_title_nber = get_historic_title.length;
 
-            	var zim_list = $('.hoster').attr('zim_list');
+                    if(historic_title_nber>nbre_historic){
 
-            	zim_list = zim_list.split(',');
+                       var url_to_delete = get_historic_list[0][0];
+ 
+                       get_historic_title.shift();
+                       get_historic_list.shift();
 
-            	for(i=2; i<zim_list.length;i++){
+                	   $.jStorage.set('historic_title',get_historic_title);
+                       $.jStorage.set('historic_list',get_historic_list);
+                       delete_recorded(url_to_delete);
+                    } 
+                }                   
+			}
 
-            		var zim = zim_list[i];
 
-            		var orginal_zim = zim_list[i];
-
-            		zim = zim.replace(/_/g,' ');
-
-            		$('.liste_zim').append('<li><a href="'+orginal_zim+'"><i class="icon-youtube-play icon-white"></i> '+zim.charAt(0).toUpperCase()+zim.slice(1).toLowerCase()+'</a></li>');
-            	
-                    if(i==zim_list.length-1){
-
-                    	window.click_by_url();
-                    }
-            	}    
-
-    	       return false;
-            });
-    ///////////////////////////////////////Video library manager//////////////////////////////////////////
-
-   
 
 			
 		
@@ -1163,402 +1174,65 @@ $(document).ready(function(){
 
 					window.hide_page();
 				}
-
                 //On affiche la box pour patienter                  
-		        $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
+		        $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();   
                 
-				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
-			    {
-				    //On initialise les variable qui vont porter les id et les titres 
-				  //Connexion
-				  var my_connect = $.indexedDB(dbName).objectStore("all_article");
-				  
-				      //On récupère les id
-				     my_connect.get('table_article_url').done(function(result_url, event_url){
-                  
-				        if(event_url.type=="success")
-						{
-					      //on récupère le tableau qui garde les articles
-                         var all_url = result_url; //qui renvoie le tableau des id des articles
-					
-					        if(result_url==undefined)//si ce tableau existe				
-					        {
-						     window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
-
-				             $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter		
-						    }
-						    else
-						    {
-						      //On récupère des titres maintenant
-						        my_connect.get('table_article_title').done(function(result_title,event_title){
-						       
-						            if(event_title.type=="success")
-									{
-                    				   var  all_title = result_title; //qui renvoie le tableau des titres des articles
-									   
-									   affiche_hist(all_url,all_title);//on envoi à la fonction qui affiche tout
-									}
-							    });
-						    }
-						}
-					});
-				}				  
-			    else 
-			    { 
-				    if($.jStorage.storageAvailable()) //si le navigateur supporte le web storage, on récupère l'historique dans son pc
-					{
-                     //on récupère le tableau qui garde les articles
-                     var all_article_hist = $.jStorage.get('all_article'); //qui renvoie le tableau des articles												 
-											 
-		                if(all_article_hist)//si ce tableau existe				
-					    { 
-					     //on affiche ces articles là
-					  
-					     //on compte le nombre d'élément du tableau
-					     var nbre_article = parseInt(all_article_hist.length);
-						
-					        if(nbre_article > 0)//si on a assurément des articles
-						    { 
-					         //affiche les chevrons de la liste
-					         $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_click"><li class="nav-header"><i class="icon-globe icon-white"></i>'+$('.historic').html()+' '+$('.historic').attr('title') +'</li></ul>');
-								
-					            for(i=0; i < nbre_article; i++) 
-						        {
-	                             var start = '<li class="active_ceci">';
-							 
-							     var list_title = $.jStorage.get('title_'+all_article_hist[i]);	
-															
-						         var b = '<a href="#" page_url="'+all_article_hist[i]+'" class="hist_wiki">';
-															
-							     var c = '<i class="icon-chevron-right" style="float:right;"></i>';
-																
-							     var e = list_title;
-															
-							     var f = '<span style="float:right;"><span  class="label label-info">&nbsp;&nbsp;&nbsp;</span></span>';//span du rien du tout
-															
-							     var end = '</a></li>';
-															   
-								 //on affiche
-                                 $('.liste_click').append(start+b+c+e+f+end).fadeIn('slow');
-                 				               
-                                 //on affiche le fichier js qui gère le résulatat affiché
-                                    if(i==(nbre_article-1))
-                                    {
-								      window.click_by_url();
-								    }												
-                                }
-						    }
-						
-						    if(nbre_article == 0)//si on n'a pas des articles
-						    {
-						      window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
-				             $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-						    }
-					    }
-					    else
-					    {
-					     //on fait la requete à la base de donnée
-					     window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
-				         $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-					    }
-					}
-                }				
-               return false;		            
-            });
-			
-			
-			$('.aspirated').click(function() {
-
-                 aspirated();
-			});
-			
-			//cette fonction permet d'afficher les catégories aspirées
-			function aspirated() {
-
-				if(window.device=="mobile"){
-
-					window.hide_page();
-				}
-
-              //On affiche la box pour patienter                  
-		     $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-			 
-			  //affiche les chevrons de la liste
-			  $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_cat"><li class="nav-header"><i class="icon-folder-open icon-white"></i>'+$('.aspirated').attr('category')+'</li></ul>');
-							
-			 //je récupère la liste des catégories
-			   var objectStore_cat = $.indexedDB(dbName).objectStore("category");
-		   
-		       var promise_cat = objectStore_cat.get("cat_list");
-			
-			    promise_cat.done(function(cat_list, event){
-			
-			        if(cat_list==undefined)//s'il ya pas la catégorie,on affiche le message d'échec
-				    {
-				     $('.liste_cat').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> '+$('.resultat').attr('no_article')+'</div></li>');
-					                    
-					 $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-				    }
-					if(event.type=="success" && cat_list!==undefined) //On affiche les catégories listées
-					{ 
-					   nbre_cat = cat_list.length;
-					   
-					    if(nbre_cat > 0)//si on a assurément des articles
-						{ 	
-					        for(i=0; i < nbre_cat; i++) 
-						    {
-	                         var start = '<li class="active_ceci">';
-							 
-							 var list_title = cat_list[i];	
-															
-						     var b = '<a href="#" cat_url="cat_art_'+list_title+'_url" cat_title="'+cat_list[i]+'"class="this_cat">';
-															
-							 var c = '<i class="icon-chevron-right" style="float:right;"></i>';
-																
-							 var e = list_title;
-															
-							 var f = '<span style="float:right;"><span  class="label label-info">&nbsp;&nbsp;&nbsp;</span></span>';//span du rien du tout
-															
-							 var end = '</a></li>';
-															   
-							 //on affiche
-                             $('.liste_cat').append(start+b+c+e+f+end).fadeIn('slow');
-                 				               
-                              //on affiche le fichier js qui gère le résultat affiché
-                                if(i==(nbre_cat-1))
-                                {
-								  click_by_cat();
-								}												
-                            }
-						}
-						else
-					    { 
-						  $('.liste_cat').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> '+$('.resultat').attr('no_article')+'</div></li>');
-					                    
-						  $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-					    }
-					}
-			    });
-			}
-			
-			
-			
-			//cette fonction affiche les articles d'une catégorie
-			function retrieve_all_article_cat(cat_url,cat_title)
-			{
-			    //On affiche la box pour patienter                  
-		     $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
-			 
-			  //affiche les chevrons de la liste
-			  $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_click"><li class="nav-header"><span class="back">(<i class="icon-backward icon-white"></i> '+$('.aspirated').attr('back')+' ) </span>'+cat_title+'</li></ul>');
-							
-			 //je récupère la liste des catégories
-			   var objectStore_cat_try = $.indexedDB(dbName).objectStore("category");
-		    
-		       var promise_cat_title = objectStore_cat_try.get("cat_art_"+cat_title+"_title");
-			
-			    promise_cat_title.done(function(cat_list_title,event_title){
-			     
-			        if(cat_list_title==undefined)//s'il ya pas la catégorie,on affiche le message d'échec
-				    {
-				        $('.liste_click').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button> '+$('.resultat').attr('no_article')+'</div></li>');
-					                    
-					    $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-				    }
-					else //On affiche les articles de la catégorie clicquée
-					{
-					   nbre_art_cat = cat_list_title.length;
-					   
-					   //on prend les id des articles
-					    objectStore_cat_try.get(cat_url).done(function(cat_list_url,event_url){
-			                
-							if(event_url.type=="success")
-					        {
-					            if(nbre_art_cat > 0)//si on a assurément des articles
-						        { 	
-					                for(i=0; i < nbre_art_cat; i++) 
-						            {
-	                                  var start = '<li class="active_ceci">';
-							 
-							          var list_title = cat_list_title[i];	
-													
-						              var b = '<a href="'+$('.hoster').attr('kiwix')+cat_list_url[i]+'"  class="click_list">';
-															
-							          var c = '<i class="icon-chevron-right" style="float:right;"></i>';
-																
-							          var e = list_title;
-															
-							          var f = '<span style="float:right;"><span  class="label label-info">&nbsp;&nbsp;&nbsp;</span></span>';//span du rien du tout
-															
-							          var end = '</a></li>';
-															   
-							          //on affiche
-                                      $('.liste_click').append(start+b+c+e+f+end).fadeIn('slow');
-                 				               
-                                      //on affiche le fichier js qui gère le résultat affiché
-                                        if(i==(nbre_art_cat-1))
-                                        {
-								            window.click_by_url();
-								        }												
-                                    }
-								}
-							}
-						});
-				    }
-				});
-			    
-			}
-			
-			
-			//cette fonction affiche l'hitorique venant de la bdd indexeddb
-			function affiche_hist(all_url,all_title)
-			{
-			 //on affiche ces articles là
-				 //on compte le nombre d'élément des tableaux
-				 var nbre_article_url = parseInt(all_url.length);
-							 
-			     var nbre_article_title = parseInt(all_title.length);
-						
-					if(nbre_article_url > 0 && nbre_article_title > 0)//si on a assurément des articles
-					{ 
-					 //affiche les chevrons de la liste
-					 $('.liste').html('<ul class="nav nav-list bs-docs-sidenav liste_click"><li class="nav-header"><i class="icon-globe icon-white"></i>'+$('.historic').html()+'</li></ul>');
-								
-					  //on parcour le tableau qui affiche alors tous les articles visités du plus rescent au plus ancien
-					       
-					 //et on parcours notre tableauen unverse
-					    for(i=0; i < nbre_article_url; i++) 
-						{
-						  var start = '<li class="active_ceci">';
-							 
-						  var list_title = all_title[i];	
-															
-						  var b = '<a href="'+all_url[i]+'" class="hist_wiki">';
-															
-						  var c = '<i class="icon-chevron-right" style="float:right;"></i>';
-																
-						  var e = list_title;
-															
-						  var f = '<span style="float:right;"><span  class="label label-info">&nbsp;&nbsp;&nbsp;</span></span>';//span du rien du tout
-															
-						  var end = '</a></li>';
-															   
-						  //on affiche
-                          $('.liste_click').append(start+b+c+e+f+end).fadeIn('slow');
-                 				               
-                          //on affiche le fichier js qui gère le résulatat affiché
-                            if(i==(nbre_article_url-1))
-                            {
-							  window.click_by_url();
-							}
-						}
-					}
-					else
-					{
-					 window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
-				     $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter
-					}
-						
-			}
-
-        
-		
-		//ceci est pour faire défiler les notification en page d'accueil
-
-            //si le navigateur supporte le webstorage et que j'ai des articles téléchargés en local
-			var cool = defile_note();
-			
-			function defile_note(){
-			    
-				if($('.wiki_title').html()=='')//si il n'est pas sur une autre page autre que la page d'accueil
+				if($.jStorage.storageAvailable()) //si le navigateur supporte le web storage, on récupère l'historique dans son pc
 				{
-				  
-				  $('.wait_it').html($('#Please_wait').html());//on affiche le message pour patienter
-                
-				 //////////////////////////
-				  //on fait un ping pour voir si le serveur on est online
-			        $.ajax({ 
-    
-						    url: $('#site_url').attr('url')+'/ping_it',
-                                        
-							type: 'POST',
-							
-							async : true,
-							
-							statusCode: {
-                                         404: function() {
-                                                    if($.jStorage.storageAvailable() && $.jStorage.get('counter_note'))
-                                                    {
-			                                         //j'affiche les notification en local
-			                                         defile_note_local();
-													 
-													  //on déclanche le défilement
-                                                     let_go();
-			                                        }
-                                            }
-                                        },
-							            
-							error: function(){ 
-							                   //j'affiche les notification en local
-			                                         defile_note_local();
-													 
-													  //on déclanche le défilement
-                                                     let_go();
-											},
-                                        
-							success:function() {
-							                     //je télécharge les notification au serveur
-				                               
-												}
-				    });
-				
-                }				 
-			}
-			
-			
-			//fait défiler lesnotification en local
-			function defile_note_local()
-			{ 
-			    if($.jStorage.storageAvailable() && $.jStorage.get('counter_note') )
-                {
-				   var titres = new Array();var contenus = new Array();var photos = new Array();
-				   
-				   var nbre_pub = $.jStorage.get('counter_note');
-				   
-				   var all_note = $.jStorage.get('all_note');
-				   
-				    for(i=0;i < nbre_pub;i++)
-					{
-				      var note_indiv = all_note[i];
-					  
-					  var a ='<div> <h5><i class="icon-envelope icon-white"></i> <span class="label label-info"> Enjoy </span> </h5>';
-					  
-					  var b = note_indiv[0]+'<br><br>';
-					     
-					  var c = '<b>'+note_indiv[1]+'</b> </div><br><br>';//slogan
-					  
-					  var d = '<span style="float:right;"><i class="icon-time icon-white"></i> <span class="user_post">'+note_indiv[2]+'</span></span>';
+                   var list_historic_title = $.jStorage.get('historic_title',false);
+                   var list_historic_list  = $.jStorage.get('historic_list',false);
+
+		            if(list_historic_title==false){
+		        	
+					    window.notificate_it($('.msg_historic').attr('no_historic'),'error','bottomRight');//ON affiche le msg d'échec
+
+					    $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter       	 
+		            }else{
+
+                        //We reverse historic before listing
+		            	list_historic_title = list_historic_title.reverse();
+		            	list_historic_list  = list_historic_list.reverse();
+
+                        
+                        //We display historic
+                        $('.liste').html('<div class="receive_list collection"></div>');
+
+                        for (var i = 0; i < list_historic_list.length; i++){
+                        	
+                        	$('.receive_list').append('<a class="list_link hist_link_list collection-item waves-effect waves-teal" title="'+list_historic_title[i]+'" href="'+list_historic_list[i][0] +'" zim="'+list_historic_list[i][1]+'" zim_file="'+list_historic_list[i][2]+'">'+list_historic_title[i]+'</a>')
+                        
+                            if(i==list_historic_list.length-1){
+                        
+                                $(document).ready(function(){
+
+                                    window.click_by_url();//Gestion des clicks des articles
+
+                                     //We reverse historic after listing
+		            	             list_historic_title = list_historic_title.reverse();
+		            	             list_historic_list  = list_historic_list.reverse();
+
+                                    $('#info_msg_wait').fadeOut();//On efface la box qui fait patienter	
+					            });
+            	            }
+                        }
+		            }
+                }
+
+               return false;	      
+            });
 						
-					  
-					   
-					        titres.push(note_indiv[1]);
-							contenus.push(note_indiv[0]);
-							photos.push(note_indiv[3]);
-							chariot = 0;
-					}
-					
-					// My_notty(titres,contenus,photos,chariot);//on enregistre les notification sous forme de tableau le Nottify
-
-                     $('.wait_it').html('');//on efface me message de patience					
-				}
-			}
-			
+						
+		
 
 			
-			function local_recorded(url) {
+			function local_recorded(url) { 
 				
 				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
 			    {
+			    	if(window.witch_zim=='wikipedia'){
+
+			    		url = $('.hoster').attr('host_wiki')+url;	
+			    	}
 					
 					$.indexedDB(dbName).objectStore("article").get(url).done(function(result, event){
                        
@@ -1589,6 +1263,21 @@ $(document).ready(function(){
 
 				return false;
 			}
+		}
+
+
+		function delete_recorded(url) { 
+				
+				if(window.indexedDB || window.openDatabase) //s'il le navigateur supporte indexeddb
+			    {					
+					$.indexedDB(dbName).objectStore("article").delete(url).done(function(result, event){
+                       
+
+                    }).fail(function(error, event){ 
+
+					   console.log(error);
+                    });
+			    }
 		}
 
 
@@ -1718,6 +1407,27 @@ $(document).ready(function(){
 		}
 	}
 
+	        function is_it_in_local_storage (title,url) {
+	        	
+	        	//est ce que le navigateur supporte le webstorage?
+   
+	        	if($.jStorage.storageAvailable()){
+
+	        		var list = $.jStorage.get('historic_title',false);
+
+	        		if(list!=false && list.indexOf(title)!=-1){
+                        
+                        local_recorded(url);
+
+                        return true;
+	        		}else{
+	        			return false;
+	        		} 
+	        	}else{
+	        		return false;
+	        	}
+	        }
+
 			
 			
 			//cette fonction s'occupe de tous les articles dont on peut générer par l'appel de son url
@@ -1728,10 +1438,10 @@ $(document).ready(function(){
 				                    })
 			                        
 			                        //on détache les évènements précédents
-	                                $('.hist_wiki,.plus_wiki_b,.liste_click a,.click_list,.liste_zim a,.click_ted,.list_link').unbind('click');//Ne pas enlever unbind sur .cat_wiki
+	                                $('.list_link').unbind('click');//Ne pas enlever unbind sur .cat_wiki
 	
 		                            //pour les articles de wikipedia
-			                        $('.click_list,.liste_click a,.list_link').click(function() {
+			                        $('.list_link').click(function() { 
 
 			  
 			                            if(window.device=='mobile'){ 
@@ -1748,46 +1458,74 @@ $(document).ready(function(){
 			                            window.save_zim_file  = $(this).attr('zim_file');
 
 			                            
-			                            var local_record = local_recorded(window.save_url);
-
-			                            if(local_record!=true){
-
-                                            //We change the link to active
+                                            
+                                          //We manage the active class  
+                                        if($(this).parent().parent().attr('list_article')=='true'){
+                                                
+                                                //We change the link to active
                                             $('.list_link').removeClass('active');
+                                        }
+
                                             $(this).addClass('active');
+                                           
 
                                             var type_zim = $(this).attr('zim');
 
                                             switch(type_zim){
 
-                                        	    case 'wikipedia':
+                                        	    case 'wikipedia': 
                                         	        //On affiche la box pour patienter                  
 		                                            $('#info_msg_wait').html($('#Please_wait').html()).fadeIn();
 			                                        var page_url = $(this).attr('href').replace($('.hoster').attr('host_wiki'),'').replace($('.hoster').attr('host'),'');
 								                
 								                    window.article_title = $(this).attr('title');
 								                    window.witch_zim = 'wikipedia';
-								                    retrieve_article_url(page_url);
+
+								                    var this_title = $(this).attr('title');
+
+								                    if(this_title==undefined){
+
+								                    	this_title = $(this).text();
+								                    }
+
+								                    var on_local = is_it_in_local_storage(this_title,page_url);
+
+								                    if(on_local==false){
+
+								                    	retrieve_article_url(page_url);
+								                    }
                                         	        break;
 
                                         	    case 'gutenberg':
-                                        	        //window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
-                                                    open_frame_gutenberg($(this).attr("href"),$(this).attr('title'));
+                                        	        window.witch_zim = 'gutenberg';
+
+                                                    var on_local = is_it_in_local_storage($(this).attr('title'),$(this).attr("href"));
+
+								                    if(on_local==false){
+								                    	//window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+                                                        open_frame_gutenberg($(this).attr("href"),$(this).attr('title'),'gutenberg');
+								                    }
                                         	        break;
 
                                         	    case 'TED':
                                     	            open_frame($(this).attr('href'),$(this).attr('zim_file'),$(this).attr('title'));
 
                                     	            window.id_ted = $(this).attr('href');
-
+                                    	             window.witch_zim = 'ted';
                                     	            //window.notty_it($('.ted_video_message').attr('help_language'));
                                     	            return false;                                             
                                         	        break;
 
                                         	    case 'ubuntu':
                                         	        if($(this).attr('href')!=''){
-                                                       //On affiche la box pour patienter                  
-                                                       open_frame_gutenberg($(this).attr("href"),$(this).attr('title'));
+                                                       
+                                                        window.witch_zim = 'ubuntu';
+                                                        var on_local = is_it_in_local_storage($(this).attr('title'),$(this).attr("href"));
+
+								                        if(on_local==false){
+								                    	    //window.open($('.hoster').attr('host_wiki')+$(this).attr("href"), "_blank", "width=600,height=600,scrollbars=yes");
+                                                            open_frame_gutenberg($(this).attr("href"),$(this).attr('title'),false);
+								                        }                  
                                         	        }                                       	   
                                         	        break;
 
@@ -1798,10 +1536,13 @@ $(document).ready(function(){
 								                
 								                    window.article_title = $(this).attr('title');
 								                    window.witch_zim = 'medecine';
-								                    retrieve_article_url(page_url);
+								                    var on_local = is_it_in_local_storage($(this).attr('title'),page_url);
+
+								                    if(on_local==false){
+								                        retrieve_article_url(page_url);								                    	   
+								                    }
                                         	        break;
                                             }
-                                        }
   
                                       return false;		            
                                     });
@@ -1948,13 +1689,14 @@ $(document).ready(function(){
                                 $('#myFrame').contents().find('#speaker').remove();
                                 $('#myFrame').contents().find('#title').remove();
                                 $('.framaTed').fadeIn();
+                                record_historic (false);
                             });
                         });     
                 });
 			}
 
 
-			function open_frame_gutenberg(zim,title){ 
+			function open_frame_gutenberg(zim,title,type){
                 
                 $('.wiki_content').html($('#Please_wait').html()); 
 			
@@ -1967,6 +1709,7 @@ $(document).ready(function(){
 			        $('title').html(title);
                         
                         $(document).ready(function(){ 
+
                             $('#myFrame').load(function(){ 
                                 $('#myFrame').contents().find('.kiwix').remove();
                                 $('#myFrame').contents().find('div')[0].remove() ;
@@ -1980,7 +1723,13 @@ $(document).ready(function(){
                                 $('.content_gutenberg').html('');
                                 $('.urlextern').append('<i class="tiny mdi-action-lock-outline"></i>');
 
-                                article_ready();                               
+                                article_ready();
+                                
+                                //We record on the historic if it is directly a gutenberg file
+                                if(type=='gutenberg'){ 
+                                	record_historic (false);
+                                }
+                                                               
                                 
                             });
                         });     

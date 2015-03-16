@@ -834,6 +834,18 @@ padding: 0.1em;
   height: 100px;
 }
 
+.receive_list .hist_link_list{
+  height:40px;
+}
+
+.cite{
+  color: blue;
+}
+
+.titre_article{
+  color: blue;
+}
+
 .witch_zim .green{
    color:white;
 }
