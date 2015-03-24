@@ -1,6 +1,8 @@
 kwiizi
 ======
 
+NB:this tutorial talks about the second version of Kwiizi so the software is in his third version actually.We work hard to update this readme after.Sorry.Commin soon :)
+
 Kwiki allows educational institutions to obtain millions of articles, books and videos for education while providing a communication platform where you can even make video calls. All without internet connection.
 
 Kwiizi is a server-client application whose purpose is to bring digital contents in school without internet coverage.
